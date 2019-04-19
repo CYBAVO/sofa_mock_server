@@ -1,6 +1,6 @@
 # Deposit Wallet API
 
-####  Create deposit wallet addresses
+#### Create deposit wallet addresses
 - **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
 	- Request
 		-	Params
@@ -114,7 +114,7 @@
 
 # Mock Server
 
-### Set web console URL
+### Set API server URL
 -	mockserver.app.conf
 
 ```
