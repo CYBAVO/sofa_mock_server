@@ -1,0 +1,10 @@
+package: github.com/cybavo/SOFA_MOCK_SERVER
+import:
+- package: github.com/astaxie/beego
+  version: v1.11.1
+  subpackages:
+  - logs
+  - orm
+  - plugins/cors
+- package: github.com/mattn/go-sqlite3
+  version: v1.10.0
