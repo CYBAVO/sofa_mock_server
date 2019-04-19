@@ -1,4 +1,4 @@
-#Deposit Wallet API
+# Deposit Wallet API
 
 ####  Create deposit wallet addresses
 - **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
@@ -112,16 +112,16 @@
 		```
 
 
-#Mock Server
+# Mock Server
 
-###Set web console URL
+### Set web console URL
 -	mockserver.app.conf
 
 ```
 api_server_url=""
 ```
 
-###Register mock server callback URL
+### Register mock server callback URL
 -	Operate on web console
 
 ```
@@ -149,7 +149,7 @@ http://localhost:8889/v1/mock/wallets/callback
 }
 ```
 
-###Query API token
+### Query API token
 
 -	Operate on web console
 	-	API-CODE, API-SECRET, WALLET-ID
@@ -160,20 +160,20 @@ curl -X POST -d '{"api_code":"API-CODE","api_secret":"API-SECRET"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken
 ```
 
-###Create deposit wallet addresses
+### Create deposit wallet addresses
 
 ```
 curl -X POST -d '{"count":10}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
 ```
 
-###Get deposit wallet addresses
+### Get deposit wallet addresses
 
 ```
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses?start_index=0&request_number=1000'
 ```
 
-###Resend all pending or failed deposit callbacks
+### Resend all pending or failed deposit callbacks
 
 ```
 curl -X POST -d '{"notification_id":0}' \
