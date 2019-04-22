@@ -72,6 +72,16 @@ type CallbackRequest struct {
 	Address     string                 `json:"address"`
 }
 
+type WithdrawTransaction struct {
+	OrderID int64  `json:"order_id"`
+	Address string `json:"address"`
+	Amount  string `json:"amount"`
+}
+
+type WithdrawTransactionRequest struct {
+	Requests []WithdrawTransaction `json:"requests"`
+}
+
 type CallbackResendRequest struct {
 	NotificationID int64 `json:"notification_id"`
 }
@@ -137,5 +147,22 @@ func ResendCallback(walletID int64, request *CallbackResendRequest) (response *C
 	}
 
 	logs.Debug("ResendCallback() => ", response)
+	return
+}
+
+func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions", walletID)
+
+	jsonRequest, err := json.Marshal(request)
+	if err != nil {
+		return
+	}
+
+	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
+	if err != nil {
+		return
+	}
+
+	logs.Debug("WithdrawTransactions() => ", string(resp))
 	return
 }

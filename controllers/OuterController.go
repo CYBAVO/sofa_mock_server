@@ -170,3 +170,29 @@ func (c *OuterController) CallbackResend() {
 
 	c.Data["json"] = resp
 }
+
+// @Title Withdraw
+// @router /wallets/:wallet_id/withdraw [post]
+func (c *OuterController) WithdrawTransactions() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	var request api.WithdrawTransactionRequest
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	err = api.WithdrawTransactions(walletID, &request)
+	if err != nil {
+		logs.Error("WithdrawTransactions failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+	return
+}

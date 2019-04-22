@@ -81,5 +81,8 @@ func makeRequest(walletID int64, method string, api string, params []string, pos
 	if err != nil {
 		return nil, err
 	}
+	if res.StatusCode != 200 {
+		return body, errors.New(res.Status)
+	}
 	return body, nil
 }
