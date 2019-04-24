@@ -11,7 +11,10 @@
 package controllers
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -130,6 +133,16 @@ func (c *OuterController) GetDepositWalletAddresses() {
 	c.Data["json"] = resp
 }
 
+func calcSHA256(data []byte) (calculatedHash []byte, err error) {
+	sha := sha256.New()
+	_, err = sha.Write(data)
+	if err != nil {
+		return
+	}
+	calculatedHash = sha.Sum(nil)
+	return
+}
+
 // @Title Callback
 // @router /wallets/callback [post]
 func (c *OuterController) Callback() {
@@ -137,6 +150,20 @@ func (c *OuterController) Callback() {
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	apiCodeObj, err := models.GetWalletAPICode(request.WalletID)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	checksum := c.Ctx.Input.Header("X-CHECKSUM")
+	payload := string(c.Ctx.Input.RequestBody) + apiCodeObj.ApiSecret
+	sha, _ := calcSHA256([]byte(payload))
+	checksumVerf := base64.URLEncoding.EncodeToString(sha)
+
+	if checksum != checksumVerf {
+		c.AbortWithError(http.StatusBadRequest, errors.New("Bad checksum"))
 	}
 
 	logs.Debug("Callback => %s\n%#v", c.Ctx.Input.RequestBody, request)
