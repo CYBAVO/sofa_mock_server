@@ -56,7 +56,7 @@ type WalletAddress struct {
 }
 
 type CallbackRequest struct {
-	Type        int64                  `json:"type"`
+	Type        int                    `json:"type"`
 	Serial      int64                  `json:"serial"`
 	OrderID     int64                  `json:"order_id"`
 	Currency    string                 `json:"currency"`
@@ -68,8 +68,9 @@ type CallbackRequest struct {
 	Fees        string                 `json:"fees"`
 	BroadcastAt int64                  `json:"broadcast_at"`
 	ChainAt     int64                  `json:"chain_at"`
-	Addon       map[string]interface{} `json:"addon"`
 	Address     string                 `json:"address"`
+	WalletID    int64                  `json:"wallet_id"`
+	Addon       map[string]interface{} `json:"addon"`
 }
 
 type WithdrawTransaction struct {
@@ -80,6 +81,10 @@ type WithdrawTransaction struct {
 
 type WithdrawTransactionRequest struct {
 	Requests []WithdrawTransaction `json:"requests"`
+}
+
+type WithdrawTransactionResponse struct {
+	Results map[int64]int64 `json:"results"`
 }
 
 type CallbackResendRequest struct {
@@ -150,7 +155,7 @@ func ResendCallback(walletID int64, request *CallbackResendRequest) (response *C
 	return
 }
 
-func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (err error) {
+func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (response *WithdrawTransactionResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions", walletID)
 
 	jsonRequest, err := json.Marshal(request)
@@ -163,6 +168,12 @@ func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (
 		return
 	}
 
-	logs.Debug("WithdrawTransactions() => ", string(resp))
+	response = &WithdrawTransactionResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return
+	}
+
+	logs.Debug("WithdrawTransactions() => ", response)
 	return
 }

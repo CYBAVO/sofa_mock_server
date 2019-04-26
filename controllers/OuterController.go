@@ -216,10 +216,11 @@ func (c *OuterController) WithdrawTransactions() {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
 
-	err = api.WithdrawTransactions(walletID, &request)
+	resp, err := api.WithdrawTransactions(walletID, &request)
 	if err != nil {
 		logs.Error("WithdrawTransactions failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
-	return
+
+	c.Data["json"] = resp
 }

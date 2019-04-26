@@ -141,8 +141,18 @@
 		```
 	
 	- Response
-		-	HTTP status code 200 stands for success
+		-	Params
+			-	`results `: Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds
+		-	Sample:
 
+		```
+		{
+		  "results": {
+		    "1": 20000000001,
+		    "2": 20000000002
+		  }
+		}
+		```
 
 # Mock Server
 
