@@ -12,6 +12,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/astaxie/beego/logs"
@@ -165,6 +166,9 @@ func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (
 
 	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
 	if err != nil {
+		result := &ErrorCodeResponse{}
+		_ = json.Unmarshal(resp, result)
+		err = errors.New(result.ErrMsg)
 		return
 	}
 
