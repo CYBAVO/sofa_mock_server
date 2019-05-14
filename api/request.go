@@ -50,6 +50,10 @@ type GetDepositWalletAddressesResponse struct {
 	WalletAddress []WalletAddress `json:"wallet_address"`
 }
 
+type GetDepositWalletPoolAddressResponse struct {
+	Address string `json:"address"`
+}
+
 type WalletAddress struct {
 	Currency     int64  `json:"currency"`
 	TokenAddress string `json:"token_address"`
@@ -130,6 +134,22 @@ func GetDepositWalletAddresses(walletID int64, startIndex int, requestNumber int
 	err = json.Unmarshal(resp, response)
 
 	logs.Debug("GetDepositWalletAddresses() => ", response)
+	return
+}
+
+func GetDepositWalletPoolAddress(walletID int64) (response *GetDepositWalletPoolAddressResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/pooladdress", walletID)
+
+	params := []string{}
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetDepositWalletPoolAddressResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Error("GetDepositWalletPoolAddress() => ", response)
 	return
 }
 

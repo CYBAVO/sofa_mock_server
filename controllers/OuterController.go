@@ -133,6 +133,26 @@ func (c *OuterController) GetDepositWalletAddresses() {
 	c.Data["json"] = resp
 }
 
+// @Title Get deposit wallet pool address
+// @router /wallets/:wallet_id/pooladdress [get]
+func (c *OuterController) GetDepositWalletPoolAddresses() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := api.GetDepositWalletPoolAddress(walletID)
+	if err != nil {
+		logs.Error("GetDepositWalletPoolAddress failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+	c.Data["json"] = resp
+}
+
 func calcSHA256(data []byte) (calculatedHash []byte, err error) {
 	sha := sha256.New()
 	_, err = sha.Write(data)

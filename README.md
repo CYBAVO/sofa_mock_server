@@ -215,6 +215,12 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses?start_index=0&request_number=1000'
 ```
 
+### Get deposit wallet pool address, only for USDT-omni 
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/pooladdress'
+```
+
 ### Resend all pending or failed deposit callbacks
 
 ```
