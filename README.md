@@ -127,12 +127,12 @@
 		{
 		  "requests": [
 		    {
-		      "order_id": 1,
+		      "order_id": "1",
 		      "address": "0x60589A749AAC632e9A830c8aBE042D1899d8Dd15",
 		      "amount": "0.0001"
 		    },
 		    {
-		      "order_id": 2,
+		      "order_id": "2",
 		      "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
 		      "amount": "0.0002"
 		    }
@@ -176,7 +176,7 @@ http://localhost:8889/v1/mock/wallets/callback
 {
   "type": 0,
   "serial": 12,
-  "order_id": 12,
+  "order_id": "12",
   "currency": "ETH",
   "txid": "0x5a5d25b1b4596962043c10c8d939a7b30efaed30574f7eee8e0b706e5fda682f",
   "block_height": 5429141,

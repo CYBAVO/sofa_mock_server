@@ -63,7 +63,7 @@ type WalletAddress struct {
 type CallbackRequest struct {
 	Type        int                    `json:"type"`
 	Serial      int64                  `json:"serial"`
-	OrderID     int64                  `json:"order_id"`
+	OrderID     string                 `json:"order_id"`
 	Currency    string                 `json:"currency"`
 	TXID        string                 `json:"txid"`
 	BlockHeight int64                  `json:"block_height"`
@@ -79,7 +79,7 @@ type CallbackRequest struct {
 }
 
 type WithdrawTransaction struct {
-	OrderID int64  `json:"order_id"`
+	OrderID string `json:"order_id"`
 	Address string `json:"address"`
 	Amount  string `json:"amount"`
 }
