@@ -90,7 +90,7 @@ type WithdrawTransactionRequest struct {
 }
 
 type WithdrawTransactionResponse struct {
-	Results map[int64]int64 `json:"results"`
+	Results map[string]int64 `json:"results"`
 }
 
 type CallbackResendRequest struct {
