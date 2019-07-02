@@ -173,11 +173,17 @@ api_server_url=""
 http://localhost:8889/v1/mock/wallets/callback
 ```
 
--	callback example
+-	callback structure
+	-	Params
+		-	`type `: [1|2|3]
+			-	1: Deposit Callback (入金回調)
+			-	2: Withdraw Callback (出金回調)
+			- 	3: Collect Callback (歸帳回調)
+	-	Sample:
 
 ```
 {
-  "type": 0,
+  "type": 1,
   "serial": 12,
   "order_id": "12",
   "currency": "ETH",
