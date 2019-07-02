@@ -175,7 +175,7 @@ http://localhost:8889/v1/mock/wallets/callback
 
 -	callback structure
 	-	Params
-		-	`type `: [1|2|3]
+		-	`type `: callback type [1|2|3]
 			-	1: Deposit Callback (入金回調)
 			-	2: Withdraw Callback (出金回調)
 			- 	3: Collect Callback (歸帳回調)
@@ -184,19 +184,22 @@ http://localhost:8889/v1/mock/wallets/callback
 ```
 {
   "type": 1,
-  "serial": 12,
-  "order_id": "12",
+  "serial": 90000000001,
+  "order_id": "",
   "currency": "ETH",
-  "txid": "0x5a5d25b1b4596962043c10c8d939a7b30efaed30574f7eee8e0b706e5fda682f",
-  "block_height": 5429141,
-  "tindex": 7,
+  "txid": "0x100e84230923124582b7feb5daf638df79616fb3dea37fc2ea80659f5de3472e",
+  "block_height": 5905092,
+  "tindex": 11,
   "vout_index": 0,
-  "amount": "10000000000000000",
+  "amount": "500000000000000000",
   "fees": "210000000000000",
-  "broadcast_at": 1555582060,
-  "chain_at": 1555582060,
-  "addon": {},
-  "address": "0x82C4E30da5b2fa15AbB4BD7CF49D194F0Bfb210f"
+  "broadcast_at": 1562057483,
+  "chain_at": 1562057483,
+  "from_address": "0x8382Cc1B05649AfBe179e341179fa869C2A9862b",
+  "to_address": "0x87F907C868D92a5d97E59CD1E9383a2E51dC4778",
+  "wallet_id": 21,
+  "state": 3,
+  "addon": {}
 }
 ```
 

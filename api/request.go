@@ -73,7 +73,8 @@ type CallbackRequest struct {
 	Fees        string                 `json:"fees"`
 	BroadcastAt int64                  `json:"broadcast_at"`
 	ChainAt     int64                  `json:"chain_at"`
-	Address     string                 `json:"address"`
+	FromAddress string                 `json:"from_address"`
+	ToAddress   string                 `json:"to_address"`
 	WalletID    int64                  `json:"wallet_id"`
 	Addon       map[string]interface{} `json:"addon"`
 }
