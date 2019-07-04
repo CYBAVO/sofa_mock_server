@@ -183,8 +183,8 @@
 - **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
 	- Request
 		-	Params
-			- 	`from_time`: Specify address start index
-			-  `to_time`: Request address count
+			- 	`from`: Start date (unix time in UTC)
+			-  `to`: End date (unix time in UTC)
 			-  `type`: Notification callback type [1|2|3]
 				-	1: Deposit Callback (入金回調)
 				-	2: Withdraw Callback (出金回調)
@@ -227,6 +227,85 @@
 		}
 		```
 
+
+#### Query vault/batch wallet transaction history
+
+- **GET** /v1/sofa/transactions?from\_time=`from`&to\_time=`to`&start_index=`start`&request_number=`count`&state=`state`
+	- Request
+		-	Params
+			- 	`from`: Start date
+			-  `to`: End date
+			-  `start`: Index of starting transaction record
+			-  `count`: Count of returning transaction record
+			-  `state`: Transaction state filter (optional, default: -1)
+				-	-1: All states
+				-	0: WaitApproval
+				- 	1: Rejected
+				-  2: Approved
+				-  3: Failed
+				-  4: NextLevel
+				-  5: Cancelled
+				-  6: BatchDone 
+		-  Sample:
+		
+		```
+		/v1/sofa/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=1
+		```
+
+	- Response
+		-	Params
+			-	`transaction_count `: Total transactions in specified date duration
+			-	`transaction_item`: Array of transaction record
+		-	Sample:
+
+		```
+		{
+		  "transaction_count": 3,
+		  "transaction_item": [
+		    {
+		      "issue_user_id": 3,
+		      "issue_user_name": "wallet owner (user@gmail.com)",
+		      "description": "TO SND",
+		      "wallet_id": 48,
+		      "wallet_name": "BNB I",
+		      "wallet_address": "tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk",
+		      "token_address": "",
+		      "txid": "3E6D61D1D39FA5DD3B86C2C28FFAD3D98CD7AFDB62346468D3C4FFE710CAAF85",
+		      "currency": 714,
+		      "currency_name": "BNB",
+		      "outgoing_address": "tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0",
+		      "outgoing_address_name": "BNB SND",
+		      "amount": "2",
+		      "fee": "0",
+		      "txno": 100087,
+		      "approval_item": [
+		        {
+		          "approval_id": 3,
+		          "approval_user": "wallet owner (user@gmail.com)",
+		          "approval_time": 1562210142,
+		          "user_message": "",
+		          "level": 0,
+		          "owner": 1,
+		          "confirm": 1,
+		          "state": 2,
+		          "error_code": 0
+		        }
+		      ],
+		      "state": 2,
+		      "create_time": 1562210129,
+		      "transaction_time": 1562210142,
+		      "scheduled_name": "",
+		      "transaction_type": 0,
+		      "eos_transaction_type": 0,
+		      "real_amount": "2",
+		      "chain_fee": "0.000375",
+		      "platform_fee": "0",
+		      "tx_category": "",
+		      "memo": "TO SND"
+		    }
+		  ]
+		}
+		```
 
 
 # Mock Server
@@ -329,4 +408,10 @@ curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apisecret
 
 ```
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
+```
+
+### Query vault/batch wallet transaction history
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8'
 ```

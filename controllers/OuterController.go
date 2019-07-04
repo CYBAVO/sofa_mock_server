@@ -295,3 +295,36 @@ func (c *OuterController) GetNotifications() {
 
 	c.Data["json"] = resp
 }
+
+// @Title Query wallet transaction history
+// @router /wallets/:wallet_id/transactions [get]
+func (c *OuterController) GetTransactionHistory() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	fromTime, _ := c.GetInt64("from_time", -1)
+	toTime, _ := c.GetInt64("to_time", -1)
+	startIndex, _ := c.GetInt("start_index", 0)
+	requestNumber, _ := c.GetInt("request_number", 0)
+	state, _ := c.GetInt("state", -1)
+
+	if fromTime == -1 || toTime == -1 {
+		logs.Error("Invalid parameters")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Invalid parameters"))
+		return
+	}
+
+	resp, err := api.GetTransactionHistory(walletID, fromTime, toTime, startIndex, requestNumber, state)
+	if err != nil {
+		logs.Error("QueryWalletTransactionHistory failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}

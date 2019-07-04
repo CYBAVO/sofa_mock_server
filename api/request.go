@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/astaxie/beego/logs"
 )
@@ -111,6 +112,65 @@ type CallbackResendResponse struct {
 type GetTxAPITokenStatusResponse struct {
 	APICode   string `json:"api_code"`
 	ExpiresAt int64  `json:"exp"`
+}
+
+type GetTransactionHistoryResponse struct {
+	TransactionCount int               `json:"transaction_count"`
+	TransactionItem  []TransactionItem `json:"transaction_item"`
+}
+
+type ApprovalItem struct {
+	ApprovalId   int64  `json:"approval_id"`
+	ApprovalUser string `json:"approval_user"`
+	ApprovalTime int64  `json:"approval_time"`
+	UserMessage  string `json:"user_message"`
+	Level        int    `json:"level"`
+	Owner        int    `json:"owner"`
+	Confirm      int    `json:"confirm"`
+	State        int    `json:"state"`
+	ErrorCode    int    `json:"error_code"`
+}
+
+type TransactionBatchStats struct {
+	TransactionId    int64     `json:"transaction_id"`
+	TotalAmount      string    `json:"total_amount"`
+	TransactionCount int       `json:"transaction_count"`
+	OutgoingCount    int       `json:"outgoing_count"`
+	SuccessCount     int       `json:"success_count"`
+	FailCount        int       `json:"fail_count"`
+	SuccessAmount    string    `json:"success_amount"`
+	CreateTime       time.Time `json:"create_time"`
+}
+
+type TransactionItem struct {
+	IssueUserId         int64                  `json:"issue_user_id"`
+	IssueUserName       string                 `json:"issue_user_name"`
+	Description         string                 `json:"description"`
+	WalletId            int64                  `json:"wallet_id"`
+	WalletName          string                 `json:"wallet_name"`
+	WalletAddress       string                 `json:"wallet_address"`
+	TokenAddress        string                 `json:"token_address"`
+	TxId                string                 `json:"txid"`
+	Currency            int64                  `json:"currency"`
+	CurrencyName        string                 `json:"currency_name"`
+	OutgoingAddress     string                 `json:"outgoing_address"`
+	OutgoingAddressName string                 `json:"outgoing_address_name"`
+	Amount              string                 `json:"amount"`
+	Fee                 string                 `json:"fee"`
+	TxNo                int64                  `json:"txno"`
+	ApprovalItem        []ApprovalItem         `json:"approval_item"`
+	State               int                    `json:"state"`
+	CreateTime          int64                  `json:"create_time"`
+	TransactionTime     int64                  `json:"transaction_time"`
+	ScheduledName       string                 `json:"scheduled_name"`
+	TransactionType     int                    `json:"transaction_type"`
+	Batch               *TransactionBatchStats `json:"batch,omitempty"`
+	EosTransactionType  int                    `json:"eos_transaction_type"`
+	RealAmount          string                 `json:"real_amount"`
+	ChainFee            string                 `json:"chain_fee"`
+	PlatformFee         string                 `json:"platform_fee"`
+	TxCategory          string                 `json:"tx_category"`
+	Memo                string                 `json:"memo"`
 }
 
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
@@ -233,7 +293,11 @@ func GetTxAPITokenStatus(walletID int64) (response *GetTxAPITokenStatusResponse,
 func GetNotifications(walletID int64, fromTime int64, toTime int64, notificationType int) (response *GetNotificationsResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/notifications", walletID)
 
-	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
+	params := []string{}
+	params = append(params, fmt.Sprintf("from_time=%d", fromTime))
+	params = append(params, fmt.Sprintf("to_time=%d", toTime))
+	params = append(params, fmt.Sprintf("type=%d", notificationType))
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
 	if err != nil {
 		return
 	}
@@ -242,5 +306,24 @@ func GetNotifications(walletID int64, fromTime int64, toTime int64, notification
 	err = json.Unmarshal(resp, response)
 
 	logs.Debug("GetNotifications() => ", response)
+	return
+}
+
+func GetTransactionHistory(walletID int64, fromTime int64, toTime int64, startIndex int, requestNumber int, state int) (response *GetTransactionHistoryResponse, err error) {
+	params := []string{}
+	params = append(params, fmt.Sprintf("from_time=%d", fromTime))
+	params = append(params, fmt.Sprintf("to_time=%d", toTime))
+	params = append(params, fmt.Sprintf("start_index=%d", startIndex))
+	params = append(params, fmt.Sprintf("request_number=%d", requestNumber))
+	params = append(params, fmt.Sprintf("state=%d", state))
+	resp, err := makeRequest(walletID, "GET", "/v1/sofa/transactions", params, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetTransactionHistoryResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Debug("GetTransactionHistory() => ", response)
 	return
 }
