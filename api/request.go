@@ -102,6 +102,11 @@ type CallbackResendResponse struct {
 	Count int `json:"count"`
 }
 
+type GetTxAPITokenStatusResponse struct {
+	APICode   string `json:"api_code"`
+	ExpiresAt int64  `json:"exp"`
+}
+
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID)
 
@@ -201,5 +206,20 @@ func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (
 	}
 
 	logs.Debug("WithdrawTransactions() => ", response)
+	return
+}
+
+func GetTxAPITokenStatus(walletID int64) (response *GetTxAPITokenStatusResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/apisecret", walletID)
+
+	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetTxAPITokenStatusResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Debug("GetTxAPITokenStatus() => ", response)
 	return
 }

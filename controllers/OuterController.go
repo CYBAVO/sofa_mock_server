@@ -218,7 +218,7 @@ func (c *OuterController) CallbackResend() {
 	c.Data["json"] = resp
 }
 
-// @Title Withdraw
+// @Title Withdraw transactions
 // @router /wallets/:wallet_id/withdraw [post]
 func (c *OuterController) WithdrawTransactions() {
 	defer c.ServeJSON()
@@ -239,6 +239,27 @@ func (c *OuterController) WithdrawTransactions() {
 	resp, err := api.WithdrawTransactions(walletID, &request)
 	if err != nil {
 		logs.Error("WithdrawTransactions failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
+
+// @Title Get API token status
+// @router /wallets/:wallet_id/apisecret [get]
+func (c *OuterController) GetTxAPITokenStatus() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := api.GetTxAPITokenStatus(walletID)
+	if err != nil {
+		logs.Error("GetTxAPITokenStatus failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
