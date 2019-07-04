@@ -60,7 +60,7 @@ type WalletAddress struct {
 	Address      string `json:"address"`
 }
 
-type CallbackRequest struct {
+type CallbackStruct struct {
 	Type        int                    `json:"type"`
 	Serial      int64                  `json:"serial"`
 	OrderID     string                 `json:"order_id"`
@@ -71,12 +71,18 @@ type CallbackRequest struct {
 	VOutIndex   int                    `json:"vout_index"`
 	Amount      string                 `json:"amount"`
 	Fees        string                 `json:"fees"`
+	Memo        string                 `json:"memo"`
 	BroadcastAt int64                  `json:"broadcast_at"`
 	ChainAt     int64                  `json:"chain_at"`
 	FromAddress string                 `json:"from_address"`
 	ToAddress   string                 `json:"to_address"`
 	WalletID    int64                  `json:"wallet_id"`
+	State       int64                  `json:"state"`
 	Addon       map[string]interface{} `json:"addon"`
+}
+
+type GetNotificationsResponse struct {
+	Notifications []*CallbackStruct `json:"notifications"`
 }
 
 type WithdrawTransaction struct {
@@ -221,5 +227,20 @@ func GetTxAPITokenStatus(walletID int64) (response *GetTxAPITokenStatusResponse,
 	err = json.Unmarshal(resp, response)
 
 	logs.Debug("GetTxAPITokenStatus() => ", response)
+	return
+}
+
+func GetNotifications(walletID int64, fromTime int64, toTime int64, notificationType int) (response *GetNotificationsResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/notifications", walletID)
+
+	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetNotificationsResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Debug("GetNotifications() => ", response)
 	return
 }

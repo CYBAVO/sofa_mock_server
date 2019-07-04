@@ -27,6 +27,7 @@
 		```
 
 #### Query address of deposit wallet
+
 - **GET** /v1/sofa/wallets/`WALLET_ID`/addresses?start\_index=`from`&request\_number=`count`
 	- Request
 		-	Params
@@ -91,7 +92,8 @@
 		```
 
 #### Resend pending or failed deposit callbacks
-- **GET** /v1/sofa/wallets/`WALLET_ID`/collection/notifications/manual
+
+- **POST** /v1/sofa/wallets/`WALLET_ID`/collection/notifications/manual
 	-	Request
 		-	Params
 			- 	`notification_id `: Specify callback ID to resend, 0 means all
@@ -157,7 +159,7 @@
 		}
 		```
 		
-# API Token Query API
+# Query API
 
 #### Query API token status
 
@@ -175,6 +177,56 @@
 		  "exp": 1564801781
 		}
 		```
+
+#### Query notification callback history
+
+- **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
+	- Request
+		-	Params
+			- 	`from_time`: Specify address start index
+			-  `to_time`: Request address count
+			-  `type`: Notification callback type [1|2|3]
+				-	1: Deposit Callback (入金回調)
+				-	2: Withdraw Callback (出金回調)
+				- 	3: Collect Callback (歸帳回調)
+		-  Sample:
+		
+		```
+		/v1/sofa/wallets/67/notifications?from_time=1561651200&to_time=1562255999&type=2
+		```
+
+	- Response
+		-	Params
+			-	`notifications `: Arrary of callbacks
+		-	Sample:
+
+		```
+		{
+		  "notifications": [
+		    {
+		      "type": 2,
+		      "serial": 90000000003,
+		      "order_id": "a206",
+		      "currency": "BNB",
+		      "txid": "76B8B2B1E25472FFE7B8FCE85742E0964FEDB1B679DE963FA19F430E8B287F93",
+		      "block_height": 25844472,
+		      "tindex": 2,
+		      "vout_index": 0,
+		      "amount": "15000000",
+		      "fees": "37500",
+		      "memo": "CC",
+		      "broadcast_at": 0,
+		      "chain_at": 1562234190,
+		      "from_address": "tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0",
+		      "to_address": "tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk",
+		      "wallet_id": 67,
+		      "state": 3,
+		      "addon": {}
+		    }
+		  ]
+		}
+		```
+
 
 
 # Mock Server
@@ -271,4 +323,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 
 ```
 curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apisecret
+```
+
+### Query notification callback history
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
 ```

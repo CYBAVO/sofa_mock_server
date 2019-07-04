@@ -166,7 +166,7 @@ func calcSHA256(data []byte) (calculatedHash []byte, err error) {
 // @Title Callback
 // @router /wallets/callback [post]
 func (c *OuterController) Callback() {
-	var request api.CallbackRequest
+	var request api.CallbackStruct
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -260,6 +260,36 @@ func (c *OuterController) GetTxAPITokenStatus() {
 	resp, err := api.GetTxAPITokenStatus(walletID)
 	if err != nil {
 		logs.Error("GetTxAPITokenStatus failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
+
+// @Title Query notification history
+// @router /wallets/:wallet_id/notifications [get]
+func (c *OuterController) GetNotifications() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	fromTime, _ := c.GetInt64("from_time", -1)
+	toTime, _ := c.GetInt64("to_time", -1)
+	notificationType, _ := c.GetInt("type", -1)
+	if fromTime == -1 || toTime == -1 || notificationType == -1 {
+		logs.Error("Invalid parameters")
+		c.AbortWithError(http.StatusBadRequest, errors.New("Invalid parameters"))
+		return
+	}
+
+	resp, err := api.GetNotifications(walletID, fromTime, toTime, notificationType)
+	if err != nil {
+		logs.Error("GetNotifications failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
