@@ -5,11 +5,27 @@
 	- Request
 		-	Params
 			- 	`count`: Specify address count, max value is 1000.
+			-  `memos`: Specify memos for BNB or EOS deposit wallet
+				-	**NOTE: The length of `memos` must equal to `count` while creating addresses for BNB or EOS wallet**
 		-  Sample:
 	
-		```
-		{ "count": 3 }
-		```
+			For BNB or EOS wallet:
+			
+			```
+			{
+			  "count": 2,
+			  "memos": [
+			    "001",
+			    "002"
+			  ]
+			}
+			```
+			
+			For wallet excepts BNB and EOS:
+			
+			```
+			{ "count": 2 }
+			```
 
 	- Response
 		-	Params
@@ -367,8 +383,17 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken
 
 ### Create deposit wallet addresses
 
+For BNB or EOS wallet:
+
 ```
-curl -X POST -d '{"count":10}' \
+curl -X POST -d '{"count":2,"memos":["001","002"]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
+```
+
+For wallet excepts BNB or EOS:
+
+```
+curl -X POST -d '{"count":2}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
 ```
 

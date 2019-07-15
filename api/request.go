@@ -39,7 +39,8 @@ type GetAPICodeResponse struct {
 }
 
 type CreateDepositWalletAddressesRequest struct {
-	Count int64 `json:"count"`
+	Count int64    `json:"count"`
+	Memos []string `json:"memos"`
 }
 
 type CreateDepositWalletAddressesResponse struct {
