@@ -60,6 +60,7 @@ type WalletAddress struct {
 	Currency     int64  `json:"currency"`
 	TokenAddress string `json:"token_address"`
 	Address      string `json:"address"`
+	Memo         string `json:"memo"`
 }
 
 type CallbackStruct struct {

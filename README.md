@@ -32,6 +32,19 @@
 			-	`addresses`: Array of just created deposit addresses
 		-	Sample:
 
+		For BNB or EOS wallet:
+		
+		```
+		{
+		  "addresses": [
+		    "002",
+		    "001"
+		  ]
+		}
+		```
+		
+		For wallet excepts BNB and EOS:
+		
 		```
 		{
 		  "addresses": [
@@ -70,17 +83,20 @@
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x8c42fD03A5cfba7C3Cd97AB8a09e1a3137Ef33C3"
+		      "address": "0x8c42fD03A5cfba7C3Cd97AB8a09e1a3137Ef33C3",
+		      "memo": ""
 		    },
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x4d3EB54b602BF4985CE457089F9fB084Af597A2C"
+		      "address": "0x4d3EB54b602BF4985CE457089F9fB084Af597A2C",
+		      "memo": ""
 		    },
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x74dc3fB523295C87C0b93E48744Ce94fe3a8Ef5e"
+		      "address": "0x74dc3fB523295C87C0b93E48744Ce94fe3a8Ef5e",
+		      "memo": ""
 		    }
 		  ]
 		}
@@ -91,17 +107,20 @@
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x6d68443D6564cF257A48c1b16aa6d0EF13c5A719"
+		      "address": "0x6d68443D6564cF257A48c1b16aa6d0EF13c5A719",
+		      "memo": ""
 		    },
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x26F103322B6f0ed2D35B85F1611589c92F023986"
+		      "address": "0x26F103322B6f0ed2D35B85F1611589c92F023986",
+		      "memo": ""
 		    },
 		    {
 		      "currency": 60,
 		      "token_address": "",
-		      "address": "0x2b91918Bee4411DaD6293EA5d6D38251E72723Ca"
+		      "address": "0x2b91918Bee4411DaD6293EA5d6D38251E72723Ca",
+		      "memo": ""
 		    }
 		  ]
 		}
