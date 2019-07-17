@@ -95,18 +95,18 @@ func (c *OuterController) CreateDepositWalletAddresses() {
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	var walletAddresses []models.DepositWalletAddress
-	for _, address := range resp.Addresses {
-		walletAddresses = append(walletAddresses, models.DepositWalletAddress{
-			Address:  address,
-			WalletID: walletID,
-		})
-	}
-	_, err = models.AddNewWalletAddresses(walletAddresses)
-	if err != nil {
-		logs.Error("AddNewWalletAddresses failed", err)
-		c.AbortWithError(http.StatusInternalServerError, err)
-	}
+	// var walletAddresses []models.DepositWalletAddress
+	// for _, address := range resp.Addresses {
+	// 	walletAddresses = append(walletAddresses, models.DepositWalletAddress{
+	// 		Address:  address,
+	// 		WalletID: walletID,
+	// 	})
+	// }
+	// _, err = models.AddNewWalletAddresses(walletAddresses)
+	// if err != nil {
+	// 	logs.Error("AddNewWalletAddresses failed", err)
+	// 	c.AbortWithError(http.StatusInternalServerError, err)
+	// }
 
 	c.Data["json"] = resp
 }
