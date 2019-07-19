@@ -265,7 +265,7 @@
 
 #### Query vault/batch wallet transaction history
 
-- **GET** /v1/sofa/transactions?from\_time=`from`&to\_time=`to`&start_index=`start`&request_number=`count`&state=`state`
+- **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start_index=`start`&request_number=`count`&state=`state`
 	- Request
 		-	Params
 			- 	`from`: Start date
@@ -284,7 +284,7 @@
 		-  Sample:
 		
 		```
-		/v1/sofa/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=1
+		/v1/sofa/wallets/48/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=3
 		```
 
 	- Response

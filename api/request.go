@@ -312,13 +312,15 @@ func GetNotifications(walletID int64, fromTime int64, toTime int64, notification
 }
 
 func GetTransactionHistory(walletID int64, fromTime int64, toTime int64, startIndex int, requestNumber int, state int) (response *GetTransactionHistoryResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/transactions", walletID)
+
 	params := []string{}
 	params = append(params, fmt.Sprintf("from_time=%d", fromTime))
 	params = append(params, fmt.Sprintf("to_time=%d", toTime))
 	params = append(params, fmt.Sprintf("start_index=%d", startIndex))
 	params = append(params, fmt.Sprintf("request_number=%d", requestNumber))
 	params = append(params, fmt.Sprintf("state=%d", state))
-	resp, err := makeRequest(walletID, "GET", "/v1/sofa/transactions", params, nil)
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
 	if err != nil {
 		return
 	}
