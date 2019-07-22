@@ -175,6 +175,11 @@ type TransactionItem struct {
 	Memo                string                 `json:"memo"`
 }
 
+type GetWalletBlockInfoResponse struct {
+	LatestBlockHeight int64 `json:"latest_block_height"`
+	SyncedBlockHeight int64 `json:"synced_block_height"`
+}
+
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID)
 
@@ -329,5 +334,21 @@ func GetTransactionHistory(walletID int64, fromTime int64, toTime int64, startIn
 	err = json.Unmarshal(resp, response)
 
 	logs.Debug("GetTransactionHistory() => ", response)
+	return
+}
+
+func GetWalletBlockInfo(walletID int64) (response *GetWalletBlockInfoResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/blocks", walletID)
+
+	params := []string{}
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetWalletBlockInfoResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Error("GetDepositWalletPoolAddress() => ", response)
 	return
 }

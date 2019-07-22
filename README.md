@@ -342,6 +342,23 @@
 		}
 		```
 
+#### Query wallet block info
+
+- **GET** /v1/sofa/wallets/`WALLET_ID`/blocks
+
+	- Response
+		-	Params
+			-	`latest_block_height `: latest block height on blockchain
+			-	`synced_block_height`: current synced block height
+		-	Sample:
+
+		```
+		{
+		  "latest_block_height": 29317651,
+		  "synced_block_height": 28529203
+		}
+		```
+		
 
 # Mock Server
 
@@ -458,4 +475,10 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?fro
 
 ```
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8'
+```
+
+### Query deposit/withdraw wallet block info
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/blocks'
 ```
