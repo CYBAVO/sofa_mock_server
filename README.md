@@ -359,6 +359,21 @@
 		}
 		```
 		
+#### Query invalid deposit addresses
+
+- **GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
+
+	- Response
+		-	Params
+			-	`addresses `: array of invalid deposit address
+		-	Sample:
+
+		```
+		{
+		  "addresses": ["0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2"]
+		}
+		```
+
 
 # Mock Server
 
@@ -481,4 +496,10 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/transactions?star
 
 ```
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/blocks'
+```
+
+#### Query invalid deposit addresses
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/invalid-deposit'
 ```

@@ -180,6 +180,10 @@ type GetWalletBlockInfoResponse struct {
 	SyncedBlockHeight int64 `json:"synced_block_height"`
 }
 
+type GetInvalidDepositAddressesResponse struct {
+	Addresses []string `json:"addresses"`
+}
+
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID)
 
@@ -349,6 +353,22 @@ func GetWalletBlockInfo(walletID int64) (response *GetWalletBlockInfoResponse, e
 	response = &GetWalletBlockInfoResponse{}
 	err = json.Unmarshal(resp, response)
 
-	logs.Error("GetDepositWalletPoolAddress() => ", response)
+	logs.Error("GetWalletBlockInfo() => ", response)
+	return
+}
+
+func GetInvalidDepositAddresses(walletID int64) (response *GetInvalidDepositAddressesResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses/invalid-deposit", walletID)
+
+	params := []string{}
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetInvalidDepositAddressesResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Error("GetInvalidDepositAddresses() => ", response)
 	return
 }
