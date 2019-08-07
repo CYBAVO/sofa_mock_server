@@ -403,7 +403,7 @@ http://localhost:8889/v1/mock/wallets/callback
 		-	`state`:
 			-	0: Enqueue
 			-	1: Processing batch in KMS
-			-	2: KMS process done, TXID created
+			-	2: TXID in pool
 			-	3: TXID in chain
 			-	4: TXID confirmed in N blocks
 			-	5: Failed
