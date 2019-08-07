@@ -400,6 +400,16 @@ http://localhost:8889/v1/mock/wallets/callback
 			-	1: Deposit Callback (入金回調)
 			-	2: Withdraw Callback (出金回調)
 			- 	3: Collect Callback (歸帳回調)
+		-	`state`:
+			-	0: Enqueue
+			-	1: Processing batch in KMS
+			-	2: KMS process done, TXID created
+			-	3: TXID in chain
+			-	4: TXID confirmed in N blocks
+			-	5: Failed
+			-	6: Resent
+			-	7: Blocked due to risk controlled
+			-	8: Cancelled
 	-	Sample:
 
 ```
