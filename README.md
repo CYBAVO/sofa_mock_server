@@ -405,7 +405,7 @@ http://localhost:8889/v1/mock/wallets/callback
 			-	1: Processing batch in KMS
 			-	2: TXID in pool
 			-	3: TXID in chain
-			-	4: TXID confirmed in N blocks
+			-	**(DEPRECATED)** 4: TXID confirmed in N blocks
 			-	5: Failed
 			-	6: Resent
 			-	7: Blocked due to risk controlled
@@ -430,6 +430,7 @@ http://localhost:8889/v1/mock/wallets/callback
   "to_address": "0x87F907C868D92a5d97E59CD1E9383a2E51dC4778",
   "wallet_id": 21,
   "state": 3,
+  "confirm_blocks": 1,
   "addon": {}
 }
 ```
