@@ -94,6 +94,7 @@ type WithdrawTransaction struct {
 	Amount  string `json:"amount"`
 	Memo    string `json:"memo"`
 	UserID  string `json:"user_id"`
+	Message string `json:"message"`
 }
 
 type WithdrawTransactionRequest struct {

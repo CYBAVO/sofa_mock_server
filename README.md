@@ -158,8 +158,10 @@
 			- 	`order_id `: Specify an unique ID
 			-  `address`: Outgoing address
 			-  `amount`: Withdrawal amount
-			-  `memo`: Memo on blockchain
+			-  `memo`: Memo on blockchain (This memo will be sent to blockchain)
 			-  `user_id`: Specify certain user (optional)
+			-  `message`: Message (This message only savced on CYBAVO, not sent to blockchain
+)
 		-  Sample:
 
 		```
@@ -169,15 +171,17 @@
 		      "order_id": "1",
 		      "address": "0x60589A749AAC632e9A830c8aBE042D1899d8Dd15",
 		      "amount": "0.0001",
-		      "memo": "WHATEVER_YOU_WANT",
-		      "user_id": "USER01"
+		      "memo": "memo-001",
+		      "user_id": "USER01",
+		      "message": "message-001",
 		    },
 		    {
 		      "order_id": "2",
 		      "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
 		      "amount": "0.0002",
-		      "memo": "WHATEVER_YOU_WANT",
-		      "user_id": "USER01"
+		      "memo": "memo-002",
+		      "user_id": "USER01",
+		      "message": "message-002",
 		    }
 		  ]
 		}
@@ -484,7 +488,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
 ### Withdraw
 
 ```
-curl -X POST -d '{"requests":[{"order_id":"1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"WHATEVER_YOU_WANT","user_id":"USER01"},{"order_id":"2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"WHATEVER_YOU_WANT","user_id":"USER01"}]}' \
+curl -X POST -d '{"requests":[{"order_id":"1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 ```
 
