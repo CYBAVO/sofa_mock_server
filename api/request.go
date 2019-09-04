@@ -114,8 +114,15 @@ type CallbackResendResponse struct {
 }
 
 type GetTxAPITokenStatusResponse struct {
-	APICode   string `json:"api_code"`
-	ExpiresAt int64  `json:"exp"`
+	Valid       *WalletApiCode `json:"valid,omitempty"`
+	Inactivated *WalletApiCode `json:"inactivated,omitempty"`
+}
+
+type WalletApiCode struct {
+	APICode   string `json:"api_code,omitempty"`
+	ApiSecret string `json:"api_secret,omitempty"`
+	ExpiresAt int64  `json:"exp,omitempty"`
+	Status    int    `json:"status,omitempty"`
 }
 
 type GetTransactionHistoryResponse struct {

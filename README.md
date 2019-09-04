@@ -209,16 +209,24 @@
 
 	- Response
 		-	Params
+			-  `valid`: Activated API token
+			-  `inactivated `: Not active API token
 			-	`api_code `: API token for querying wallet
 			-	`exp`: API token expiration unix time in UTC
 		-	Sample:
 
 		```
 		{
-		  "api_code": "2cVhTyZrkctoEiUQa",
-		  "exp": 1564801781
+		  "valid": {
+		    "api_code": "H4Q6xFZgiTZb37GN",
+		    "exp": 1583144863
+		  },
+		  "inactivated": {
+		    "api_code": "32PmGCjNzXda4mNHX"
+		  }
 		}
 		```
+	PS: 未啟用的token會在第一次使用(填在**X-API-CODE**)時自動生效，並讓當前已啟用的token失效
 
 #### Query notification callback history
 
