@@ -226,7 +226,8 @@
 		  }
 		}
 		```
-	PS: 未啟用的token會在第一次使用(填在**X-API-CODE**)時自動生效，並讓當前已啟用的token失效
+	PS: 1. 未啟用的API-CODE會在第一次使用(填在**X-API-CODE**)時自動生效，並讓當前已啟用的API-CODE失效
+	    2. 若使用已失效的API-CODE查詢會得到403 Forbidden
 
 #### Query notification callback history
 
