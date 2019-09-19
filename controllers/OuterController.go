@@ -370,3 +370,24 @@ func (c *OuterController) GetInvalidDepositAddresses() {
 
 	c.Data["json"] = resp
 }
+
+// @Title Query wallet basic info
+// @router /wallets/:wallet_id/info [get]
+func (c *OuterController) GetWalletInfo() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := api.GetWalletInfo(walletID)
+	if err != nil {
+		logs.Error("GetBlockInfo failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}

@@ -390,6 +390,39 @@
 		}
 		```
 
+#### Query wallet basic info
+
+- **GET** /v1/sofa/wallets/`WALLET_ID`/info
+
+	- Response
+		-	Params
+			-	`currency `: Registered coin types
+
+				*refer to https://github.com/satoshilabs/slips/blob/master/slip-0044.md*
+
+			-	`currency_name ` 
+			-	`address `: Wallet address
+
+			If `WALLET_ID` is a token wallet, the following fields present:
+
+			-	`token_name `
+			-	`token_symbol `
+			-	`token_contract_address ` 
+			-	`token_decimals ` 
+		-	Sample:
+
+		```
+		{
+		  "currency": 60,
+		  "currency_name": "ETH",
+		  "address": "0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943",
+		  "token_name": "TTF TOKEN",
+		  "token_symbol": "TTF",
+		  "token_contract_address": "0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40",
+		  "token_decimals": "18"
+		}
+		```
+
 
 # Mock Server
 
@@ -529,4 +562,10 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/blocks'
 
 ```
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/invalid-deposit'
+```
+
+### Query wallet basic info
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
 ```

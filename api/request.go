@@ -193,6 +193,16 @@ type GetInvalidDepositAddressesResponse struct {
 	Addresses []string `json:"addresses"`
 }
 
+type GetWalletInfoResponse struct {
+	Currency             int64  `json:"currency"`
+	CurrencyName         string `json:"currency_name"`
+	Address              string `json:"address"`
+	TokenName            string `json:"token_name,omitempty"`
+	TokenSymbol          string `json:"token_symbol,omitempty"`
+	TokenContractAddress string `json:"token_contract_address,omitempty"`
+	TokenDecimals        string `json:"token_decimals,omitempty"`
+}
+
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID)
 
@@ -379,5 +389,21 @@ func GetInvalidDepositAddresses(walletID int64) (response *GetInvalidDepositAddr
 	err = json.Unmarshal(resp, response)
 
 	logs.Error("GetInvalidDepositAddresses() => ", response)
+	return
+}
+
+func GetWalletInfo(walletID int64) (response *GetWalletInfoResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/info", walletID)
+
+	params := []string{}
+	resp, err := makeRequest(walletID, "GET", uri, params, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetWalletInfoResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Error("GetWalletInfo() => ", response)
 	return
 }
