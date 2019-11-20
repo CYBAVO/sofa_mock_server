@@ -456,6 +456,10 @@ http://localhost:8889/v1/mock/wallets/callback
 			-	6: Resent
 			-	7: Blocked due to risk controlled
 			-	8: Cancelled
+		-	`processing_state`:
+			-	0: inpool (mempool中)
+			-	1: in chain (已經上鏈還沒滿confirm block)
+			-	2: done (已經上鍊也滿足confirm block)
 	-	Sample:
 
 ```
@@ -477,6 +481,7 @@ http://localhost:8889/v1/mock/wallets/callback
   "wallet_id": 21,
   "state": 3,
   "confirm_blocks": 1,
+  "processing_state": 1,
   "addon": {}
 }
 ```
