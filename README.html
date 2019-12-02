@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>README</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+
+</head>
+
+<body>
+
+<p><a name="table-of-contents"></a></p>
+
+<h2 id="toc_0">Table of contents</h2>
+
+<ul>
+<li><a href="#get-started">Get Started</a></li>
+<li>Deposit Wallet API
+
+<ul>
+<li><a href="#create-deposit-wallet-addresses">Create deposit wallet addresses</a></li>
+<li><a href="#query-address-of-deposit-wallet">Query address of deposit wallet</a></li>
+<li><a href="#query-pool-address-of-deposit-wallet">Query pool address of deposit wallet</a></li>
+<li><a href="#resend-pending-or-failed-deposit-callbacks">Resend pending or failed deposit callbacks</a></li>
+</ul></li>
+<li>Withdraw Wallet API
+
+<ul>
+<li><a href="#withdraw">Withdraw</a></li>
+</ul></li>
+<li>Query API
+
+<ul>
+<li><a href="#query-api-token-status">Query API token status</a></li>
+<li><a href="#query-notification-callback-history">Query notification callback history</a></li>
+<li><a href="#query-vault/batch-wallet-transaction-history">Query vault/batch wallet transaction history</a></li>
+<li><a href="#query-wallet-block-info">Query wallet block info</a></li>
+<li><a href="#query-invalid-deposit-addresses">Query invalid deposit addresses</a></li>
+<li><a href="#query-wallet-basic-info">Query wallet basic info</a></li>
+</ul></li>
+<li>Testing
+
+<ul>
+<li><a href="#mock-server">Mock Server</a></li>
+<li><a href="#curl-testing-commands">CURL Testing Commands</a></li>
+</ul></li>
+<li>Appendix
+
+<ul>
+<li><a href="#callback-definition">Callback Definition</a></li>
+<li><a href="#notification-callback-type-definition">Notification Callback Type Definition
+</a></li>
+<li><a href="#transaction-state-filter-definition">Transaction State Filter Definition</a></li>
+</ul></li>
+</ul>
+
+<p><a name="get-started"></a></p>
+
+<h1 id="toc_1">Get Started</h1>
+
+<ul>
+<li>Get API code and API secret of the wallet on web console</li>
+<li>Refer to <a href="#mock-server">mock server</a> sample code </li>
+</ul>
+
+<h1 id="toc_2">Deposit Wallet API</h1>
+
+<p><a name="create-deposit-wallet-addresses"></a></p>
+
+<h2 id="toc_3">Create deposit wallet addresses</h2>
+
+<p>Create deposit addresses in a deposit wallet.</p>
+
+<p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses</p>
+
+<blockquote>
+<p>Wallet ID must be a deposit wallet&#39;s ID</p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-create-deposit-wallet-addresses">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_4">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_5">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/addresses</code></pre></div>
+
+<h6 id="toc_6">Post body</h6>
+
+<p>For BNB or EOS wallet:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;count&quot;: 2,
+  &quot;memos&quot;: [
+    &quot;001&quot;,
+    &quot;002&quot;
+  ]
+}</code></pre></div>
+
+<p>For wallet excepts BNB and EOS:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;count&quot;: 2
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_7">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">count</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Specify address count, max value is 1000</td>
+</tr>
+<tr>
+<td style="text-align: left">memos</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Specify memos for BNB or EOS deposit wallet</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p><strong>NOTE: The length of <code>memos</code> must equal to <code>count</code> while creating addresses for BNB or EOS wallet</strong></p>
+</blockquote>
+
+<h5 id="toc_8">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<p>For BNB or EOS wallet:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;addresses&quot;: [
+    &quot;002&quot;,
+    &quot;001&quot;
+  ]
+}</code></pre></div>
+
+<p>For wallet excepts BNB and EOS:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;addresses&quot;: [
+    &quot;0x2E7248BBCD61Ad7C33EA183A85B1856bc02C40b6&quot;,
+    &quot;0x4EB990D527c96c64eC5Bfb0D1e304840052d4975&quot;,
+    &quot;0x86434604FF857702fbE11cBFf5aC7689Af19c4Ed&quot;
+  ]
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">addresses</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Array of just created deposit addresses</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_9"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-address-of-deposit-wallet"></a></p>
+
+<h2 id="toc_10">Query address of deposit wallet</h2>
+
+<p>Query deposit addresses those created by address creation API in a deposit wallet.</p>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses?start_index=<code>from</code>&amp;request_number=<code>count</code></p>
+
+<blockquote>
+<p>Wallet ID must be a deposit wallet&#39;s ID</p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-get-deposit-wallet-addresses">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_11">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_12">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/17/addresses?start_index=0&amp;request_number=3
+
+--- THEN ---
+
+/v1/sofa/wallets/17/addresses?start_index=3&amp;request_number=3</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">start_index</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Specify address start index</td>
+</tr>
+<tr>
+<td style="text-align: left">request_number</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Request address count</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_13">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;wallet_id&quot;: 17,
+  &quot;wallet_address&quot;: [
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x8c42fD03A5cfba7C3Cd97AB8a09e1a3137Ef33C3&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    },
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x4d3EB54b602BF4985CE457089F9fB084Af597A2C&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    },
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x74dc3fB523295C87C0b93E48744Ce94fe3a8Ef5e&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    }
+  ]
+}
+
+--- THEN ---
+
+{
+  &quot;wallet_id&quot;: 17,
+  &quot;wallet_address&quot;: [
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x6d68443D6564cF257A48c1b16aa6d0EF13c5A719&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    },
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x26F103322B6f0ed2D35B85F1611589c92F023986&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    },
+    {
+      &quot;currency&quot;: 60,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;address&quot;: &quot;0x2b91918Bee4411DaD6293EA5d6D38251E72723Ca&quot;,
+      &quot;memo&quot;: &quot;&quot;
+    }
+  ]
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">wallet_id</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">ID of request wallet</td>
+</tr>
+<tr>
+<td style="text-align: left">wallet_address</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Array of wallet addresses</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_14"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-pool-address-of-deposit-wallet"></a></p>
+
+<h2 id="toc_15">Query pool address of deposit wallet</h2>
+
+<p>Get pool address of a deposit wallet.</p>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/pooladdress</p>
+
+<blockquote>
+<p>Wallet ID must be a deposit wallet&#39;s ID</p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-get-deposit-wallet-pool-address">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_16">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_17">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/17/pooladdress</code></pre></div>
+
+<h5 id="toc_18">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;address&quot;: &quot;0x36099775afa8d6363aC8e5d0fC698306C021a858&quot;
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">address</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Pool address of wallet</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_19"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="resend-pending-or-failed-deposit-callbacks"></a></p>
+
+<h2 id="toc_20">Resend pending or failed deposit callbacks</h2>
+
+<p>Trigger pending/failed deposit callback resending process manually.</p>
+
+<p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/collection/notifications/manual</p>
+
+<ul>
+<li><a href="#curl-resend-all-pending-or-failed-deposit-callbacks">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_21">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_22">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/collection/notifications/manual</code></pre></div>
+
+<h6 id="toc_23">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;notification_id&quot;: 0
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_24">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">notification_id</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">Specify callback ID to resend, 0 means all</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>This ID equal to callback data&#39;s serial/order_id</p>
+</blockquote>
+
+<h5 id="toc_25">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;count&quot;: 0
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">count</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Count of callbacks just resent</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_26"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_27">Withdraw Wallet API</h1>
+
+<p><a name="withdraw"></a></p>
+
+<h2 id="toc_28">Withdraw</h2>
+
+<p>Withdraw assets from withdraw wallet.</p>
+
+<p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/sender/transactions</p>
+
+<blockquote>
+<p>Wallet ID must be a withdraw wallet&#39;s ID</p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-withdraw">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_29">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_30">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/sender/transactions</code></pre></div>
+
+<h6 id="toc_31">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;requests&quot;: [
+    {
+      &quot;order_id&quot;: &quot;1&quot;,
+      &quot;address&quot;: &quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,
+      &quot;amount&quot;: &quot;0.0001&quot;,
+      &quot;memo&quot;: &quot;memo-001&quot;,
+      &quot;user_id&quot;: &quot;USER01&quot;,
+      &quot;message&quot;: &quot;message-001&quot;,
+    },
+    {
+      &quot;order_id&quot;: &quot;2&quot;,
+      &quot;address&quot;: &quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,
+      &quot;amount&quot;: &quot;0.0002&quot;,
+      &quot;memo&quot;: &quot;memo-002&quot;,
+      &quot;user_id&quot;: &quot;USER01&quot;,
+      &quot;message&quot;: &quot;message-002&quot;,
+    }
+  ]
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_32">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">order_id</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Specify an unique ID</td>
+</tr>
+<tr>
+<td style="text-align: left">address</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Outgoing address</td>
+</tr>
+<tr>
+<td style="text-align: left">amount</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Withdrawal amount</td>
+</tr>
+<tr>
+<td style="text-align: left">memo</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Memo on blockchain (This memo will be sent to blockchain)</td>
+</tr>
+<tr>
+<td style="text-align: left">user_id</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Specify certain user (optional)</td>
+</tr>
+<tr>
+<td style="text-align: left">message</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Message (This message only savced on CYBAVO, not sent to blockchain)</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_33">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;results&quot;: {
+    &quot;1&quot;: 20000000001,
+    &quot;2&quot;: 20000000002
+  }
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">results</td>
+<td style="text-align: left">Array</td>
+<td style="text-align: left">Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_34"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_35">Query API</h1>
+
+<p><a name="query-api-token-status"></a></p>
+
+<h2 id="toc_36">Query API token status</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/apisecret</p>
+
+<ul>
+<li><a href="#curl-query-api-token-status">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_37">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_38">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/apisecret</code></pre></div>
+
+<h5 id="toc_39">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;valid&quot;: {
+    &quot;api_code&quot;: &quot;H4Q6xFZgiTZb37GN&quot;,
+    &quot;exp&quot;: 1583144863
+  },
+  &quot;inactivated&quot;: {
+    &quot;api_code&quot;: &quot;32PmGCjNzXda4mNHX&quot;
+  }
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">valid</td>
+<td style="text-align: left">object</td>
+<td style="text-align: left">Activated API token</td>
+</tr>
+<tr>
+<td style="text-align: left">inactivated</td>
+<td style="text-align: left">object</td>
+<td style="text-align: left">Not active API token</td>
+</tr>
+<tr>
+<td style="text-align: left">api_code</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">API code for querying wallet</td>
+</tr>
+<tr>
+<td style="text-align: left">exp</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">API code expiration unix time in UTC</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>未啟用的API-CODE會在第一次使用(填在<strong>X-API-CODE</strong>)時自動生效，並讓當前已啟用的API-CODE失效</p>
+
+<p>若使用已失效的API-CODE查詢會得到403 Forbidden</p>
+</blockquote>
+
+<h5 id="toc_40"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-notification-callback-history"></a></p>
+
+<h2 id="toc_41">Query notification callback history</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications?from_time=<code>from</code>&amp;to_time=<code>to</code>&amp;type=<code>type</code></p>
+
+<ul>
+<li><a href="#curl-query-notification-callback-history">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_42">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_43">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/67/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_44">API Parameters</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">from_time</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">Start date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">to_time</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">End date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">type</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left"><a href="#notification-callback-type-definition">Notification Callback Type</a></td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_45">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;notifications&quot;: [
+    {
+      &quot;type&quot;: 2,
+      &quot;serial&quot;: 90000000003,
+      &quot;order_id&quot;: &quot;a206&quot;,
+      &quot;currency&quot;: &quot;BNB&quot;,
+      &quot;txid&quot;: &quot;76B8B2B1E25472FFE7B8FCE85742E0964FEDB1B679DE963FA19F430E8B287F93&quot;,
+      &quot;block_height&quot;: 25844472,
+      &quot;tindex&quot;: 2,
+      &quot;vout_index&quot;: 0,
+      &quot;amount&quot;: &quot;15000000&quot;,
+      &quot;fees&quot;: &quot;37500&quot;,
+      &quot;memo&quot;: &quot;CC&quot;,
+      &quot;broadcast_at&quot;: 0,
+      &quot;chain_at&quot;: 1562234190,
+      &quot;from_address&quot;: &quot;tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0&quot;,
+      &quot;to_address&quot;: &quot;tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk&quot;,
+      &quot;wallet_id&quot;: 67,
+      &quot;state&quot;: 3,
+      &quot;addon&quot;: {}
+    }
+  ]
+}
+</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">notifications</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Arrary of callbacks, refer to <a href="#callback-definition">Callback Definition</a></td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_46"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-vault/batch-wallet-transaction-history"></a></p>
+
+<h2 id="toc_47">Query vault/batch wallet transaction history</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/transactions?from_time=<code>from</code>&amp;to_time=<code>to</code>&amp;start_index=<code>start</code>&amp;request_number=<code>count</code>&amp;state=<code>state</code></p>
+
+<ul>
+<li><a href="#curl-query-vault/batch-wallet-transaction-history">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_48">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_49">API with parameters</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/48/transactions?from_time=1559664000&amp;to_time=1562255999&amp;start_index=0&amp;request_number=1</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_50">API Parameters</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">from_item</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">Start date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">to_item</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">End date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">start_index</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Index of starting transaction record</td>
+</tr>
+<tr>
+<td style="text-align: left">request_number</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Count of returning transaction record</td>
+</tr>
+<tr>
+<td style="text-align: left">state</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Refer to <a href="#transaction-state-filter-definition">Transaction State Filter</a> (optional, default: -1)</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_51">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;transaction_count&quot;: 3,
+  &quot;transaction_item&quot;: [
+    {
+      &quot;issue_user_id&quot;: 3,
+      &quot;issue_user_name&quot;: &quot;wallet owner (user@gmail.com)&quot;,
+      &quot;description&quot;: &quot;TO SND&quot;,
+      &quot;wallet_id&quot;: 48,
+      &quot;wallet_name&quot;: &quot;BNB I&quot;,
+      &quot;wallet_address&quot;: &quot;tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk&quot;,
+      &quot;token_address&quot;: &quot;&quot;,
+      &quot;txid&quot;: &quot;3E6D61D1D39FA5DD3B86C2C28FFAD3D98CD7AFDB62346468D3C4FFE710CAAF85&quot;,
+      &quot;currency&quot;: 714,
+      &quot;currency_name&quot;: &quot;BNB&quot;,
+      &quot;outgoing_address&quot;: &quot;tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0&quot;,
+      &quot;outgoing_address_name&quot;: &quot;BNB SND&quot;,
+      &quot;amount&quot;: &quot;2&quot;,
+      &quot;fee&quot;: &quot;0&quot;,
+      &quot;txno&quot;: 100087,
+      &quot;approval_item&quot;: [
+        {
+          &quot;approval_id&quot;: 3,
+          &quot;approval_user&quot;: &quot;wallet owner (user@gmail.com)&quot;,
+          &quot;approval_time&quot;: 1562210142,
+          &quot;user_message&quot;: &quot;&quot;,
+          &quot;level&quot;: 0,
+          &quot;owner&quot;: 1,
+          &quot;confirm&quot;: 1,
+          &quot;state&quot;: 2,
+          &quot;error_code&quot;: 0
+        }
+      ],
+      &quot;state&quot;: 2,
+      &quot;create_time&quot;: 1562210129,
+      &quot;transaction_time&quot;: 1562210142,
+      &quot;scheduled_name&quot;: &quot;&quot;,
+      &quot;transaction_type&quot;: 0,
+      &quot;eos_transaction_type&quot;: 0,
+      &quot;real_amount&quot;: &quot;2&quot;,
+      &quot;chain_fee&quot;: &quot;0.000375&quot;,
+      &quot;platform_fee&quot;: &quot;0&quot;,
+      &quot;tx_category&quot;: &quot;&quot;,
+      &quot;memo&quot;: &quot;TO SND&quot;
+    }
+  ]
+}
+</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">transaction_count</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Total transactions in specified date duration</td>
+</tr>
+<tr>
+<td style="text-align: left">transaction_item</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Array of transaction record</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_52"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-wallet-block-info"></a></p>
+
+<h2 id="toc_53">Query wallet block info</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/blocks</p>
+
+<ul>
+<li><a href="#curl-query-deposit/withdraw-wallet-block-info">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_54">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_55">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/blocks</code></pre></div>
+
+<h5 id="toc_56">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;latest_block_height&quot;: 29317651,
+  &quot;synced_block_height&quot;: 28529203
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">latest_block_height</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">The latest block height on blockchain</td>
+</tr>
+<tr>
+<td style="text-align: left">synced_block_height</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">The current synced block height</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_57"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-invalid-deposit-addresses"></a></p>
+
+<h2 id="toc_58">Query invalid deposit addresses</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses/invalid-deposit</p>
+
+<ul>
+<li><a href="#curl-query-invalid-deposit-addresses">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_59">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_60">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/addresses/invalid-deposit</code></pre></div>
+
+<h5 id="toc_61">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;addresses&quot;: [&quot;0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2&quot;]
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">addresses</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Array of invalid deposit address</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_62"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="query-wallet-basic-info"></a></p>
+
+<h2 id="toc_63">Query wallet basic info</h2>
+
+<p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/info</p>
+
+<ul>
+<li><a href="#curl-query-invalid-deposit-addresses">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_64">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_65">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/1/info</code></pre></div>
+
+<h5 id="toc_66">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;currency&quot;: 60,
+  &quot;currency_name&quot;: &quot;ETH&quot;,
+  &quot;address&quot;: &quot;0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943&quot;,
+  &quot;token_name&quot;: &quot;TTF TOKEN&quot;,
+  &quot;token_symbol&quot;: &quot;TTF&quot;,
+  &quot;token_contract_address&quot;: &quot;0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40&quot;,
+  &quot;token_decimals&quot;: &quot;18&quot;
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">currency</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">Registered coin types</td>
+</tr>
+<tr>
+<td style="text-align: left">currency_name</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Name of currency</td>
+</tr>
+<tr>
+<td style="text-align: left">address</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Wallet address</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>Refer to https://github.com/satoshilabs/slips/blob/master/slip-0044.md for currency definitions</p>
+</blockquote>
+
+<p>If <code>WALLET_ID</code> is a token wallet, the following fields present:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">token_name</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Token name</td>
+</tr>
+<tr>
+<td style="text-align: left">token_symbol</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Token symbol</td>
+</tr>
+<tr>
+<td style="text-align: left">token_contract_address</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Token contract address</td>
+</tr>
+<tr>
+<td style="text-align: left">token_decimals</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Token decimals</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_67"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="mock-server"></a></p>
+
+<h1 id="toc_68">Mock Server</h1>
+
+<h3 id="toc_69">How to compile</h3>
+
+<ul>
+<li>Put sample code to {YOUR_GO_PATH}/github.com/cybavo/SOFA_MOCK_SERVER</li>
+<li>Execute
+
+<ul>
+<li>glide install</li>
+<li>go build ./mockserver.go</li>
+<li>./mockserver</li>
+</ul></li>
+</ul>
+
+<h3 id="toc_70">Setup configuration</h3>
+
+<blockquote>
+<p>Set following configuration in mockserver.app.conf</p>
+</blockquote>
+
+<div><pre><code class="language-none">api_server_url=&quot;&quot;</code></pre></div>
+
+<h3 id="toc_71">Put wallet API code/secret into mock server</h3>
+
+<ul>
+<li>  Get API code/secret on web console
+
+<ul>
+<li>  API-CODE, API-SECRET, WALLET-ID</li>
+</ul></li>
+<li>  Put API code/secret to mock server&#39;s database</li>
+</ul>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;api_code&quot;:&quot;API-CODE&quot;,&quot;api_secret&quot;:&quot;API-SECRET&quot;}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken</code></pre></div>
+
+<h3 id="toc_72">Register mock server URL</h3>
+
+<blockquote>
+<p>Operate on web admin console</p>
+</blockquote>
+
+<p>Callback URL</p>
+
+<div><pre><code class="language-none">http://localhost:8889/v1/mock/wallets/callback</code></pre></div>
+
+<h5 id="toc_73"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="curl-testing-commands"></a></p>
+
+<h2 id="toc_74">CURL Testing Commands</h2>
+
+<p><a name="curl-create-deposit-wallet-addresses"></a></p>
+
+<h3 id="toc_75">Create deposit wallet addresses</h3>
+
+<p>For BNB or EOS wallet:</p>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;count&quot;:2,&quot;memos&quot;:[&quot;001&quot;,&quot;002&quot;]}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses</code></pre></div>
+
+<p>For wallet excepts BNB or EOS:</p>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;count&quot;:2}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses</code></pre></div>
+
+<ul>
+<li><a href="#create-deposit-wallet-addresses">API definition</a></li>
+</ul>
+
+<p><a name="curl-get-deposit-wallet-addresses"></a></p>
+
+<h3 id="toc_76">Get deposit wallet addresses</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses?start_index=0&amp;request_number=1000&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-address-of-deposit-wallet">API definition</a></li>
+</ul>
+
+<p><a name="curl-get-deposit-wallet-pool-address"></a></p>
+
+<h3 id="toc_77">Get deposit wallet pool address</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/pooladdress&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-pool-address-of-deposit-wallet">API definition</a></li>
+</ul>
+
+<p><a name="curl-resend-all-pending-or-failed-deposit-callbacks"></a></p>
+
+<h3 id="toc_78">Resend all pending or failed deposit callbacks</h3>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;notification_id&quot;:0}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/collection/notifications/manual</code></pre></div>
+
+<ul>
+<li><a href="#resend-pending-or-failed-deposit-callbacks">API definition</a></li>
+</ul>
+
+<p><a name="curl-withdraw"></a></p>
+
+<h3 id="toc_79">Withdraw</h3>
+
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions</code></pre></div>
+
+<ul>
+<li><a href="#withdraw">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-api-token-status"></a></p>
+
+<h3 id="toc_80">Query API token status</h3>
+
+<div><pre><code class="language-none">curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apisecret</code></pre></div>
+
+<ul>
+<li><a href="#query-api-token-status">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-notification-callback-history"></a></p>
+
+<h3 id="toc_81">Query notification callback history</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-notification-callback-history">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-vault/batch-wallet-transaction-history"></a></p>
+
+<h3 id="toc_82">Query vault/batch wallet transaction history</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/transactions?start_index=0&amp;from_time=1559664000&amp;to_time=1562255999&amp;request_number=8&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-vault/batch-wallet-transaction-history">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-deposit/withdraw-wallet-block-info"></a></p>
+
+<h3 id="toc_83">Query deposit/withdraw wallet block info</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/blocks&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-wallet-block-info">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-invalid-deposit-addresses"></a></p>
+
+<h4 id="toc_84">Query invalid deposit addresses</h4>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/invalid-deposit&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-invalid-deposit-addresses">API definition</a></li>
+</ul>
+
+<p><a name="curl-query-wallet-basic-info"></a></p>
+
+<h3 id="toc_85">Query wallet basic info</h3>
+
+<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-wallet-basic-info">API definition</a></li>
+</ul>
+
+<h5 id="toc_86"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_87">Appendix</h1>
+
+<p><a name="callback-definition"></a></p>
+
+<h2 id="toc_88">Callback Definition</h2>
+
+<table>
+  <tr>
+    <td>Field</td>
+    <td>Type</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>int</td>
+    <td rowspan="3">
+      <b>1</b> - Deposit Callback (入金回調)<br>
+      <b>2</b> - Withdraw Callback (出金回調)<br>
+      <b>3</b> - Collect Callback (歸帳回調)<br>
+    </td>
+  </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr>
+    <td>state</td>
+    <td>int</td>
+    <td rowspan="9">
+      <b>0</b> - Enqueue<br>
+      <b>1</b> - Processing batch in KMS<br>
+      <b>2</b> - TXID in pool<br>
+      <b>3</b> - TXID in chain<br>
+      <span style="text-decoration:line-through"><b>4 (DEPRECATED)</b> - TXID confirmed in N blocks</span><br>
+      <b>5</b> - Failed<br>
+      <b>6</b> - Resent<br>
+      <b>7</b> - Blocked due to risk controlled<br>
+      <b>8</b> - Cancelled<br>
+    </td>
+  </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr>
+    <td>processing_state</td>
+    <td>int</td>
+    <td rowspan="3">
+      <b>0</b> - inpool (mempool中)<br>
+      <b>1</b> - in chain (已經上鏈還沒滿confirm block)<br>
+      <b>2</b> - done (已經上鍊也滿足confirm block)<br>
+    </td>
+  </tr>
+</table>
+
+<p>Callback sample:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;type&quot;: 1,
+  &quot;serial&quot;: 90000000001,
+  &quot;order_id&quot;: &quot;&quot;,
+  &quot;currency&quot;: &quot;ETH&quot;,
+  &quot;txid&quot;: &quot;0x100e84230923124582b7feb5daf638df79616fb3dea37fc2ea80659f5de3472e&quot;,
+  &quot;block_height&quot;: 5905092,
+  &quot;tindex&quot;: 11,
+  &quot;vout_index&quot;: 0,
+  &quot;amount&quot;: &quot;500000000000000000&quot;,
+  &quot;fees&quot;: &quot;210000000000000&quot;,
+  &quot;broadcast_at&quot;: 1562057483,
+  &quot;chain_at&quot;: 1562057483,
+  &quot;from_address&quot;: &quot;0x8382Cc1B05649AfBe179e341179fa869C2A9862b&quot;,
+  &quot;to_address&quot;: &quot;0x87F907C868D92a5d97E59CD1E9383a2E51dC4778&quot;,
+  &quot;wallet_id&quot;: 21,
+  &quot;state&quot;: 3,
+  &quot;confirm_blocks&quot;: 1,
+  &quot;processing_state&quot;: 1,
+  &quot;addon&quot;: {}
+}</code></pre></div>
+
+<h5 id="toc_89"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="notification-callback-type-definition"></a></p>
+
+<h2 id="toc_90">Notification Callback Type Definition</h2>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">ID</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">1</td>
+<td style="text-align: left">Deposit Callback (入金回調)</td>
+</tr>
+<tr>
+<td style="text-align: left">2</td>
+<td style="text-align: left">Withdraw Callback (出金回調)</td>
+</tr>
+<tr>
+<td style="text-align: left">3</td>
+<td style="text-align: left">Collect Callback (歸帳回調)</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_91"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="transaction-state-filter-definition"></a></p>
+
+<h2 id="toc_92">Transaction State Filter Definition</h2>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">ID</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">-1</td>
+<td style="text-align: left">All states</td>
+</tr>
+<tr>
+<td style="text-align: left">0</td>
+<td style="text-align: left">WaitApproval</td>
+</tr>
+<tr>
+<td style="text-align: left">1</td>
+<td style="text-align: left">Rejected</td>
+</tr>
+<tr>
+<td style="text-align: left">2</td>
+<td style="text-align: left">Approved</td>
+</tr>
+<tr>
+<td style="text-align: left">3</td>
+<td style="text-align: left">Failed</td>
+</tr>
+<tr>
+<td style="text-align: left">4</td>
+<td style="text-align: left">NextLevel</td>
+</tr>
+<tr>
+<td style="text-align: left">5</td>
+<td style="text-align: left">Cancelled</td>
+</tr>
+<tr>
+<td style="text-align: left">6</td>
+<td style="text-align: left">BatchDone</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_93"><a href="#table-of-contents">Back to top</a></h5>
+
+
+
+
+</body>
+
+</html>
