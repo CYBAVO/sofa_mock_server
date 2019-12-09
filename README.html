@@ -1522,7 +1522,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses</code></pre></div>
 <h3 id="toc_78">Resend all pending or failed deposit callbacks</h3>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;notification_id&quot;:0}&#39; \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/collection/notifications/manual</code></pre></div>
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend</code></pre></div>
 
 <ul>
 <li><a href="#resend-pending-or-failed-deposit-callbacks">API definition</a></li>
@@ -1533,7 +1533,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/collection/notifications/manua
 <h3 id="toc_79">Withdraw</h3>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions</code></pre></div>
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw</code></pre></div>
 
 <ul>
 <li><a href="#withdraw">API definition</a></li>

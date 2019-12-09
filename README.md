@@ -813,7 +813,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/pooladdress'
 
 ```
 curl -X POST -d '{"notification_id":0}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/collection/notifications/manual
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
 ```
 - [API definition](#resend-pending-or-failed-deposit-callbacks)
 
@@ -822,7 +822,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/collection/notifications/manua
 
 ```
 curl -X POST -d '{"requests":[{"order_id":"1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 ```
 - [API definition](#withdraw)
 
