@@ -890,12 +890,14 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
   <tr>
     <td>type</td>
     <td>int</td>
-    <td rowspan="3">
+    <td rowspan="4">
       <b>1</b> - Deposit Callback (入金回調)<br>
       <b>2</b> - Withdraw Callback (出金回調)<br>
       <b>3</b> - Collect Callback (歸帳回調)<br>
+      <b>3</b> - Airdrop Callback (空投回調)<br>
     </td>
   </tr>
+  <tr></tr>
   <tr></tr>
   <tr></tr>
   <tr>
@@ -969,6 +971,7 @@ Callback sample:
 | 1 | Deposit Callback (入金回調) |
 | 2 | Withdraw Callback (出金回調) |
 | 3 | Collect Callback (歸帳回調) |
+| 4 | Airdrop Callback (空投回調) |
 
 ##### [Back to top](#table-of-contents)
 
