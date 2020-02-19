@@ -16,6 +16,7 @@
 	- [Query wallet block info](#query-wallet-block-info)
 	- [Query invalid deposit addresses](#query-invalid-deposit-addresses)
 	- [Query wallet basic info](#query-wallet-basic-info)
+	- [Verify addresses](#verify-addresses)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -733,6 +734,74 @@ If `WALLET_ID` is a token wallet, the following fields present:
 
 ##### [Back to top](#table-of-contents)
 
+<a name="verify-addresses"></a>
+## Verify addresses
+
+Verify addresses that conform to the wallet currency address format.
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/addresses/verify
+
+> Wallet ID must be a deposit or withdraw wallet's ID
+
+- [Sample curl command](#curl-verify-addresses)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/addresses/verify
+```
+
+###### Post body
+
+```json
+{
+  "addresses": [
+    "0x635B4764D1939DfAcD3a8014726159abC277BecC",
+    "1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| addresses | array | Specify the address for verification |
+
+##### Response Format
+
+An example of a successful response:
+	
+```json
+{
+  "result": [
+    {
+      "address": "0x635B4764D1939DfAcD3a8014726159abC277BecC",
+      "valid": true
+    },
+    {
+      "address": "1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE",
+      "valid": false
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | array | Array of addresses' verification result |
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -874,6 +943,17 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
 ```
 - [API definition](#query-wallet-basic-info)
 
+<a name="curl-verify-addresses"></a>
+### Verify addresses
+
+```
+curl -X POST -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
+```
+
+- [API definition](#verify-addresses)
+
+
 ##### [Back to top](#table-of-contents)
 
 # Appendix
@@ -990,4 +1070,3 @@ Callback sample:
 | 6 | BatchDone |
 
 ##### [Back to top](#table-of-contents)
-

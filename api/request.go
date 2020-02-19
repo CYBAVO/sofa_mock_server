@@ -203,6 +203,19 @@ type GetWalletInfoResponse struct {
 	TokenDecimals        string `json:"token_decimals,omitempty"`
 }
 
+type VerifyAddressesRequest struct {
+	Addresses []string `json:"addresses"`
+}
+
+type AddressStatus struct {
+	Address string `json:"address"`
+	Valid   bool   `json:"valid"`
+}
+
+type VerifyAddressesResponse struct {
+	Result []*AddressStatus `json:"result"`
+}
+
 func CreateDepositWalletAddresses(walletID int64, request *CreateDepositWalletAddressesRequest) (response *CreateDepositWalletAddressesResponse, err error) {
 	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID)
 
@@ -405,5 +418,31 @@ func GetWalletInfo(walletID int64) (response *GetWalletInfoResponse, err error) 
 	err = json.Unmarshal(resp, response)
 
 	logs.Error("GetWalletInfo() => ", response)
+	return
+}
+
+func VerifyAddresses(walletID int64, request *VerifyAddressesRequest) (response *VerifyAddressesResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/addresses/verify", walletID)
+
+	jsonRequest, err := json.Marshal(request)
+	if err != nil {
+		return
+	}
+
+	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
+	if err != nil {
+		result := &ErrorCodeResponse{}
+		_ = json.Unmarshal(resp, result)
+		err = errors.New(result.ErrMsg)
+		return
+	}
+
+	response = &VerifyAddressesResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return
+	}
+
+	logs.Debug("VerifyAddresses() => ", response)
 	return
 }

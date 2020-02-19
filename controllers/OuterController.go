@@ -391,3 +391,29 @@ func (c *OuterController) GetWalletInfo() {
 
 	c.Data["json"] = resp
 }
+
+// @Title Verify addresses
+// @router /wallets/:wallet_id/addresses/verify [post]
+func (c *OuterController) VerifyAddresses() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid walled ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	var request api.VerifyAddressesRequest
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	resp, err := api.VerifyAddresses(walletID, &request)
+	if err != nil {
+		logs.Error("VerifyAddresses failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+	c.Data["json"] = resp
+}
