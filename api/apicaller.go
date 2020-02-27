@@ -28,8 +28,9 @@ import (
 
 var baseURL = beego.AppConfig.DefaultString("api_server_url", "")
 
-func buildChecksum(params []string, secret string, time int64) string {
+func buildChecksum(params []string, secret string, time int64, r string) string {
 	params = append(params, fmt.Sprintf("t=%d", time))
+	params = append(params, fmt.Sprintf("r=%s", r))
 	sort.Strings(params)
 	params = append(params, fmt.Sprintf("secret=%s", secret))
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(strings.Join(params, "&"))))
@@ -41,8 +42,12 @@ func makeRequest(walletID int64, method string, api string, params []string, pos
 	}
 
 	client := &http.Client{}
+	r := RandomString(8)
+	if r == "" {
+		return nil, errors.New("can't generate random byte string")
+	}
 	t := time.Now().Unix()
-	url := fmt.Sprintf("%s%s?t=%d", baseURL, api, t)
+	url := fmt.Sprintf("%s%s?t=%d&r=%s", baseURL, api, t, r)
 	if len(params) > 0 {
 		url += fmt.Sprintf("&%s", strings.Join(params, "&"))
 	}
@@ -64,7 +69,7 @@ func makeRequest(walletID int64, method string, api string, params []string, pos
 	}
 
 	req.Header.Set("X-API-CODE", apiCodeObj.APICode)
-	req.Header.Set("X-CHECKSUM", buildChecksum(params, apiCodeObj.ApiSecret, t))
+	req.Header.Set("X-CHECKSUM", buildChecksum(params, apiCodeObj.ApiSecret, t, r))
 	if postBody != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
