@@ -974,7 +974,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
       <b>1</b> - Deposit Callback (入金回調)<br>
       <b>2</b> - Withdraw Callback (出金回調)<br>
       <b>3</b> - Collect Callback (歸帳回調)<br>
-      <b>3</b> - Airdrop Callback (空投回調)<br>
+      <b>4</b> - Airdrop Callback (空投回調)<br>
     </td>
   </tr>
   <tr></tr>
