@@ -257,10 +257,10 @@ func (c *OuterController) GetWithdrawTransactionState() {
 		return
 	}
 
-	orderID, err := strconv.ParseInt(c.Ctx.Input.Param(":order_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid order ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
+	orderID := c.Ctx.Input.Param(":order_id")
+	if orderID == "" {
+		logs.Error("Invalid order ID")
+		c.AbortWithError(http.StatusBadRequest, errors.New("invalid order id"))
 		return
 	}
 

@@ -328,8 +328,8 @@ func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (
 	return
 }
 
-func GetWithdrawTransactionState(walletID int64, orderID int64) (response *GetWithdrawTransactionStateResponse, err error) {
-	uri := fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%d", walletID, orderID)
+func GetWithdrawTransactionState(walletID int64, orderID string) (response *GetWithdrawTransactionStateResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%s", walletID, orderID)
 
 	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
 	if err != nil {
