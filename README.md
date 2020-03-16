@@ -9,6 +9,7 @@
 	- [Resend pending or failed deposit callbacks](#resend-pending-or-failed-deposit-callbacks)
 - Withdraw Wallet API
 	- [Withdraw](#withdraw)
+	- [Query withdrawal transaction state](#query-withdrawal-transaction-state)
 - Query API
 	- [Query API token status](#query-api-token-status)
 	- [Query notification callback history](#query-notification-callback-history)
@@ -398,6 +399,56 @@ The response includes the following parameters:
 | results | Array | Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds |
 
 ##### [Back to top](#table-of-contents)
+
+[Get withdrawal transaction state](#query-withdrawal-transaction-state)
+
+<a name="query-withdrawal-transaction-state"></a>
+## Query withdrawal transaction state
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`
+
+- [Sample curl command](#curl-query-withdrawal-transaction-state)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/sender/transactions/1
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "order_id": "1",
+  "address": "0xaa0cA2f9bA3A33a915a27e289C9719adB2ad7d73",
+  "amount": "1.11",
+  "memo": "",
+  "in_chain_block": 1016603,
+  "txid": "db0f3a27de564a411aeff1d2cb3234c54817de1ecc2258a510a50c5a1063d41c",
+  "create_time": "2020-03-16T10:27:57Z"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| order_id | string | The unique ID specified in `sender/transactions` API |
+| address | string | Outgoing address |
+| amount | string | Withdrawal amount |
+| memo | string | Memo on blockchain |
+| in\_chain\_block | int64 | The block that contains this transaction |
+| txid | string | Transaction ID |
+| create_time | int64 | The withdrawal unix time in UTC |
+
+##### [Back to top](#table-of-contents)
+
 
 # Query API
 
@@ -894,6 +945,14 @@ curl -X POST -d '{"requests":[{"order_id":"1","address":"0x60589A749AAC632e9A830
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 ```
 - [API definition](#withdraw)
+
+<a name="curl-query-withdrawal-transaction-state"></a>
+### Query withdrawal transaction state
+
+```
+curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions/{ORDER_ID}
+```
+- [API definition](#query-withdrawal-transaction-state)
 
 <a name="curl-query-api-token-status"></a>
 ### Query API token status
