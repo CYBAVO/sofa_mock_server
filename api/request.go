@@ -12,7 +12,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 
@@ -26,6 +25,10 @@ type CommonResponse struct {
 type ErrorCodeResponse struct {
 	ErrMsg  string `json:"error,omitempty"`
 	ErrCode int    `json:"error_code,omitempty"`
+}
+
+func (m *ErrorCodeResponse) String() string {
+	return fmt.Sprintf("%s (code:%d)", m.ErrMsg, m.ErrCode)
 }
 
 type SetAPICodeRequest struct {
@@ -312,9 +315,6 @@ func WithdrawTransactions(walletID int64, request *WithdrawTransactionRequest) (
 
 	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
 	if err != nil {
-		result := &ErrorCodeResponse{}
-		_ = json.Unmarshal(resp, result)
-		err = errors.New(result.ErrMsg)
 		return
 	}
 
@@ -333,9 +333,6 @@ func GetWithdrawTransactionState(walletID int64, orderID string) (response *GetW
 
 	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
 	if err != nil {
-		result := &ErrorCodeResponse{}
-		_ = json.Unmarshal(resp, result)
-		err = errors.New(result.ErrMsg)
 		return
 	}
 
@@ -462,9 +459,6 @@ func VerifyAddresses(walletID int64, request *VerifyAddressesRequest) (response 
 
 	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
 	if err != nil {
-		result := &ErrorCodeResponse{}
-		_ = json.Unmarshal(resp, result)
-		err = errors.New(result.ErrMsg)
 		return
 	}
 

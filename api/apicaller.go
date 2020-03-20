@@ -13,6 +13,7 @@ package api
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -87,7 +88,10 @@ func makeRequest(walletID int64, method string, api string, params []string, pos
 		return nil, err
 	}
 	if res.StatusCode != 200 {
-		return body, errors.New(res.Status)
+		result := &ErrorCodeResponse{}
+		_ = json.Unmarshal(body, result)
+		msg := fmt.Sprintf("%s, Error: %s", res.Status, result.String())
+		return body, errors.New(msg)
 	}
 	return body, nil
 }
