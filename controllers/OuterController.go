@@ -219,7 +219,7 @@ func (c *OuterController) CallbackResend() {
 }
 
 // @Title Withdraw transactions
-// @router /wallets/:wallet_id/withdraw [post]
+// @router /wallets/:wallet_id/sender/transactions [post]
 func (c *OuterController) WithdrawTransactions() {
 	defer c.ServeJSON()
 
