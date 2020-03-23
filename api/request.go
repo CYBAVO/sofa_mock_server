@@ -91,6 +91,10 @@ type GetNotificationsResponse struct {
 	Notifications []*CallbackStruct `json:"notifications"`
 }
 
+type GetNotificationsByIDRequest struct {
+	IDs []int64 `json:"ids"`
+}
+
 type WithdrawTransaction struct {
 	OrderID string `json:"order_id"`
 	Address string `json:"address"`
@@ -377,6 +381,26 @@ func GetNotifications(walletID int64, fromTime int64, toTime int64, notification
 	err = json.Unmarshal(resp, response)
 
 	logs.Debug("GetNotifications() => ", response)
+	return
+}
+
+func GetNotificationByID(walletID int64, request *GetNotificationsByIDRequest) (response *GetNotificationsResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/notifications/get_by_id", walletID)
+
+	jsonRequest, err := json.Marshal(request)
+	if err != nil {
+		return
+	}
+
+	resp, err := makeRequest(walletID, "POST", uri, nil, jsonRequest)
+	if err != nil {
+		return
+	}
+
+	response = &GetNotificationsResponse{}
+	err = json.Unmarshal(resp, response)
+
+	logs.Debug("GetNotificationByID() => ", response)
 	return
 }
 

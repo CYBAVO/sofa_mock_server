@@ -324,6 +324,33 @@ func (c *OuterController) GetNotifications() {
 	c.Data["json"] = resp
 }
 
+// @Title Query notification by ID
+// @router /wallets/:wallet_id/notifications/get_by_id [post]
+func (c *OuterController) GetWalletNotificationsByID() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	var request api.GetNotificationsByIDRequest
+	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	resp, err := api.GetNotificationByID(walletID, &request)
+	if err != nil {
+		logs.Error("GetNotificationByID failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
+
 // @Title Query wallet transaction history
 // @router /wallets/:wallet_id/transactions [get]
 func (c *OuterController) GetTransactionHistory() {

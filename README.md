@@ -13,6 +13,7 @@
 - Query API
 	- [Query API token status](#query-api-token-status)
 	- [Query notification callback history](#query-notification-callback-history)
+	- [Query notification callback by ID](#query-notification-callback-by-id)
 	- [Query vault/batch wallet transaction history](#query-vault/batch-wallet-transaction-history)
 	- [Query wallet block info](#query-wallet-block-info)
 	- [Query invalid deposit addresses](#query-invalid-deposit-addresses)
@@ -567,6 +568,106 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
+<a name="query-notification-callback-by-id"></a>
+## Query notification callback by ID
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get_by_id
+
+- [Sample curl command](#curl-query-notification-callback-by-id)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/120/notifications/get_by_id
+```
+
+###### Post body
+
+```json
+{
+  "ids": [
+    90000000140,
+    90000000139    
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| ids | array | Specify the IDs for query |
+
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "notifications": [
+    {
+      "type": 3,
+      "serial": 90000000139,
+      "order_id": "",
+      "currency": "ADA",
+      "txid": "35c283a6f13f5886240fe2e815bc149154ec066cd2061202318dd4e4bf8af35e",
+      "block_height": 1003304,
+      "tindex": 0,
+      "vout_index": 0,
+      "amount": "24447",
+      "fees": "0",
+      "memo": "",
+      "broadcast_at": 1584088556,
+      "chain_at": 1584088556,
+      "from_address": "",
+      "to_address": "37btjrVyb4KG8gKeZjJguinwdsbcRV65ngHhBUaJWf36QxiakTV3UHiNUP9arReXMZQnpRBVVdkcBB4GyiWzPRSTmg41mTzMpxgfhtfRHtaBCKJNbX",
+      "wallet_id": 120,
+      "state": 3,
+      "addon": {}
+    },
+    {
+      "type": 3,
+      "serial": 90000000140,
+      "order_id": "",
+      "currency": "ADA",
+      "txid": "fa120b6283509f0ab2b136a3ac8b613aa3ca2f36ce7c2744e122668d013cfdb5",
+      "block_height": 1003305,
+      "tindex": 0,
+      "vout_index": 0,
+      "amount": "55497180",
+      "fees": "0",
+      "memo": "",
+      "broadcast_at": 1584088576,
+      "chain_at": 1584088576,
+      "from_address": "",
+      "to_address": "37btjrVyb4KDKCyAPRUPxpGiUPWunpBAkGRX8U3h7LYzS2UrHUnEQozcCyqR2GfBVnM3frTaUNEb8DoNGo9JakrskAtaWt6vED6R6ohkmaJ2qr4oCg",
+      "wallet_id": 120,
+      "state": 3,
+      "addon": {}
+    }
+  ]
+}
+
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| notifications | array | Arrary of callbacks, refer to [Callback Definition](#callback-definition) |
+
+##### [Back to top](#table-of-contents)
+
+
+
 <a name="query-vault/batch-wallet-transaction-history"></a>
 ## Query vault/batch wallet transaction history
 
@@ -969,6 +1070,15 @@ curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apisecret
 curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
 ```
 - [API definition](#query-notification-callback-history)
+
+<a name="curl-query-notification-callback-by-id"></a>
+### Query notification callback by ID
+
+```
+curl -X POST -d '{"ids":[90000000140,90000000139]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications/get_by_id
+```
+- [API definition](#query-notification-callback-by-id)
 
 <a name="curl-query-vault/batch-wallet-transaction-history"></a>
 ### Query vault/batch wallet transaction history
