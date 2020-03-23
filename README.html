@@ -812,6 +812,7 @@ kbd {
       &quot;memo&quot;: &quot;memo-001&quot;,
       &quot;user_id&quot;: &quot;USER01&quot;,
       &quot;message&quot;: &quot;message-001&quot;,
+      &quot;block_average_fee&quot;: 5
     },
     {
       &quot;order_id&quot;: &quot;2&quot;,
@@ -820,6 +821,7 @@ kbd {
       &quot;memo&quot;: &quot;memo-002&quot;,
       &quot;user_id&quot;: &quot;USER01&quot;,
       &quot;message&quot;: &quot;message-002&quot;,
+      &quot;manual_fee&quot;: 50,
     }
   ]
 }</code></pre></div>
@@ -861,15 +863,29 @@ kbd {
 <tr>
 <td style="text-align: left">user_id</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Specify certain user (optional)</td>
+<td style="text-align: left">Specify certain user (Optional)</td>
 </tr>
 <tr>
 <td style="text-align: left">message</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">Message (This message only savced on CYBAVO, not sent to blockchain)</td>
 </tr>
+<tr>
+<td style="text-align: left">block_average_fee</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30)</td>
+</tr>
+<tr>
+<td style="text-align: left">manual_fee</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000)</td>
+</tr>
 </tbody>
 </table>
+
+<blockquote>
+<p>block_average_fee and manual_fee are mutually exclusive configurations</p>
+</blockquote>
 
 <h5 id="toc_33">Response Format</h5>
 

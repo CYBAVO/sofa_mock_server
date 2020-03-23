@@ -96,12 +96,14 @@ type GetNotificationsByIDRequest struct {
 }
 
 type WithdrawTransaction struct {
-	OrderID string `json:"order_id"`
-	Address string `json:"address"`
-	Amount  string `json:"amount"`
-	Memo    string `json:"memo"`
-	UserID  string `json:"user_id"`
-	Message string `json:"message"`
+	OrderID         string `json:"order_id"`
+	Address         string `json:"address"`
+	Amount          string `json:"amount"`
+	Memo            string `json:"memo"`
+	UserID          string `json:"user_id"`
+	Message         string `json:"message"`
+	BlockAverageFee *int   `json:"block_average_fee"`
+	ManualFee       *int   `json:"manual_fee"`
 }
 
 type WithdrawTransactionRequest struct {

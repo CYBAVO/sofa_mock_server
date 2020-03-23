@@ -354,6 +354,7 @@ An example of the request:
       "memo": "memo-001",
       "user_id": "USER01",
       "message": "message-001",
+      "block_average_fee": 5
     },
     {
       "order_id": "2",
@@ -362,6 +363,7 @@ An example of the request:
       "memo": "memo-002",
       "user_id": "USER01",
       "message": "message-002",
+      "manual_fee": 50,
     }
   ]
 }
@@ -377,8 +379,12 @@ The request includes the following parameters:
 | address | string | Outgoing address |
 | amount | string | Withdrawal amount |
 | memo | string | Memo on blockchain (This memo will be sent to blockchain) |
-| user_id | string | Specify certain user (optional) |
+| user_id | string | Specify certain user (Optional) |
 | message | string | Message (This message only savced on CYBAVO, not sent to blockchain) |
+| block\_average_fee | int | Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30) |
+| manual_fee | int | Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000) |
+
+> block\_average\_fee and manual_fee are mutually exclusive configurations
 
 ##### Response Format
 
