@@ -1789,15 +1789,25 @@ kbd {
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;api_code&quot;:&quot;API-CODE&quot;,&quot;api_secret&quot;:&quot;API-SECRET&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken</code></pre></div>
 
-<h3 id="toc_91">Register mock server URL</h3>
+<h3 id="toc_91">Register mock server callback URL</h3>
 
 <blockquote>
 <p>Operate on web admin console</p>
 </blockquote>
 
-<p>Callback URL</p>
+<p>Notification Callback URL</p>
 
 <div><pre><code class="language-none">http://localhost:8889/v1/mock/wallets/callback</code></pre></div>
+
+<p>Withdrawal Authentication Callback URL</p>
+
+<div><pre><code class="language-none">http://localhost:8889/v1/mock/wallets/withdrawal/callback</code></pre></div>
+
+<blockquote>
+<p>The withdrawal authentication callback URL once set, every withrawal request will callback this URL to get authentication to proceed withdrawal request.</p>
+
+<p>Refer to <em>WithdrawalCallback()</em> function in mock server OuterController.go</p>
+</blockquote>
 
 <h5 id="toc_92"><a href="#table-of-contents">Back to top</a></h5>
 

@@ -191,6 +191,35 @@ func (c *OuterController) Callback() {
 	c.Ctx.WriteString("OK")
 }
 
+// @Title Withdrawal Callback
+// @router /wallets/withdrawal/callback [post]
+func (c *OuterController) WithdrawalCallback() {
+	var request api.WithdrawTransactionRequest
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	// How to verify:
+	// 1. Try to find corresponding API secret by request.Requests[0].OrderID
+	// 2. Calculate checksum then compare to X-CHECKSUM header (refer to sample code bellow)
+	// 3. If these two checksums match and the request is valid in your system,
+	//    reply 200, OK otherwise reply 400 to decline the withdrawal
+
+	// sample code to calculate checksum and verify
+	// payload := string(c.Ctx.Input.RequestBody) + APISECRET
+	// sha, _ := calcSHA256([]byte(payload))
+	// checksumVerf := base64.URLEncoding.EncodeToString(sha)
+	// checksum := c.Ctx.Input.Header("X-CHECKSUM")
+	// if checksum != checksumVerf {
+	//   c.AbortWithError(http.StatusBadRequest, errors.New("Bad checksum"))
+	// }
+
+	logs.Debug("Withdraw Callback => %s\n%#v", c.Ctx.Input.RequestBody, request)
+
+	c.Ctx.WriteString("OK")
+}
+
 // @Title Resend Callback
 // @router /wallets/:wallet_id/callback/resend [post]
 func (c *OuterController) CallbackResend() {

@@ -993,14 +993,24 @@ curl -X POST -d '{"api_code":"API-CODE","api_secret":"API-SECRET"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken
 ```
 
-### Register mock server URL
+### Register mock server callback URL
 >	Operate on web admin console
 
-Callback URL
+Notification Callback URL
 
 ```
 http://localhost:8889/v1/mock/wallets/callback
 ```
+
+Withdrawal Authentication Callback URL
+
+```
+http://localhost:8889/v1/mock/wallets/withdrawal/callback
+```
+
+> The withdrawal authentication callback URL once set, every withrawal request will callback this URL to get authentication to proceed withdrawal request.
+> 
+> Refer to *WithdrawalCallback()* function in mock server OuterController.go
 
 ##### [Back to top](#table-of-contents)
 
