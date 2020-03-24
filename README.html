@@ -787,6 +787,10 @@ kbd {
 
 <blockquote>
 <p>Wallet ID must be a withdraw wallet&#39;s ID</p>
+
+<p>order_id must be prefixed. The prefix is 888888_ in following sample request.</p>
+
+<p><strong>Find prefix from corresponding wallet detail web console UI.</strong></p>
 </blockquote>
 
 <ul>
@@ -806,7 +810,7 @@ kbd {
 <div><pre><code class="language-javascript">{
   &quot;requests&quot;: [
     {
-      &quot;order_id&quot;: &quot;1&quot;,
+      &quot;order_id&quot;: &quot;888888_1&quot;,
       &quot;address&quot;: &quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,
       &quot;amount&quot;: &quot;0.0001&quot;,
       &quot;memo&quot;: &quot;memo-001&quot;,
@@ -815,7 +819,7 @@ kbd {
       &quot;block_average_fee&quot;: 5
     },
     {
-      &quot;order_id&quot;: &quot;2&quot;,
+      &quot;order_id&quot;: &quot;888888_2&quot;,
       &quot;address&quot;: &quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,
       &quot;amount&quot;: &quot;0.0002&quot;,
       &quot;memo&quot;: &quot;memo-002&quot;,
@@ -843,7 +847,7 @@ kbd {
 <tr>
 <td style="text-align: left">order_id</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Specify an unique ID</td>
+<td style="text-align: left">Specify an unique ID, order ID must be prefixed</td>
 </tr>
 <tr>
 <td style="text-align: left">address</td>
@@ -884,6 +888,8 @@ kbd {
 </table>
 
 <blockquote>
+<p>The order_id must be prefixed. Find prefix from corresponding wallet detail console UI</p>
+
 <p>block_average_fee and manual_fee are mutually exclusive configurations</p>
 </blockquote>
 
@@ -1852,7 +1858,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend</code></pre></
 
 <h3 id="toc_98">Withdraw</h3>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
+<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;888888_1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;888888_2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw</code></pre></div>
 
 <ul>

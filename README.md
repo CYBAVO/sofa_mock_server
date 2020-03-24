@@ -329,6 +329,10 @@ Withdraw assets from withdraw wallet.
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions
 
 > Wallet ID must be a withdraw wallet's ID
+> 
+> order\_id must be prefixed. The prefix is 888888_ in following sample request.
+> 
+> **Find prefix from corresponding wallet detail web console UI.**
 
 - [Sample curl command](#curl-withdraw)
 
@@ -348,7 +352,7 @@ An example of the request:
 {
   "requests": [
     {
-      "order_id": "1",
+      "order_id": "888888_1",
       "address": "0x60589A749AAC632e9A830c8aBE042D1899d8Dd15",
       "amount": "0.0001",
       "memo": "memo-001",
@@ -357,7 +361,7 @@ An example of the request:
       "block_average_fee": 5
     },
     {
-      "order_id": "2",
+      "order_id": "888888_2",
       "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
       "amount": "0.0002",
       "memo": "memo-002",
@@ -375,7 +379,7 @@ The request includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| order_id | string | Specify an unique ID |
+| order_id | string | Specify an unique ID, order ID must be prefixed |
 | address | string | Outgoing address |
 | amount | string | Withdrawal amount |
 | memo | string | Memo on blockchain (This memo will be sent to blockchain) |
@@ -384,6 +388,8 @@ The request includes the following parameters:
 | block\_average_fee | int | Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30) |
 | manual_fee | int | Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000) |
 
+> The order\_id must be prefixed. Find prefix from corresponding wallet detail console UI
+>
 > block\_average\_fee and manual_fee are mutually exclusive configurations
 
 ##### Response Format
@@ -1048,7 +1054,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
 ### Withdraw
 
 ```
-curl -X POST -d '{"requests":[{"order_id":"1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
+curl -X POST -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 ```
 - [API definition](#withdraw)

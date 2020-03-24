@@ -25,10 +25,11 @@ type CommonResponse struct {
 type ErrorCodeResponse struct {
 	ErrMsg  string `json:"error,omitempty"`
 	ErrCode int    `json:"error_code,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 func (m *ErrorCodeResponse) String() string {
-	return fmt.Sprintf("%s (code:%d)", m.ErrMsg, m.ErrCode)
+	return fmt.Sprintf("%s (msg:%s) (code:%d)", m.ErrMsg, m.Message, m.ErrCode)
 }
 
 type SetAPICodeRequest struct {
