@@ -1147,7 +1147,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
 
 ```
 curl -X POST -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
 ```
 
 - [API definition](#verify-addresses)
