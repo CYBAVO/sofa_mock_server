@@ -332,7 +332,7 @@ Withdraw assets from withdraw wallet.
 > 
 > order\_id must be prefixed. The prefix is 888888_ in following sample request.
 > 
-> **Find prefix from corresponding wallet detail web console UI.**
+> **Find prefix from corresponding wallet detail on web console UI.**
 
 - [Sample curl command](#curl-withdraw)
 
@@ -365,9 +365,17 @@ An example of the request:
       "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
       "amount": "0.0002",
       "memo": "memo-002",
-      "user_id": "USER01",
+      "user_id": "USER02",
       "message": "message-002",
-      "manual_fee": 50,
+      "manual_fee": 50
+    },
+    {
+      "order_id": "888888_3",
+      "address": "0x9638fa816ccd35389a9a98a997ee08b5321f3eb9",
+      "amount": "0.0002",
+      "memo": "memo-003",
+      "user_id": "USER03",
+      "message": "message-003"
     }
   ]
 }
@@ -388,7 +396,7 @@ The request includes the following parameters:
 | block\_average_fee | int | Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30) |
 | manual_fee | int | Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000) |
 
-> The order\_id must be prefixed. Find prefix from corresponding wallet detail console UI
+> The order\_id must be prefixed. Find prefix from corresponding wallet detail on web console UI
 >
 > block\_average\_fee and manual_fee are mutually exclusive configurations
 
