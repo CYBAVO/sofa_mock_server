@@ -222,6 +222,8 @@ The response includes the following parameters:
 | wallet_id | int64 | ID of request wallet |
 | wallet_address | array | Array of wallet addresses |
 
+> Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-pool-address-of-deposit-wallet"></a>
@@ -778,6 +780,8 @@ The response includes the following parameters:
 | transaction_count | int | Total transactions in specified date duration |
 | transaction_item | array | Array of transaction record |
 
+> Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-wallet-block-info"></a>
@@ -889,11 +893,12 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| currency | int64 | Registered coin types |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
 | currency_name | string | Name of currency |
 | address | string | Wallet address |
 
-> Refer to https://github.com/satoshilabs/slips/blob/master/slip-0044.md for currency definitions
+> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
 
 If `WALLET_ID` is a token wallet, the following fields present:
 
@@ -1269,3 +1274,26 @@ Callback sample:
 | 6 | BatchDone |
 
 ##### [Back to top](#table-of-contents)
+
+<a name="currency-definition"></a>
+## Currency Definition
+
+| ID   | Description |
+| :--- | :---        |
+| 0 | BTC |
+| 2 | LTC |
+| 5 | DASH |
+| 60 | ETH |
+| 144 | XRP |
+| 145 | BCH |
+| 148 | XLM |
+| 194 | EOS |
+| 195 | TRX |
+| 236 | BSV |
+| 714| BNB |
+| 1815| ADA |
+  
+> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
+##### [Back to top](#table-of-contents)
+

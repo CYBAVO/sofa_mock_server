@@ -637,6 +637,10 @@ kbd {
 </tbody>
 </table>
 
+<blockquote>
+<p>Refer to <a href="#currency-definition">Currency Definition</a> or <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
+</blockquote>
+
 <h5 id="toc_14"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-pool-address-of-deposit-wallet"></a></p>
@@ -790,7 +794,7 @@ kbd {
 
 <p>order_id must be prefixed. The prefix is 888888_ in following sample request.</p>
 
-<p><strong>Find prefix from corresponding wallet detail web console UI.</strong></p>
+<p><strong>Find prefix from corresponding wallet detail on web console UI.</strong></p>
 </blockquote>
 
 <ul>
@@ -823,9 +827,17 @@ kbd {
       &quot;address&quot;: &quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,
       &quot;amount&quot;: &quot;0.0002&quot;,
       &quot;memo&quot;: &quot;memo-002&quot;,
-      &quot;user_id&quot;: &quot;USER01&quot;,
+      &quot;user_id&quot;: &quot;USER02&quot;,
       &quot;message&quot;: &quot;message-002&quot;,
-      &quot;manual_fee&quot;: 50,
+      &quot;manual_fee&quot;: 50
+    },
+    {
+      &quot;order_id&quot;: &quot;888888_3&quot;,
+      &quot;address&quot;: &quot;0x9638fa816ccd35389a9a98a997ee08b5321f3eb9&quot;,
+      &quot;amount&quot;: &quot;0.0002&quot;,
+      &quot;memo&quot;: &quot;memo-003&quot;,
+      &quot;user_id&quot;: &quot;USER03&quot;,
+      &quot;message&quot;: &quot;message-003&quot;
     }
   ]
 }</code></pre></div>
@@ -888,7 +900,7 @@ kbd {
 </table>
 
 <blockquote>
-<p>The order_id must be prefixed. Find prefix from corresponding wallet detail console UI</p>
+<p>The order_id must be prefixed. Find prefix from corresponding wallet detail on web console UI</p>
 
 <p>block_average_fee and manual_fee are mutually exclusive configurations</p>
 </blockquote>
@@ -1449,6 +1461,10 @@ kbd {
 </tbody>
 </table>
 
+<blockquote>
+<p>Refer to <a href="#currency-definition">Currency Definition</a> or <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
+</blockquote>
+
 <h5 id="toc_64"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-wallet-block-info"></a></p>
@@ -1600,7 +1616,7 @@ kbd {
 <tr>
 <td style="text-align: left">currency</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">Registered coin types</td>
+<td style="text-align: left">Registered coin types. Refer to <a href="#currency-definition">Currency Definition</a></td>
 </tr>
 <tr>
 <td style="text-align: left">currency_name</td>
@@ -1616,7 +1632,7 @@ kbd {
 </table>
 
 <blockquote>
-<p>Refer to https://github.com/satoshilabs/slips/blob/master/slip-0044.md for currency definitions</p>
+<p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
 </blockquote>
 
 <p>If <code>WALLET_ID</code> is a token wallet, the following fields present:</p>
@@ -1961,7 +1977,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications/get_by_id</code>
 <h3 id="toc_107">Verify addresses</h3>
 
 <div><pre><code class="language-none">curl -X POST -d &#39;{&quot;addresses&quot;:[&quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,&quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;]}&#39; \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses</code></pre></div>
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre></div>
 
 <ul>
 <li><a href="#verify-addresses">API definition</a></li>
@@ -2137,6 +2153,76 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses</code></pre></div>
 </table>
 
 <h5 id="toc_115"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="currency-definition"></a></p>
+
+<h2 id="toc_116">Currency Definition</h2>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">ID</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">0</td>
+<td style="text-align: left">BTC</td>
+</tr>
+<tr>
+<td style="text-align: left">2</td>
+<td style="text-align: left">LTC</td>
+</tr>
+<tr>
+<td style="text-align: left">5</td>
+<td style="text-align: left">DASH</td>
+</tr>
+<tr>
+<td style="text-align: left">60</td>
+<td style="text-align: left">ETH</td>
+</tr>
+<tr>
+<td style="text-align: left">144</td>
+<td style="text-align: left">XRP</td>
+</tr>
+<tr>
+<td style="text-align: left">145</td>
+<td style="text-align: left">BCH</td>
+</tr>
+<tr>
+<td style="text-align: left">148</td>
+<td style="text-align: left">XLM</td>
+</tr>
+<tr>
+<td style="text-align: left">194</td>
+<td style="text-align: left">EOS</td>
+</tr>
+<tr>
+<td style="text-align: left">195</td>
+<td style="text-align: left">TRX</td>
+</tr>
+<tr>
+<td style="text-align: left">236</td>
+<td style="text-align: left">BSV</td>
+</tr>
+<tr>
+<td style="text-align: left">714</td>
+<td style="text-align: left">BNB</td>
+</tr>
+<tr>
+<td style="text-align: left">1815</td>
+<td style="text-align: left">ADA</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
+</blockquote>
+
+<h5 id="toc_117"><a href="#table-of-contents">Back to top</a></h5>
 
 
 
