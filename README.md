@@ -27,6 +27,8 @@
 	- [Notification Callback Type Definition
 ](#notification-callback-type-definition)
 	- [Transaction State Filter Definition](#transaction-state-filter-definition)
+	- [Currency Definition](#currency-definition)
+	- [Memo Requirement](#memo-requirement)
 
 <a name="get-started"></a>
 # Get Started
@@ -60,7 +62,7 @@ An example of the request:
 
 ###### Post body
 
-For BNB or EOS wallet:
+For BNB, XLM, XRP or EOS wallet:
 
 ```json
 {
@@ -72,7 +74,7 @@ For BNB or EOS wallet:
 }
 ```
 
-For wallet excepts BNB and EOS:
+For wallet excepts BNB, XLM, XRP and EOS:
 
 ```json
 {
@@ -84,12 +86,12 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| count | int | Specify address count, max value is 1000 |
-| memos | array | Specify memos for BNB or EOS deposit wallet |
+| Field | Type  | Required | Description |
+| :---  | :---  | :--- | :---        |
+| count | int | YES | Specify address count, max value is 1000 |
+| memos | array | YES (if create BNB, XLM, XRP or EOS wallet) | Specify memos for BNB, XLM, XRP or EOS deposit wallet. Refer to [Memo Requirement](#memo-requirement) |
 
-> **NOTE: The length of `memos` must equal to `count` while creating addresses for BNB or EOS wallet**
+> NOTE: The length of `memos` must equal to `count` while creating addresses for BNB or EOS wallet
 
 ##### Response Format
 
@@ -154,10 +156,10 @@ An example of the request:
 
 The request includes the following parameters:
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| start_index | int | Specify address start index |
-| request_number | int | Request address count |
+| Field | Type  | Requried | Description |
+| :---  | :---  | :--- | :---        |
+| start_index | int | NO | Specify address start index (default: 0) |
+| request_number | int | NO | Request address count (default: 1000, max: 5000) |
 
 ##### Response Format
 
@@ -296,9 +298,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| notification_id | int64 | Specify callback ID to resend, 0 means all |
+| Field | Type  | Required | Description |
+| :---  | :---  | :---  | :---        |
+| notification_id | int64 | YES | Specify callback ID to resend, 0 means all |
 
 > This ID equal to callback data's serial/order_id
 
@@ -387,20 +389,20 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| order_id | string | Specify an unique ID, order ID must be prefixed |
-| address | string | Outgoing address |
-| amount | string | Withdrawal amount |
-| memo | string | Memo on blockchain (This memo will be sent to blockchain) |
-| user_id | string | Specify certain user (Optional) |
-| message | string | Message (This message only savced on CYBAVO, not sent to blockchain) |
-| block\_average_fee | int | Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30) |
-| manual_fee | int | Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000) |
+| Field | Type  | Required | Description |
+| :---  | :---  | :--- | :---        |
+| order_id | string | YES | Specify an unique ID, order ID must be prefixed (Up to 255 chars) |
+| address | string | YES | Outgoing address |
+| amount | string | YES | Withdrawal amount |
+| memo | string | NO | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
+| user_id | string | NO | Specify certain user |
+| message | string | NO | Message (This message only savced on CYBAVO, not sent to blockchain) |
+| block\_average_fee | int | NO | Use avarage blockchain fee within latest N blocks (acceptable value 1~30) |
+| manual_fee | int | NO | Specify blockchain fee in smallest unit of wallet currency (acceptable value 1~1000) |
 
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web console UI
 >
-> block\_average\_fee and manual_fee are mutually exclusive configurations
+> block\_average\_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.
 
 ##### Response Format
 
@@ -468,7 +470,7 @@ The response includes the following parameters:
 | memo | string | Memo on blockchain |
 | in\_chain\_block | int64 | The block that contains this transaction |
 | txid | string | Transaction ID |
-| create_time | int64 | The withdrawal unix time in UTC |
+| create_time | string | The withdrawal unix time in UTC |
 
 ##### [Back to top](#table-of-contents)
 
@@ -517,9 +519,9 @@ The response includes the following parameters:
 | api_code | string | API code for querying wallet |
 | exp | int64 | API code expiration unix time in UTC |
 
-> 未啟用的API-CODE會在第一次使用(填在**X-API-CODE**)時自動生效，並讓當前已啟用的API-CODE失效
+> The un-enabled API-CODE will automatically take effect when it is used for the first time (fill in **X-API-CODE**), and invalidate the currently enabled API-CODE
 
-> 若使用已失效的API-CODE查詢會得到403 Forbidden
+> If you use the invalid API-CODE query, you will get 403 Forbidden
 
 ##### [Back to top](#table-of-contents)
 
@@ -544,11 +546,11 @@ The request includes the following parameters:
 
 ###### API Parameters
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| from_time | int64 | Start date (unix time in UTC) |
-| to_time | int64 | End date (unix time in UTC) |
-| type | int | [Notification Callback Type](#notification-callback-type-definition)  |
+| Field | Type  | Required | Description |
+| :---  | :---  | :--- | :---        |
+| from_time | int64 | NO | Start date (unix time in UTC) (default: 0) |
+| to_time | int64 | NO | End date (unix time in UTC) (default: current time) |
+| type | int | NO | Refer to [Notification Callback Type](#notification-callback-type-definition) (default: -1)  |
 
 ##### Response Format
 
@@ -623,9 +625,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| ids | array | Specify the IDs for query |
+| Field | Type | Required | Description |
+| :---  | :--- | :--- | :---        |
+| ids | array | YES | Specify the IDs for query |
 
 
 ##### Response Format
@@ -711,13 +713,13 @@ The request includes the following parameters:
 
 ###### API Parameters
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| from_item | int64 | Start date (unix time in UTC) |
-| to_item | int64 | End date (unix time in UTC) |
-| start_index | int | Index of starting transaction record |
-| request_number | int | Count of returning transaction record |
-| state | int | Refer to [Transaction State Filter](#transaction-state-filter-definition) (optional, default: -1) |
+| Field | Type | Required | Description |
+| :---  | :--- | :--- | :---        |
+| from_item | int64 | NO | Start date (unix time in UTC) (default: 0) |
+| to_item | int64 | NO | End date (unix time in UTC) (default: current time) |
+| start_index | int | NO | Index of starting transaction record (default: 0) |
+| request_number | int | NO | Count of returning transaction record (default: 1000, max: 5000) |
+| state | int | NO | Refer to [Transaction State Filter](#transaction-state-filter-definition) (default: -1) |
 
 ##### Response Format
 
@@ -947,9 +949,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| addresses | array | Specify the address for verification |
+| Field | Type  | Requried | Description |
+| :---  | :---  | :--- | :---        |
+| addresses | array | YES | Specify the address for verification |
 
 ##### Response Format
 
@@ -1175,10 +1177,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
     <td>type</td>
     <td>int</td>
     <td rowspan="4">
-      <b>1</b> - Deposit Callback (入金回調)<br>
-      <b>2</b> - Withdraw Callback (出金回調)<br>
-      <b>3</b> - Collect Callback (歸帳回調)<br>
-      <b>4</b> - Airdrop Callback (空投回調)<br>
+      <b>1</b> - Deposit Callback<br>
+      <b>2</b> - Withdraw Callback<br>
+      <b>3</b> - Collect Callback<br>
+      <b>4</b> - Airdrop Callback<br>
     </td>
   </tr>
   <tr></tr>
@@ -1211,9 +1213,9 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
     <td>processing_state</td>
     <td>int</td>
     <td rowspan="3">
-      <b>0</b> - inpool (mempool中)<br>
-      <b>1</b> - in chain (已經上鏈還沒滿confirm block)<br>
-      <b>2</b> - done (已經上鍊也滿足confirm block)<br>
+      <b>0</b> - in pool (in fullnode mempool)<br>
+      <b>1</b> - in chain (the transaction is already on the blockchain but the confirmations have not been met)<br>
+      <b>2</b> - done (the transaction is already on the blockchain and satisfy confirmations)<br>
     </td>
   </tr>
 </table>
@@ -1252,10 +1254,11 @@ Callback sample:
 
 | ID   | Description |
 | :--- | :---        |
-| 1 | Deposit Callback (入金回調) |
-| 2 | Withdraw Callback (出金回調) |
-| 3 | Collect Callback (歸帳回調) |
-| 4 | Airdrop Callback (空投回調) |
+| 1 | Deposit Callback |
+| 2 | Withdraw Callback |
+| 3 | Collect Callback |
+| 4 | Airdrop Callback |
+| -1 | All callbacks (for inquiry) |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1264,7 +1267,6 @@ Callback sample:
 
 | ID   | Description |
 | :--- | :---        |
-| -1 | All states |
 | 0 | WaitApproval |
 | 1 | Rejected |
 | 2 | Approved |
@@ -1272,6 +1274,7 @@ Callback sample:
 | 4 | NextLevel |
 | 5 | Cancelled |
 | 6 | BatchDone |
+| -1 | All states (for inquiry) |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1294,6 +1297,18 @@ Callback sample:
 | 1815| ADA |
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+ 
+##### [Back to top](#table-of-contents)
+
+<a name="memo-requirement"></a>
+## Memo Requirement
+
+| Currency | Description |
+| :--- | :---        |
+| XRP | Up to 20 digits |
+| XLM | Up to 28 bytes of ASCII/UTF-8 |
+| EOS | Up to 256 chars |
+| BNB | Up to 128 chars |
 
 ##### [Back to top](#table-of-contents)
 

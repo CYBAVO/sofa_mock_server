@@ -373,6 +373,8 @@ kbd {
 <li><a href="#notification-callback-type-definition">Notification Callback Type Definition
 </a></li>
 <li><a href="#transaction-state-filter-definition">Transaction State Filter Definition</a></li>
+<li><a href="#currency-definition">Currency Definition</a></li>
+<li><a href="#memo-requirement">Memo Requirement</a></li>
 </ul></li>
 </ul>
 
@@ -413,7 +415,7 @@ kbd {
 
 <h6 id="toc_6">Post body</h6>
 
-<p>For BNB or EOS wallet:</p>
+<p>For BNB, XLM, XRP or EOS wallet:</p>
 
 <div><pre><code class="language-javascript">{
   &quot;count&quot;: 2,
@@ -423,7 +425,7 @@ kbd {
   ]
 }</code></pre></div>
 
-<p>For wallet excepts BNB and EOS:</p>
+<p>For wallet excepts BNB, XLM, XRP and EOS:</p>
 
 <div><pre><code class="language-javascript">{
   &quot;count&quot;: 2
@@ -438,6 +440,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -446,18 +449,20 @@ kbd {
 <tr>
 <td style="text-align: left">count</td>
 <td style="text-align: left">int</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Specify address count, max value is 1000</td>
 </tr>
 <tr>
 <td style="text-align: left">memos</td>
 <td style="text-align: left">array</td>
-<td style="text-align: left">Specify memos for BNB or EOS deposit wallet</td>
+<td style="text-align: left">YES (if create BNB, XLM, XRP or EOS wallet)</td>
+<td style="text-align: left">Specify memos for BNB, XLM, XRP or EOS deposit wallet. Refer to <a href="#memo-requirement">Memo Requirement</a></td>
 </tr>
 </tbody>
 </table>
 
 <blockquote>
-<p><strong>NOTE: The length of <code>memos</code> must equal to <code>count</code> while creating addresses for BNB or EOS wallet</strong></p>
+<p>NOTE: The length of <code>memos</code> must equal to <code>count</code> while creating addresses for BNB or EOS wallet</p>
 </blockquote>
 
 <h5 id="toc_8">Response Format</h5>
@@ -540,6 +545,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Requried</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -548,12 +554,14 @@ kbd {
 <tr>
 <td style="text-align: left">start_index</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Specify address start index</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Specify address start index (default: 0)</td>
 </tr>
 <tr>
 <td style="text-align: left">request_number</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Request address count</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Request address count (default: 1000, max: 5000)</td>
 </tr>
 </tbody>
 </table>
@@ -732,6 +740,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -740,6 +749,7 @@ kbd {
 <tr>
 <td style="text-align: left">notification_id</td>
 <td style="text-align: left">int64</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Specify callback ID to resend, 0 means all</td>
 </tr>
 </tbody>
@@ -851,6 +861,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -859,42 +870,50 @@ kbd {
 <tr>
 <td style="text-align: left">order_id</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Specify an unique ID, order ID must be prefixed</td>
+<td style="text-align: left">YES</td>
+<td style="text-align: left">Specify an unique ID, order ID must be prefixed (Up to 255 chars)</td>
 </tr>
 <tr>
 <td style="text-align: left">address</td>
 <td style="text-align: left">string</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Outgoing address</td>
 </tr>
 <tr>
 <td style="text-align: left">amount</td>
 <td style="text-align: left">string</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Withdrawal amount</td>
 </tr>
 <tr>
 <td style="text-align: left">memo</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Memo on blockchain (This memo will be sent to blockchain)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Memo on blockchain (This memo will be sent to blockchain). Refer to <a href="#memo-requirement">Memo Requirement</a></td>
 </tr>
 <tr>
 <td style="text-align: left">user_id</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">Specify certain user (Optional)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Specify certain user</td>
 </tr>
 <tr>
 <td style="text-align: left">message</td>
 <td style="text-align: left">string</td>
+<td style="text-align: left">NO</td>
 <td style="text-align: left">Message (This message only savced on CYBAVO, not sent to blockchain)</td>
 </tr>
 <tr>
 <td style="text-align: left">block_average_fee</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Use avarage blockchain fee within latest N blocks (Optional, acceptable value 1~30)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Use avarage blockchain fee within latest N blocks (acceptable value 1~30)</td>
 </tr>
 <tr>
 <td style="text-align: left">manual_fee</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency (Optional, acceptable value 1~1000)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency (acceptable value 1~1000)</td>
 </tr>
 </tbody>
 </table>
@@ -902,7 +921,7 @@ kbd {
 <blockquote>
 <p>The order_id must be prefixed. Find prefix from corresponding wallet detail on web console UI</p>
 
-<p>block_average_fee and manual_fee are mutually exclusive configurations</p>
+<p>block_average_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.</p>
 </blockquote>
 
 <h5 id="toc_33">Response Format</h5>
@@ -1016,7 +1035,7 @@ kbd {
 </tr>
 <tr>
 <td style="text-align: left">create_time</td>
-<td style="text-align: left">int64</td>
+<td style="text-align: left">string</td>
 <td style="text-align: left">The withdrawal unix time in UTC</td>
 </tr>
 </tbody>
@@ -1094,9 +1113,9 @@ kbd {
 </table>
 
 <blockquote>
-<p>未啟用的API-CODE會在第一次使用(填在<strong>X-API-CODE</strong>)時自動生效，並讓當前已啟用的API-CODE失效</p>
+<p>The un-enabled API-CODE will automatically take effect when it is used for the first time (fill in <strong>X-API-CODE</strong>), and invalidate the currently enabled API-CODE</p>
 
-<p>若使用已失效的API-CODE查詢會得到403 Forbidden</p>
+<p>If you use the invalid API-CODE query, you will get 403 Forbidden</p>
 </blockquote>
 
 <h5 id="toc_45"><a href="#table-of-contents">Back to top</a></h5>
@@ -1128,6 +1147,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1136,17 +1156,20 @@ kbd {
 <tr>
 <td style="text-align: left">from_time</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">Start date (unix time in UTC)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Start date (unix time in UTC) (default: 0)</td>
 </tr>
 <tr>
 <td style="text-align: left">to_time</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">End date (unix time in UTC)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">End date (unix time in UTC) (default: current time)</td>
 </tr>
 <tr>
 <td style="text-align: left">type</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left"><a href="#notification-callback-type-definition">Notification Callback Type</a></td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Refer to <a href="#notification-callback-type-definition">Notification Callback Type</a> (default: -1)</td>
 </tr>
 </tbody>
 </table>
@@ -1239,6 +1262,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1247,6 +1271,7 @@ kbd {
 <tr>
 <td style="text-align: left">ids</td>
 <td style="text-align: left">array</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Specify the IDs for query</td>
 </tr>
 </tbody>
@@ -1351,6 +1376,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1359,27 +1385,32 @@ kbd {
 <tr>
 <td style="text-align: left">from_item</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">Start date (unix time in UTC)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Start date (unix time in UTC) (default: 0)</td>
 </tr>
 <tr>
 <td style="text-align: left">to_item</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">End date (unix time in UTC)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">End date (unix time in UTC) (default: current time)</td>
 </tr>
 <tr>
 <td style="text-align: left">start_index</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Index of starting transaction record</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Index of starting transaction record (default: 0)</td>
 </tr>
 <tr>
 <td style="text-align: left">request_number</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Count of returning transaction record</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Count of returning transaction record (default: 1000, max: 5000)</td>
 </tr>
 <tr>
 <td style="text-align: left">state</td>
 <td style="text-align: left">int</td>
-<td style="text-align: left">Refer to <a href="#transaction-state-filter-definition">Transaction State Filter</a> (optional, default: -1)</td>
+<td style="text-align: left">NO</td>
+<td style="text-align: left">Refer to <a href="#transaction-state-filter-definition">Transaction State Filter</a> (default: -1)</td>
 </tr>
 </tbody>
 </table>
@@ -1714,6 +1745,7 @@ kbd {
 <tr>
 <th style="text-align: left">Field</th>
 <th style="text-align: left">Type</th>
+<th style="text-align: left">Requried</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1722,6 +1754,7 @@ kbd {
 <tr>
 <td style="text-align: left">addresses</td>
 <td style="text-align: left">array</td>
+<td style="text-align: left">YES</td>
 <td style="text-align: left">Specify the address for verification</td>
 </tr>
 </tbody>
@@ -2001,10 +2034,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
     <td>type</td>
     <td>int</td>
     <td rowspan="4">
-      <b>1</b> - Deposit Callback (入金回調)<br>
-      <b>2</b> - Withdraw Callback (出金回調)<br>
-      <b>3</b> - Collect Callback (歸帳回調)<br>
-      <b>4</b> - Airdrop Callback (空投回調)<br>
+      <b>1</b> - Deposit Callback<br>
+      <b>2</b> - Withdraw Callback<br>
+      <b>3</b> - Collect Callback<br>
+      <b>4</b> - Airdrop Callback<br>
     </td>
   </tr>
   <tr></tr>
@@ -2037,9 +2070,9 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
     <td>processing_state</td>
     <td>int</td>
     <td rowspan="3">
-      <b>0</b> - inpool (mempool中)<br>
-      <b>1</b> - in chain (已經上鏈還沒滿confirm block)<br>
-      <b>2</b> - done (已經上鍊也滿足confirm block)<br>
+      <b>0</b> - in pool (in fullnode mempool)<br>
+      <b>1</b> - in chain (the transaction is already on the blockchain but the confirmations have not been met)<br>
+      <b>2</b> - done (the transaction is already on the blockchain and satisfy confirmations)<br>
     </td>
   </tr>
 </table>
@@ -2085,19 +2118,23 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
 <tbody>
 <tr>
 <td style="text-align: left">1</td>
-<td style="text-align: left">Deposit Callback (入金回調)</td>
+<td style="text-align: left">Deposit Callback</td>
 </tr>
 <tr>
 <td style="text-align: left">2</td>
-<td style="text-align: left">Withdraw Callback (出金回調)</td>
+<td style="text-align: left">Withdraw Callback</td>
 </tr>
 <tr>
 <td style="text-align: left">3</td>
-<td style="text-align: left">Collect Callback (歸帳回調)</td>
+<td style="text-align: left">Collect Callback</td>
 </tr>
 <tr>
 <td style="text-align: left">4</td>
-<td style="text-align: left">Airdrop Callback (空投回調)</td>
+<td style="text-align: left">Airdrop Callback</td>
+</tr>
+<tr>
+<td style="text-align: left">-1</td>
+<td style="text-align: left">All callbacks (for inquiry)</td>
 </tr>
 </tbody>
 </table>
@@ -2117,10 +2154,6 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
 </thead>
 
 <tbody>
-<tr>
-<td style="text-align: left">-1</td>
-<td style="text-align: left">All states</td>
-</tr>
 <tr>
 <td style="text-align: left">0</td>
 <td style="text-align: left">WaitApproval</td>
@@ -2148,6 +2181,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
 <tr>
 <td style="text-align: left">6</td>
 <td style="text-align: left">BatchDone</td>
+</tr>
+<tr>
+<td style="text-align: left">-1</td>
+<td style="text-align: left">All states (for inquiry)</td>
 </tr>
 </tbody>
 </table>
@@ -2223,6 +2260,40 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify</code></pre><
 </blockquote>
 
 <h5 id="toc_117"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="memo-requirement"></a></p>
+
+<h2 id="toc_118">Memo Requirement</h2>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Currency</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">XRP</td>
+<td style="text-align: left">Up to 20 digits</td>
+</tr>
+<tr>
+<td style="text-align: left">XLM</td>
+<td style="text-align: left">Up to 28 bytes of ASCII/UTF-8</td>
+</tr>
+<tr>
+<td style="text-align: left">EOS</td>
+<td style="text-align: left">Up to 256 chars</td>
+</tr>
+<tr>
+<td style="text-align: left">BNB</td>
+<td style="text-align: left">Up to 128 chars</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_119"><a href="#table-of-contents">Back to top</a></h5>
 
 
 
