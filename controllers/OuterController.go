@@ -302,6 +302,27 @@ func (c *OuterController) GetWithdrawTransactionState() {
 	c.Data["json"] = resp
 }
 
+// @Title Get balance of withdrawal wallet
+// @router /wallets/:wallet_id/sender/balance [get]
+func (c *OuterController) GetWithdrawalWalletBalance() {
+	defer c.ServeJSON()
+
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	resp, err := api.GetWithdrawalWalletBalance(walletID)
+	if err != nil {
+		logs.Error("GetWithdrawalWalletBalance failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Data["json"] = resp
+}
+
 // @Title Get API token status
 // @router /wallets/:wallet_id/apisecret [get]
 func (c *OuterController) GetTxAPITokenStatus() {

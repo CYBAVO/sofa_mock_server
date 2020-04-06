@@ -125,6 +125,17 @@ type GetWithdrawTransactionStateResponse struct {
 	CreateTime   time.Time `json:"create_time"`
 }
 
+type GetWithdrawalWalletBalanceResponse struct {
+	Currency              int64  `json:"currency"`
+	WalletAddress         string `json:"wallet_address"`
+	TokenAddress          string `json:"token_address"`
+	Balance               string `json:"balance"`
+	TokenBalance          string `json:"token_balance"`
+	UnconfirmBalance      string `json:"unconfirm_balance"`
+	UnconfirmTokenBalance string `json:"unconfirm_token_balance"`
+	ErrReason             string `json:"err_reason,omitempty"`
+}
+
 type CallbackResendRequest struct {
 	NotificationID int64 `json:"notification_id"`
 }
@@ -350,6 +361,24 @@ func GetWithdrawTransactionState(walletID int64, orderID string) (response *GetW
 	}
 
 	logs.Debug("GetWithdrawTransactionState() => ", response)
+	return
+}
+
+func GetWithdrawalWalletBalance(walletID int64) (response *GetWithdrawalWalletBalanceResponse, err error) {
+	uri := fmt.Sprintf("/v1/sofa/wallets/%d/sender/balance", walletID)
+
+	resp, err := makeRequest(walletID, "GET", uri, nil, nil)
+	if err != nil {
+		return
+	}
+
+	response = &GetWithdrawalWalletBalanceResponse{}
+	err = json.Unmarshal(resp, response)
+	if err != nil {
+		return
+	}
+
+	logs.Debug("GetWithdrawalWalletBalance() => ", response)
 	return
 }
 

@@ -10,6 +10,7 @@
 - Withdraw Wallet API
 	- [Withdraw](#withdraw)
 	- [Query withdrawal transaction state](#query-withdrawal-transaction-state)
+	- [Query withdrawal wallet balance](#query-withdrawal-wallet-balance)
 - Query API
 	- [Query API token status](#query-api-token-status)
 	- [Query notification callback history](#query-notification-callback-history)
@@ -474,6 +475,55 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+<a name="query-withdrawal-wallet-balance"></a>
+## Query withdrawal wallet balance
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/balance
+
+- [Sample curl command](#curl-query-withdrawal-wallet-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/sender/balance
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "currency": 60,
+  "wallet_address": "0xaa0cA2f9bA3A33a915a27e289C9719adB2ad7d73",
+  "token_address": "",
+  "balance": "0.619673333517576",
+  "token_balance": "",
+  "unconfirm_balance": "0",
+  "unconfirm_token_balance": ""
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| wallet_address | string | Wallet address |
+| token_address | string | Token contract address |
+| balance | string | Withdrawal wallet balance |
+| token_balance | string | Withdrawal wallet token balance |
+| unconfirm_balance | string | Unconfirmed withdrawal wallet balance |
+| unconfirm_token_balance | string | Unconfirmed withdrawal wallet token balance |
+| err_reason | string | Error message if fail to get balance |
+
+> The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH
+
+##### [Back to top](#table-of-contents)
 
 # Query API
 
@@ -1091,6 +1141,14 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions/{ORDER_ID}
 ```
 - [API definition](#query-withdrawal-transaction-state)
+
+<a name="curl-query-withdrawal-wallet-balance"></a>
+### curl-query-withdrawal-wallet-balance
+
+```
+curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/balance
+```
+- [API definition](#query-withdrawal-wallet-balance)
 
 <a name="curl-query-api-token-status"></a>
 ### Query API token status
