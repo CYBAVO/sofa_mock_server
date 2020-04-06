@@ -43,7 +43,7 @@
 <a name="create-deposit-wallet-addresses"></a>
 ## Create deposit wallet addresses
 
-Create deposit addresses in a deposit wallet.
+You can create new deposit address through this API, once the addresses were created, both of the deposit and withdraw behavior occurs on these addresses will be callback..
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
 
@@ -232,7 +232,10 @@ The response includes the following parameters:
 <a name="query-pool-address-of-deposit-wallet"></a>
 ## Query pool address of deposit wallet
 
-Get pool address of a deposit wallet.
+Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrency.
+> In BTC/ETH/BCH/LTC, the cryptocurrency in the pool address will be used to pay for token transfer(Ex. ERC20, USDT-Omni).
+> 
+> In EOS/XRP/XLM/BNB, the pool address is the user’s deposit address, and all user will be distinguished by memo/tag field.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/pooladdress
 
@@ -271,7 +274,7 @@ The response includes the following parameters:
 <a name="resend-pending-or-failed-deposit-callbacks"></a>
 ## Resend pending or failed deposit callbacks
 
-Trigger pending/failed deposit callback resending process manually.
+When the deposit callback sent to your server and not got the correct response, the SOFA system will resend the callback automatically (time interval: 1-3-5-15-45 mins), and if all resends were failed, for example your server is under maintenance or network is corrupted at that time. All the callbacks will be put in failed zone, and you can use this api to ask SOFA system resend again or you can resend it through SOFA UI resend button.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/collection/notifications/manual
 
@@ -329,7 +332,7 @@ The response includes the following parameters:
 <a name="withdraw"></a>
 ## Withdraw
 
-Withdraw assets from withdraw wallet.
+Withdraw assets from withdraw wallet. You have to provide a unique **order_id** for each request, we will send the callback with the unique **order_id** when the withdraw is success (from in pool to in chain). 
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions
 
@@ -431,6 +434,8 @@ The response includes the following parameters:
 <a name="query-withdrawal-transaction-state"></a>
 ## Query withdrawal transaction state
 
+Used to check the withdrawal state.
+
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`
 
 - [Sample curl command](#curl-query-withdrawal-transaction-state)
@@ -477,6 +482,8 @@ The response includes the following parameters:
 
 <a name="query-withdrawal-wallet-balance"></a>
 ## Query withdrawal wallet balance
+
+Use to get the withdrawal wallet balance.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/balance
 
@@ -530,6 +537,8 @@ The response includes the following parameters:
 <a name="query-api-token-status"></a>
 ## Query API token status
 
+Used to check the api token status, you can see if the api token is expired or not. Every time you apply a new api token, you need to call at least one api to activate it, this query api will be useful in this case. 
+
 **GET** /v1/sofa/wallets/`WALLET_ID`/apisecret
 
 - [Sample curl command](#curl-query-api-token-status)
@@ -577,6 +586,8 @@ The response includes the following parameters:
 
 <a name="query-notification-callback-history"></a>
 ## Query notification callback history
+
+Used to query some kind of callback during a time interval.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
 
@@ -645,6 +656,8 @@ The response includes the following parameters:
 
 <a name="query-notification-callback-by-id"></a>
 ## Query notification callback by ID
+
+Used to query if the callback exist or not by id, you can use this api for double confirming if an deposit callback is really existed or not.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get_by_id
 
@@ -745,6 +758,8 @@ The response includes the following parameters:
 <a name="query-vault/batch-wallet-transaction-history"></a>
 ## Query vault/batch wallet transaction history
 
+Use to get the wallet’s transaction history.
+
 **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
 
 - [Sample curl command](#curl-query-vault/batch-wallet-transaction-history)
@@ -839,6 +854,8 @@ The response includes the following parameters:
 <a name="query-wallet-block-info"></a>
 ## Query wallet block info
 
+Use to get the wallet’s syncing block information.
+
 **GET** /v1/sofa/wallets/`WALLET_ID`/blocks
 
 - [Sample curl command](#curl-query-deposit/withdraw-wallet-block-info)
@@ -876,6 +893,8 @@ The response includes the following parameters:
 <a name="query-invalid-deposit-addresses"></a>
 ## Query invalid deposit addresses
 
+The fake deposit will make the address be added to invalid deposit address. Used this api to get the invalid list for further usage.
+
 **GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
 
 - [Sample curl command](#curl-query-invalid-deposit-addresses)
@@ -910,6 +929,8 @@ The response includes the following parameters:
 
 <a name="query-wallet-basic-info"></a>
 ## Query wallet basic info
+
+Use to get wallet basic information.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/info
 
@@ -966,7 +987,7 @@ If `WALLET_ID` is a token wallet, the following fields present:
 <a name="verify-addresses"></a>
 ## Verify addresses
 
-Verify addresses that conform to the wallet currency address format.
+Check if the addresses are well-formatted in this cryptocurrency, Ex. ETH must have the prefix 0x, BTC should be started with 1 or 3 or bc1, etc.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses/verify
 
