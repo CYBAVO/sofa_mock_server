@@ -1070,10 +1070,10 @@ The response includes the following parameters:
 	- ./mockserver
 
 ### Setup configuration
->	Set following configuration in mockserver.app.conf
+>	Set the backend server URL to the following configuration in mockserver.app.conf
 
 ```
-api_server_url=""
+api_server_url="BACKEND_SERVER_URL"
 ```
 
 ### Put wallet API code/secret into mock server
