@@ -811,7 +811,11 @@ kbd {
 
 <p>order_id must be prefixed. The prefix is 888888_ in following sample request.</p>
 
+<blockquote>
 <p><strong>Find prefix from corresponding wallet detail on web console UI.</strong></p>
+</blockquote>
+
+<p>If withdraw BNB or XRP, this API will check whether the destination addresse needs memo / destination tag or not. If the address does need memo, the withdraw API will fail without memo specified.</p>
 </blockquote>
 
 <ul>
@@ -1827,6 +1831,10 @@ kbd {
 
 <p>Check if the addresses are well-formatted in this cryptocurrency, Ex. ETH must have the prefix 0x, BTC should be started with 1 or 3 or bc1, etc.</p>
 
+<blockquote>
+<p>If the wallet&#39;s cryptocurrency is BNB or XRP, there will be a <code>must_need_memo</code> flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address.</p>
+</blockquote>
+
 <p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses/verify</p>
 
 <blockquote>
@@ -1886,11 +1894,13 @@ kbd {
   &quot;result&quot;: [
     {
       &quot;address&quot;: &quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,
-      &quot;valid&quot;: true
+      &quot;valid&quot;: true,
+      &quot;must_need_memo&quot;: false
     },
     {
       &quot;address&quot;: &quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;,
-      &quot;valid&quot;: false
+      &quot;valid&quot;: false,
+      &quot;must_need_memo&quot;: false
     }
   ]
 }</code></pre></div>
@@ -1911,6 +1921,11 @@ kbd {
 <td style="text-align: left">result</td>
 <td style="text-align: left">array</td>
 <td style="text-align: left">Array of addresses&#39; verification result</td>
+</tr>
+<tr>
+<td style="text-align: left">must_need_memo</td>
+<td style="text-align: left">boolean</td>
+<td style="text-align: left">Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address</td>
 </tr>
 </tbody>
 </table>

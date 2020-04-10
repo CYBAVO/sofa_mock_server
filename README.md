@@ -339,8 +339,10 @@ Withdraw assets from withdraw wallet. You have to provide a unique **order_id** 
 > Wallet ID must be a withdraw wallet's ID
 > 
 > order\_id must be prefixed. The prefix is 888888_ in following sample request.
-> 
-> **Find prefix from corresponding wallet detail on web console UI.**
+>
+>> **Find prefix from corresponding wallet detail on web console UI.**
+>
+> If withdraw BNB or XRP, this API will check whether the destination addresse needs memo / destination tag or not. If the address does need memo, the withdraw API will fail without memo specified.
 
 - [Sample curl command](#curl-withdraw)
 
@@ -989,6 +991,8 @@ If `WALLET_ID` is a token wallet, the following fields present:
 
 Check if the addresses are well-formatted in this cryptocurrency, Ex. ETH must have the prefix 0x, BTC should be started with 1 or 3 or bc1, etc.
 
+> If the wallet's cryptocurrency is BNB or XRP, there will be a `must_need_memo` flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address.
+
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses/verify
 
 > Wallet ID must be a deposit or withdraw wallet's ID
@@ -1033,11 +1037,13 @@ An example of a successful response:
   "result": [
     {
       "address": "0x635B4764D1939DfAcD3a8014726159abC277BecC",
-      "valid": true
+      "valid": true,
+      "must_need_memo": false
     },
     {
       "address": "1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE",
-      "valid": false
+      "valid": false,
+      "must_need_memo": false
     }
   ]
 }
@@ -1048,6 +1054,7 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | result | array | Array of addresses' verification result |
+| must\_need\_memo | boolean | Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address |
 
 ##### [Back to top](#table-of-contents)
 

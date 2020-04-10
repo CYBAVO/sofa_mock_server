@@ -239,8 +239,9 @@ type VerifyAddressesRequest struct {
 }
 
 type AddressStatus struct {
-	Address string `json:"address"`
-	Valid   bool   `json:"valid"`
+	Address      string `json:"address"`
+	Valid        bool   `json:"valid"`
+	MustNeedMemo bool   `json:"must_need_memo"`
 }
 
 type VerifyAddressesResponse struct {
