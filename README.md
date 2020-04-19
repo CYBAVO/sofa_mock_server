@@ -427,7 +427,7 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| results | Array | Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds |
+| results | array | Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1116,14 +1116,14 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 For BNB or EOS wallet:
 
 ```
-curl -X POST -d '{"count":2,"memos":["001","002"]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"count":2,"memos":["001","002"]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
 ```
 
 For wallet excepts BNB or EOS:
 
 ```
-curl -X POST -d '{"count":2}' \
+curl -X POST -H "Content-Type: application/json" -d '{"count":2}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
 ```
 - [API definition](#create-deposit-wallet-addresses)
@@ -1148,7 +1148,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/pooladdress'
 ### Resend all pending or failed deposit callbacks
 
 ```
-curl -X POST -d '{"notification_id":0}' \
+curl -X POST -H "Content-Type: application/json" -d '{"notification_id":0}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
 ```
 - [API definition](#resend-pending-or-failed-deposit-callbacks)
@@ -1157,7 +1157,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
 ### Withdraw
 
 ```
-curl -X POST -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
 ```
 - [API definition](#withdraw)
@@ -1198,7 +1198,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?fro
 ### Query notification callback by ID
 
 ```
-curl -X POST -d '{"ids":[90000000140,90000000139]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"ids":[90000000140,90000000139]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications/get_by_id
 ```
 - [API definition](#query-notification-callback-by-id)
@@ -1239,7 +1239,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
 ### Verify addresses
 
 ```
-curl -X POST -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
 ```
 
@@ -1273,6 +1273,76 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
   <tr></tr>
   <tr></tr>
   <tr>
+    <td>serial</td>
+    <td>int</td>
+    <td>The unique serial of callback</td>
+  </tr>
+  <tr>
+    <td>order_id</td>
+    <td>string</td>
+    <td>The unique order ID of withdrawal request</td>
+  </tr>
+  <tr>
+    <td>currency</td>
+    <td>string</td>
+    <td>Cryptocurrency of the callback</td>
+  </tr>
+  <tr>
+    <td>txid</td>
+    <td>string</td>
+    <td>Transaction identifier</td>
+  </tr>
+  <tr>
+    <td>block_height</td>
+    <td>int64</td>
+    <td>The block height show the transaction was packed in which block</td>
+  </tr>
+  <tr>
+    <td>tindex</td>
+    <td>int</td>
+    <td>The index of transaction in its block</td>
+  </tr>
+  <tr>
+    <td>vout_index</td>
+    <td>int</td>
+    <td>The index of vout in its transaction</td>
+  </tr>
+  <tr>
+    <td>amount</td>
+    <td>string</td>
+    <td>Transaction amount denominated in the smallest cryptocurrency unit</td>
+  </tr>
+  <tr>
+    <td>fees</td>
+    <td>string</td>
+    <td>Mining fee denominated in the smallest cryptocurrency unit</td>
+  </tr>
+  <tr>
+    <td>broadcast_at</td>
+    <td>int64</td>
+    <td>When to broadcast the transaction in UTC time</td>
+  </tr>
+  <tr>
+    <td>chain_at</td>
+    <td>int64</td>
+    <td>When was the transaction packed into block (in chain) in UTC time</td>
+  </tr>
+  <tr>
+    <td>from_address</td>
+    <td>string</td>
+    <td>The source address of the transaction</td>
+  </tr>
+  <tr>
+    <td>to_address</td>
+    <td>string</td>
+    <td>The destination address of the transaction</td>
+  </tr>
+  <tr>
+    <td>wallet_id</td>
+    <td>int64</td>
+    <td>The wallet ID of the callback</td>
+  </tr>
+  <tr>
     <td>state</td>
     <td>int</td>
     <td rowspan="9">
@@ -1296,6 +1366,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
   <tr></tr>
   <tr></tr>
   <tr>
+    <td>confirm_blocks</td>
+    <td>int64</td>
+    <td>Number of confirmations</td>
+  </tr>
+  <tr>
     <td>processing_state</td>
     <td>int</td>
     <td rowspan="3">
@@ -1304,8 +1379,14 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
       <b>2</b> - done (the transaction is already on the blockchain and satisfy confirmations)<br>
     </td>
   </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr>
+    <td>addon</td>
+    <td>key-value pairs</td>
+    <td>The extra information of this callback</td>
+  </tr>
 </table>
-
 Callback sample:
 
 ```json
