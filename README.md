@@ -20,6 +20,7 @@
 	- [Query invalid deposit addresses](#query-invalid-deposit-addresses)
 	- [Query wallet basic info](#query-wallet-basic-info)
 	- [Verify addresses](#verify-addresses)
+	- [Query wallet transaction avarage blockchain fee](#query-wallet-transaction-autofee)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
@@ -640,6 +641,8 @@ An example of a successful response:
       "to_address": "tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk",
       "wallet_id": 67,
       "state": 3,
+      "confirm_blocks": 1,
+      "processing_state": 1,
       "addon": {}
     }
   ]
@@ -661,7 +664,7 @@ The response includes the following parameters:
 
 Used to query if the callback exist or not by id, you can use this api for double confirming if an deposit callback is really existed or not.
 
-**POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get_by_id
+**POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get\_by_id
 
 - [Sample curl command](#curl-query-notification-callback-by-id)
 
@@ -720,6 +723,8 @@ An example of a successful response:
       "to_address": "37btjrVyb4KG8gKeZjJguinwdsbcRV65ngHhBUaJWf36QxiakTV3UHiNUP9arReXMZQnpRBVVdkcBB4GyiWzPRSTmg41mTzMpxgfhtfRHtaBCKJNbX",
       "wallet_id": 120,
       "state": 3,
+      "confirm_blocks": 2,
+      "processing_state": 1,
       "addon": {}
     },
     {
@@ -740,6 +745,8 @@ An example of a successful response:
       "to_address": "37btjrVyb4KDKCyAPRUPxpGiUPWunpBAkGRX8U3h7LYzS2UrHUnEQozcCyqR2GfBVnM3frTaUNEb8DoNGo9JakrskAtaWt6vED6R6ohkmaJ2qr4oCg",
       "wallet_id": 120,
       "state": 3,
+      "confirm_blocks": 1,
+      "processing_state": 1,
       "addon": {}
     }
   ]
@@ -1059,6 +1066,61 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-wallet-transaction-autofee"></a>
+## Query wallet transaction avarage blockchain fee
+
+Query avarage blockchain fee within latest N blocks.
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/autofee
+
+- [Sample curl command](#curl-query-wallet-transaction-autofee)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/autofee
+```
+
+###### Post body
+
+```json
+{
+  "block_num": 1
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Requried | Description |
+| :---  | :---  | :--- | :---        |
+| block_num | int | NO | Get avarage blockchain fee within latest N blocks (acceptable value 1~30)(default: 1) |
+
+##### Response Format
+
+An example of a successful response:
+	
+```json
+{
+	"auto_fee": "1"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| auto_fee | string | Mining fee denominated in the smallest cryptocurrency unit |
+
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -1241,6 +1303,16 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
+```
+
+- [API definition](#verify-addresses)
+
+<a name="curl-query-wallet-transaction-autofee"></a>
+### Query wallet transaction avarage blockchain fee
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
+http://localhost:8889/v1/mock/wallets/{WALLET-ID}/autofee
 ```
 
 - [API definition](#verify-addresses)
