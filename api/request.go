@@ -67,25 +67,36 @@ type WalletAddress struct {
 	Memo         string `json:"memo"`
 }
 
+type ProcessingState int8
+
+const (
+	ProcessingStateUndefined ProcessingState = -1
+	ProcessingStateInPool    ProcessingState = 0
+	ProcessingStateInChain   ProcessingState = 1
+	ProcessingStateDone      ProcessingState = 2
+)
+
 type CallbackStruct struct {
-	Type        int                    `json:"type"`
-	Serial      int64                  `json:"serial"`
-	OrderID     string                 `json:"order_id"`
-	Currency    string                 `json:"currency"`
-	TXID        string                 `json:"txid"`
-	BlockHeight int64                  `json:"block_height"`
-	TIndex      int                    `json:"tindex"`
-	VOutIndex   int                    `json:"vout_index"`
-	Amount      string                 `json:"amount"`
-	Fees        string                 `json:"fees"`
-	Memo        string                 `json:"memo"`
-	BroadcastAt int64                  `json:"broadcast_at"`
-	ChainAt     int64                  `json:"chain_at"`
-	FromAddress string                 `json:"from_address"`
-	ToAddress   string                 `json:"to_address"`
-	WalletID    int64                  `json:"wallet_id"`
-	State       int64                  `json:"state"`
-	Addon       map[string]interface{} `json:"addon"`
+	Type            int                    `json:"type"`
+	Serial          int64                  `json:"serial"`
+	OrderID         string                 `json:"order_id"`
+	Currency        string                 `json:"currency"`
+	TXID            string                 `json:"txid"`
+	BlockHeight     int64                  `json:"block_height"`
+	TIndex          int                    `json:"tindex"`
+	VOutIndex       int                    `json:"vout_index"`
+	Amount          string                 `json:"amount"`
+	Fees            string                 `json:"fees"`
+	Memo            string                 `json:"memo"`
+	BroadcastAt     int64                  `json:"broadcast_at"`
+	ChainAt         int64                  `json:"chain_at"`
+	FromAddress     string                 `json:"from_address"`
+	ToAddress       string                 `json:"to_address"`
+	WalletID        int64                  `json:"wallet_id"`
+	State           int64                  `json:"state"`
+	ConfirmBlocks   int64                  `json:"confirm_blocks"`
+	ProcessingState ProcessingState        `json:"processing_state"`
+	Addon           map[string]interface{} `json:"addon"`
 }
 
 type GetNotificationsResponse struct {

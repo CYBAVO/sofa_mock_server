@@ -55,7 +55,6 @@ func RegisterModel() {
 
 	orm.RegisterModelWithPrefix(GetMockDatabasePrefix(),
 		new(APICode),
-		new(DepositWalletAddress),
 	)
 	err := orm.RunSyncdb("default", false, true)
 	if err != nil {
