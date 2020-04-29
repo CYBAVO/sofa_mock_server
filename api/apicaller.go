@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The Cybavo developers
+// Copyright (c) 2018-2020 The Cybavo developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of Cybavo and its suppliers,
@@ -37,7 +37,7 @@ func buildChecksum(params []string, secret string, time int64, r string) string 
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(strings.Join(params, "&"))))
 }
 
-func makeRequest(walletID int64, method string, api string, params []string, postBody []byte) ([]byte, error) {
+func MakeRequest(walletID int64, method string, api string, params []string, postBody []byte) ([]byte, error) {
 	if walletID <= 0 || method == "" || api == "" {
 		return nil, errors.New("invalid parameters")
 	}
@@ -74,7 +74,7 @@ func makeRequest(walletID int64, method string, api string, params []string, pos
 	if postBody != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	logs.Debug("Request URL:", req.URL.String())
+	logs.Debug("Request URL:", url)
 	logs.Debug("\tX-CHECKSUM:\t", req.Header.Get("X-CHECKSUM"))
 
 	res, err := client.Do(req)

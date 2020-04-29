@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The Cybavo developers
+// Copyright (c) 2018-2020 The Cybavo developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of Cybavo and its suppliers,
@@ -32,6 +32,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses/invalid-deposit", &controllers.OuterController{}, "GET:GetInvalidDepositAddresses")
 	beego.Router("/v1/mock/wallets/:wallet_id/info", &controllers.OuterController{}, "GET:GetWalletInfo")
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses/verify", &controllers.OuterController{}, "POST:VerifyAddresses")
+	beego.Router("/v1/mock/wallets/:wallet_id/autofee", &controllers.OuterController{}, "POST:GetAutoFee")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")

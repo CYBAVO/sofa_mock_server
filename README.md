@@ -24,6 +24,7 @@
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
+	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
 	- [Notification Callback Type Definition
@@ -1165,12 +1166,12 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 
 > The withdrawal authentication callback URL once set, every withrawal request will callback this URL to get authentication to proceed withdrawal request.
 > 
-> Refer to *WithdrawalCallback()* function in mock server OuterController.go
+> Refer to [WithdrawalCallback()](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L183) function in mock server OuterController.go
 
 ##### [Back to top](#table-of-contents)
 
 <a name="curl-testing-commands"></a>
-## CURL Testing Commands
+# CURL Testing Commands
 
 <a name="curl-create-deposit-wallet-addresses"></a>
 ### Create deposit wallet addresses
@@ -1315,8 +1316,14 @@ curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
 http://localhost:8889/v1/mock/wallets/{WALLET-ID}/autofee
 ```
 
-- [API definition](#verify-addresses)
+- [API definition](#query-wallet-transaction-autofee)
 
+##### [Back to top](#table-of-contents)
+
+<a name="other-language-versions"></a>
+# Other Language Versions
+- [JAVA](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA)
+- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT)
 
 ##### [Back to top](#table-of-contents)
 

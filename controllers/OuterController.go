@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2019 The Cybavo developers
+// Copyright (c) 2018-2020 The Cybavo developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of Cybavo and its suppliers,
@@ -15,10 +15,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/logs"
 	"github.com/cybavo/SOFA_MOCK_SERVER/api"
 	"github.com/cybavo/SOFA_MOCK_SERVER/models"
@@ -26,6 +29,37 @@ import (
 
 type OuterController struct {
 	beego.Controller
+}
+
+func getQueryString(ctx *context.Context) []string {
+	var qs []string
+	tokens := strings.Split(ctx.Request.URL.RawQuery, "&")
+	for _, token := range tokens {
+		qs = append(qs, token)
+	}
+	return qs
+}
+
+var debugPrint = func(ctx *context.Context) {
+	var params string
+	qs := getQueryString(ctx)
+	if qs != nil {
+		params = strings.Join(qs, "&")
+	}
+	logs.Debug(fmt.Sprintf("Recv requst => %s, params: %s, body: %s", ctx.Input.URL(), params, ctx.Input.RequestBody))
+}
+
+func init() {
+	beego.InsertFilter("/v1/mock/*", beego.BeforeExec, debugPrint)
+}
+
+func (c *OuterController) getWalletID() int64 {
+	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	if err != nil {
+		logs.Error("Invalid wallet ID =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+	return walletID
 }
 
 func (c *OuterController) AbortWithError(status int, err error) {
@@ -77,25 +111,17 @@ func (c *OuterController) SetAPIToken() {
 func (c *OuterController) CreateDepositWalletAddresses() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	var request api.CreateDepositWalletAddressesRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.CreateDepositWalletAddresses(walletID, &request)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID),
+		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("CreateDepositWalletAddresses failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Get deposit wallet addresses
@@ -103,21 +129,17 @@ func (c *OuterController) CreateDepositWalletAddresses() {
 func (c *OuterController) GetDepositWalletAddresses() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	startIndex, _ := c.GetInt("start_index", 0)
-	requestNumber, _ := c.GetInt("request_number", 1000)
-
-	resp, err := api.GetDepositWalletAddresses(walletID, startIndex, requestNumber)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/addresses", walletID),
+		getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("GetDepositWalletAddresses failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
-	c.Data["json"] = resp
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Get deposit wallet pool address
@@ -125,19 +147,17 @@ func (c *OuterController) GetDepositWalletAddresses() {
 func (c *OuterController) GetDepositWalletPoolAddresses() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetDepositWalletPoolAddress(walletID)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/pooladdress", walletID),
+		nil, nil)
 	if err != nil {
 		logs.Error("GetDepositWalletPoolAddress failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
-	c.Data["json"] = resp
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 func calcSHA256(data []byte) (calculatedHash []byte, err error) {
@@ -173,7 +193,7 @@ func (c *OuterController) Callback() {
 		c.AbortWithError(http.StatusBadRequest, errors.New("Bad checksum"))
 	}
 
-	logs.Debug("Callback => %s\n%#v", c.Ctx.Input.RequestBody, request)
+	logs.Debug("Callback => %s", c.Ctx.Input.RequestBody)
 
 	c.Ctx.WriteString("OK")
 }
@@ -181,12 +201,6 @@ func (c *OuterController) Callback() {
 // @Title Withdrawal Callback
 // @router /wallets/withdrawal/callback [post]
 func (c *OuterController) WithdrawalCallback() {
-	var request api.WithdrawTransactionRequest
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
 	// How to verify:
 	// 1. Try to find corresponding API secret by request.Requests[0].OrderID
 	// 2. Calculate checksum then compare to X-CHECKSUM header (refer to sample code bellow)
@@ -202,7 +216,7 @@ func (c *OuterController) WithdrawalCallback() {
 	//   c.AbortWithError(http.StatusBadRequest, errors.New("Bad checksum"))
 	// }
 
-	logs.Debug("Withdraw Callback => %s\n%#v", c.Ctx.Input.RequestBody, request)
+	logs.Debug("Withdraw Callback => %s", c.Ctx.Input.RequestBody)
 
 	c.Ctx.WriteString("OK")
 }
@@ -212,26 +226,17 @@ func (c *OuterController) WithdrawalCallback() {
 func (c *OuterController) CallbackResend() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	var request api.CallbackResendRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.ResendCallback(walletID, &request)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/collection/notifications/manual", walletID),
+		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("ResendCallback failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Withdraw transactions
@@ -239,39 +244,23 @@ func (c *OuterController) CallbackResend() {
 func (c *OuterController) WithdrawTransactions() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	var request api.WithdrawTransactionRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.WithdrawTransactions(walletID, &request)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions", walletID),
+		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("WithdrawTransactions failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Get state of withdrawal transaction
 // @router /wallets/:wallet_id/sender/transactions/:order_id [get]
 func (c *OuterController) GetWithdrawTransactionState() {
 	defer c.ServeJSON()
-
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
 
 	orderID := c.Ctx.Input.Param(":order_id")
 	if orderID == "" {
@@ -280,13 +269,17 @@ func (c *OuterController) GetWithdrawTransactionState() {
 		return
 	}
 
-	resp, err := api.GetWithdrawTransactionState(walletID, orderID)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%s", walletID, orderID),
+		nil, nil)
 	if err != nil {
 		logs.Error("GetWithdrawTransactionState failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Get balance of withdrawal wallet
@@ -294,20 +287,17 @@ func (c *OuterController) GetWithdrawTransactionState() {
 func (c *OuterController) GetWithdrawalWalletBalance() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetWithdrawalWalletBalance(walletID)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/balance", walletID),
+		nil, nil)
 	if err != nil {
 		logs.Error("GetWithdrawalWalletBalance failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Get API token status
@@ -315,20 +305,17 @@ func (c *OuterController) GetWithdrawalWalletBalance() {
 func (c *OuterController) GetTxAPITokenStatus() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetTxAPITokenStatus(walletID)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/apisecret", walletID),
+		nil, nil)
 	if err != nil {
 		logs.Error("GetTxAPITokenStatus failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query notification history
@@ -336,29 +323,17 @@ func (c *OuterController) GetTxAPITokenStatus() {
 func (c *OuterController) GetNotifications() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	fromTime, _ := c.GetInt64("from_time", -1)
-	toTime, _ := c.GetInt64("to_time", -1)
-	notificationType, _ := c.GetInt("type", -1)
-	if fromTime == -1 || toTime == -1 || notificationType == -1 {
-		logs.Error("Invalid parameters")
-		c.AbortWithError(http.StatusBadRequest, errors.New("Invalid parameters"))
-		return
-	}
-
-	resp, err := api.GetNotifications(walletID, fromTime, toTime, notificationType)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/notifications", walletID),
+		getQueryString(c.Ctx), nil)
 	if err != nil {
 		logs.Error("GetNotifications failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query notification by ID
@@ -366,26 +341,17 @@ func (c *OuterController) GetNotifications() {
 func (c *OuterController) GetWalletNotificationsByID() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/notifications/get_by_id", walletID),
+		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	var request api.GetNotificationsByIDRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.GetNotificationByID(walletID, &request)
-	if err != nil {
-		logs.Error("GetNotificationByID failed", err)
+		logs.Error("GetWalletNotificationsByID failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query wallet transaction history
@@ -393,32 +359,17 @@ func (c *OuterController) GetWalletNotificationsByID() {
 func (c *OuterController) GetTransactionHistory() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/transactions", walletID),
+		getQueryString(c.Ctx), nil)
 	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	fromTime, _ := c.GetInt64("from_time", -1)
-	toTime, _ := c.GetInt64("to_time", -1)
-	startIndex, _ := c.GetInt("start_index", 0)
-	requestNumber, _ := c.GetInt("request_number", 0)
-	state, _ := c.GetInt("state", -1)
-
-	if fromTime == -1 || toTime == -1 {
-		logs.Error("Invalid parameters")
-		c.AbortWithError(http.StatusBadRequest, errors.New("Invalid parameters"))
-		return
-	}
-
-	resp, err := api.GetTransactionHistory(walletID, fromTime, toTime, startIndex, requestNumber, state)
-	if err != nil {
-		logs.Error("QueryWalletTransactionHistory failed", err)
+		logs.Error("GetTransactionHistory failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query wallet block info
@@ -426,20 +377,17 @@ func (c *OuterController) GetTransactionHistory() {
 func (c *OuterController) GetWalletBlockInfo() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/blocks", walletID),
+		nil, nil)
 	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetWalletBlockInfo(walletID)
-	if err != nil {
-		logs.Error("GetBlockInfo failed", err)
+		logs.Error("GetWalletBlockInfo failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query invalid deposit addresses
@@ -447,20 +395,17 @@ func (c *OuterController) GetWalletBlockInfo() {
 func (c *OuterController) GetInvalidDepositAddresses() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetInvalidDepositAddresses(walletID)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/addresses/invalid-deposit", walletID),
+		nil, nil)
 	if err != nil {
 		logs.Error("GetInvalidDepositAddresses failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Query wallet basic info
@@ -468,20 +413,17 @@ func (c *OuterController) GetInvalidDepositAddresses() {
 func (c *OuterController) GetWalletInfo() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/info", walletID),
+		nil, nil)
 	if err != nil {
-		logs.Error("Invalid wallet ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	resp, err := api.GetWalletInfo(walletID)
-	if err != nil {
-		logs.Error("GetBlockInfo failed", err)
+		logs.Error("GetWalletInfo failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
-	c.Data["json"] = resp
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
 
 // @Title Verify addresses
@@ -489,23 +431,33 @@ func (c *OuterController) GetWalletInfo() {
 func (c *OuterController) VerifyAddresses() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid walled ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	var request api.VerifyAddressesRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-	}
-
-	resp, err := api.VerifyAddresses(walletID, &request)
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/addresses/verify", walletID),
+		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("VerifyAddresses failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
-	c.Data["json"] = resp
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query wallet transaction avarage blockchain fee
+// @router /wallets/:wallet_id/autofee [post]
+func (c *OuterController) GetAutoFee() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/autofee", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetAutoFee failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
 }
