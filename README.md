@@ -36,9 +36,7 @@
 <a name="get-started"></a>
 # Get Started
 
-- Get API code and API secret of the wallet on web console
-- Refer to [mock server](#mock-server) sample code 
-
+- Refer to [mock server](#mock-server) to integrate CYBAVO SOFA API.
 
 # Deposit Wallet API
 
@@ -1133,7 +1131,8 @@ The response includes the following parameters:
 	- ./mockserver
 
 ### Setup configuration
->	Set the backend server URL to the following configuration in mockserver.app.conf
+
+>	Configure CYBAVO API server URL in mockserver.app.conf
 
 ```
 api_server_url="BACKEND_SERVER_URL"
@@ -1324,6 +1323,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/autofee
 # Other Language Versions
 - [JAVA](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA)
 - [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT)
+- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP)
 
 ##### [Back to top](#table-of-contents)
 
