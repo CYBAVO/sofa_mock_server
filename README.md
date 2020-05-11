@@ -2,33 +2,35 @@
 ## Table of contents
 
 - [Get Started](#get-started)
-- Deposit Wallet API
-	- [Create deposit wallet addresses](#create-deposit-wallet-addresses)
-	- [Query address of deposit wallet](#query-address-of-deposit-wallet)
-	- [Query pool address of deposit wallet](#query-pool-address-of-deposit-wallet)
-	- [Resend pending or failed deposit callbacks](#resend-pending-or-failed-deposit-callbacks)
-- Withdraw Wallet API
-	- [Withdraw](#withdraw)
-	- [Query withdrawal transaction state](#query-withdrawal-transaction-state)
-	- [Query withdrawal wallet balance](#query-withdrawal-wallet-balance)
-- Query API
-	- [Query API token status](#query-api-token-status)
-	- [Query notification callback history](#query-notification-callback-history)
-	- [Query notification callback by ID](#query-notification-callback-by-id)
-	- [Query vault/batch wallet transaction history](#query-vault/batch-wallet-transaction-history)
-	- [Query wallet block info](#query-wallet-block-info)
-	- [Query invalid deposit addresses](#query-invalid-deposit-addresses)
-	- [Query wallet basic info](#query-wallet-basic-info)
-	- [Verify addresses](#verify-addresses)
-	- [Query wallet transaction avarage blockchain fee](#query-wallet-transaction-autofee)
+- [API Authentication](#api-authentication)
+- [Callback Integration](#callback-integration)
+- REST API
+	- Deposit Wallet API
+		- [Create Deposit Addresses](#create-deposit-wallet-addresses)
+		- [Query Deposit Addresses](#query-address-of-deposit-wallet)
+		- [Query Pool Address](#query-pool-address-of-deposit-wallet)
+		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
+		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
+	- Withdraw Wallet API
+		- [Withdraw Assets](#withdraw)
+		- [Query Withdrawal Transaction State](#query-withdrawal-transaction-state)
+		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
+	- Query API
+		- [Query API Code Status](#query-api-code-status)
+		- [Query Callback History](#query-notification-callback-history)
+		- [Query Callback Detail](#query-notification-callback-by-id)
+		- [Query Wallet Synchronization Info](#query-wallet-block-info)
+		- [Query Wallet Info](#query-wallet-basic-info)
+		- [Query Transaction Avarage Fee](#query-wallet-transaction-autofee)
+		- [Query Transaction History](#query-vault/batch-wallet-transaction-history)
+		- [Verify Addresses](#verify-addresses)
 - Testing
 	- [Mock Server](#mock-server)
 	- [CURL Testing Commands](#curl-testing-commands)
 	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
-	- [Notification Callback Type Definition
-](#notification-callback-type-definition)
+	- [Callback Type Definition](#callback-type-definition)
 	- [Transaction State Filter Definition](#transaction-state-filter-definition)
 	- [Currency Definition](#currency-definition)
 	- [Memo Requirement](#memo-requirement)
@@ -36,18 +38,81 @@
 <a name="get-started"></a>
 # Get Started
 
-- Refer to [mock server](#mock-server) to integrate CYBAVO SOFA API.
+### How to deposit?
+- Setup a deposit wallet and configure it (via web control panel)
+	- Refer to CYBAVO VAULT SOFA User Manual for detailed steps.
+- Request an API code/secret (via web control panel)
+- Create deposit addresses (via CYBAVO SOFA API)
+	- Refer to [Create deposit wallet addresses](#create-deposit-wallet-addresses) API
+- Waiting for the CYBAVO SOFA system detecting transactions to those deposit addresses
+- Handle the deposit callback
+	- Use the callback data to update certain data on your system.
+	- Refer to [Callback Integration](#callback-integration) for detailed information.
+
+### How to withdraw?
+- Setup a withdrawal wallet and configure it (via web control panel)
+	- Refer to CYBAVO VAULT SOFA User Manual for detailed steps.
+- Request an API code/secret (via web control panel)
+- Make withdraw request (via CYBAVI SOFA API)
+	- Refer to [Withdraw](#withdraw) API
+- Waiting for the CYBAVO SOFA system broadcasting transactions to blockchain
+- Handle the withdrawal callback
+	- Use the callback data to update certain data on your system.
+	- Refer to [Callback Integration](#callback-integration) for detailed information.
+
+### Try it now
+- Use [mock server](#mock-server) to test CYBAVO SOFA API right away.
+
+### Start integration
+- To make a correct API call, refer to [API Authentication](#api-authentication).
+- To handle callback correctly, refer to [Callback Integration](#callback-integration).
+
+<a name="api-authentication"></a>
+# API Authentication
+
+- The CYBAVO SOFA system verifies all incoming requests. All requests must include X-API-CODE, X-CHECKSUM headers otherwise caller will get a 403 Forbidden error.
+
+### How to make a correct request?
+- Put the API code in the X-API-CODE header.
+- Calculate the checksum with the corresponding API secret and put the checksum in the X-CHECKSUM header.
+  - The checksum calculation will use all the query parameters, the current timestamp, user-defined random string and the post body (if any).
+- Please refer to the code snippet on the github project to learn how to calculate the checksum.
+	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/api/apicaller.go#L40)
+	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L54)
+	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php)
+
+<a name="callback-integration"></a>
+# Callback Integration
+
+- How to distinguish betwenn deposit and withdrawal callbacks?
+	- Deposit Callback (callback type 1)
+	  - The **serial** of the callback is unique, use this ID to identify the deposit request, not the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.
+	- Withdrawal Callback (callback type 2)
+	  - The **order_id** of the callback is unique, use this ID to identify the withdrawal request.
+
+> It is important to distinguish between unique callbacks to avoid improper handling of deposit / withdrawal requests.
+
+- To ensure that the callbacks have processed by callback handler, the CYBAVO SOFA system will continue to send the callbacks to the callback URL until a callback confirmation (HTTP/1.1 200 OK) is received or exceeds the number of retries (retry time interval: 1-3-5-15-45 mins).
+	- If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the [resend](#resend-pending-or-failed-deposit-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.
+
+- Refer to [Callback Definition](#callback-definition), [Callback Type Definition](#callback-type-definition) for detailed definition.
+
+
+# REST API
 
 # Deposit Wallet API
 
 <a name="create-deposit-wallet-addresses"></a>
-## Create deposit wallet addresses
+### Create Deposit Addresses
 
-You can create new deposit address through this API, once the addresses were created, both of the deposit and withdraw behavior occurs on these addresses will be callback..
+Create deposit addresses on certain wallet. Once addresses are created, the CYBAVO SOFA system will callback when transactions are detected on these addresses.
+
+##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
 
-> Wallet ID must be a deposit wallet's ID
+> `WALLET_ID` must be a deposit wallet ID
 
 - [Sample curl command](#curl-create-deposit-wallet-addresses)
 
@@ -58,7 +123,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/addresses
+/v1/sofa/wallets/107950/addresses
 ```
 
 ###### Post body
@@ -87,18 +152,18 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Required | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
-| count | int | YES | Specify address count, max value is 1000 |
-| memos | array | YES (if create BNB, XLM, XRP or EOS wallet) | Specify memos for BNB, XLM, XRP or EOS deposit wallet. Refer to [Memo Requirement](#memo-requirement) |
+| count | int | required, max `1000` | Specify address count |
+| memos | array | required (creating BNB, XLM, XRP or EOS wallet) | Specify memos for BNB, XLM, XRP or EOS deposit wallet. Refer to [Memo Requirement](#memo-requirement) |
 
-> NOTE: The length of `memos` must equal to `count` while creating addresses for BNB or EOS wallet
+> NOTE: The length of `memos` must equal to `count` while creating addresses for BNB, XLM, XRP or EOS wallet.
 
 ##### Response Format
 
 An example of a successful response:
 
-For BNB or EOS wallet:
+For BNB, XLM, XRP or EOS wallet:
 	
 ```json
 {
@@ -109,7 +174,7 @@ For BNB or EOS wallet:
 }
 ```
 	
-For wallet excepts BNB and EOS:
+For wallet excepts BNB, XLM, XRP or EOS:
 	
 ```json
 {
@@ -131,13 +196,15 @@ The response includes the following parameters:
 
 
 <a name="query-address-of-deposit-wallet"></a>
-## Query address of deposit wallet
+### Query Deposit Addresses
 
-Query deposit addresses those created by address creation API in a deposit wallet.
+Query the deposit addresses created by the [Create Deposit Addresses](#create-deposit-wallet-addresses) API.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/addresses?start\_index=`from`&request\_number=`count`
 
-> Wallet ID must be a deposit wallet's ID
+> `WALLET_ID` must be a deposit wallet ID
 
 - [Sample curl command](#curl-get-deposit-wallet-addresses)
 
@@ -157,10 +224,10 @@ An example of the request:
 
 The request includes the following parameters:
 
-| Field | Type  | Requried | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
-| start_index | int | NO | Specify address start index (default: 0) |
-| request_number | int | NO | Request address count (default: 1000, max: 5000) |
+| start_index | int | optional, default `0` | Specify address start index |
+| request_number | int | optional, default `1000`, max `5000` | Request address count |
 
 ##### Response Format
 
@@ -229,17 +296,61 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-pool-address-of-deposit-wallet"></a>
-## Query pool address of deposit wallet
+<a name="query-invalid-deposit-addresses"></a>
+### Query Invalid Deposit Addresses
 
-Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrency.
-> In BTC/ETH/BCH/LTC, the cryptocurrency in the pool address will be used to pay for token transfer(Ex. ERC20, USDT-Omni).
+When an abnormal deposit is detected, the CYBAVO SOFA system will set the deposit address to invalid. Use this API to obtain the all invalid deposit addresses for further usage.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
+
+> `WALLET_ID` must be a deposit wallet ID
+
+- [Sample curl command](#curl-query-invalid-deposit-addresses)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/addresses/invalid-deposit
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "addresses": ["0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2"]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| addresses | array | Array of invalid deposit address |
+
+##### [Back to top](#table-of-contents)
+
+<a name="query-pool-address-of-deposit-wallet"></a>
+### Query Pool Address
+
+Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrencies.
+
+> In BTC, ETH, BCH or LTC, the cryptocurrency in the pool address will be used to pay for token transfer(ex. ERC20, USDT-Omni).
 > 
-> In EOS/XRP/XLM/BNB, the pool address is the user’s deposit address, and all user will be distinguished by memo/tag field.
+> In EOS, XRP, XLM or BNB, the pool address is the user's deposit address. All user deposits will be distinguished by memo / tag field.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/pooladdress
 
-> Wallet ID must be a deposit wallet's ID
+> `WALLET_ID` must be a deposit wallet ID
 
 - [Sample curl command](#curl-get-deposit-wallet-pool-address)
 
@@ -272,11 +383,19 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 <a name="resend-pending-or-failed-deposit-callbacks"></a>
-## Resend pending or failed deposit callbacks
+### Resend Deposit Callbacks
 
-When the deposit callback sent to your server and not got the correct response, the SOFA system will resend the callback automatically (time interval: 1-3-5-15-45 mins), and if all resends were failed, for example your server is under maintenance or network is corrupted at that time. All the callbacks will be put in failed zone, and you can use this api to ask SOFA system resend again or you can resend it through SOFA UI resend button.
+The callback handler can call this API to resend pending or failed deposit callbacks.
+
+Refer to [Callback Integration](#callback-integration) for callback rules.
+
+> The resend operation could be requested on the web control panel as well.
+
+##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/collection/notifications/manual
+
+> `WALLET_ID` must be a deposit wallet ID
 
 - [Sample curl command](#curl-resend-all-pending-or-failed-deposit-callbacks)
 
@@ -302,9 +421,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Required | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :---  | :---        |
-| notification_id | int64 | YES | Specify callback ID to resend, 0 means all |
+| notification_id | int64 | required, 0 means all | Specify callback ID to resend |
 
 > This ID equal to callback data's serial/order_id
 
@@ -330,25 +449,27 @@ The response includes the following parameters:
 # Withdraw Wallet API
 
 <a name="withdraw"></a>
-## Withdraw
+### Withdraw Assets
 
-Withdraw assets from withdraw wallet. You have to provide a unique **order_id** for each request, we will send the callback with the unique **order_id** when the withdraw is success (from in pool to in chain). 
+To withdraw assets from an withdrawal wallet, the caller must to provide an unique **order_id** for each request, the CYBAVO SOFA system will send the callback with the unique **order_id** when the withdrawal is success (from `in pool` state to `in chain` state). 
+
+##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions
 
-> Wallet ID must be a withdraw wallet's ID
+> `WALLET_ID` must be a withdrawal wallet ID
 > 
-> order\_id must be prefixed. The prefix is 888888_ in following sample request.
+> The order\_id must be prefixed. **Find prefix from corresponding wallet detail on web control panel.**
 >
->> **Find prefix from corresponding wallet detail on web console UI.**
->
-> If withdraw BNB or XRP, this API will check whether the destination addresse needs memo / destination tag or not. If the address does need memo, the withdraw API will fail without memo specified.
+> If withdraw BNB or XRP, this API will check whether the destination addresse needs memo / destination tag or not. If the address does need memo / destination tag, the API will fail without memo / destination tag specified.
 
 - [Sample curl command](#curl-withdraw)
 
 ##### Request Format
 
 An example of the request:
+
+> The prefix is 888888_ in following sample request.
 
 ###### API
 
@@ -395,18 +516,18 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Required | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
-| order_id | string | YES | Specify an unique ID, order ID must be prefixed (Up to 255 chars) |
-| address | string | YES | Outgoing address |
-| amount | string | YES | Withdrawal amount |
-| memo | string | NO | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
-| user_id | string | NO | Specify certain user |
-| message | string | NO | Message (This message only savced on CYBAVO, not sent to blockchain) |
-| block\_average_fee | int | NO | Use avarage blockchain fee within latest N blocks (acceptable value 1~30) |
-| manual_fee | int | NO | Specify blockchain fee in smallest unit of wallet currency (acceptable value 1~1000) |
+| order_id | string | required, max `255` chars | Specify an unique ID, order ID must be prefixed |
+| address | string | required | Outgoing address |
+| amount | string | required | Withdrawal amount |
+| memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
+| user_id | string | optional | Specify certain user |
+| message | string | optional | Message (This message only savced on CYBAVO, not sent to blockchain) |
+| block\_average_fee | int | optional, range `1~30` | Use avarage blockchain fee within latest N blocks |
+| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency |
 
-> The order\_id must be prefixed. Find prefix from corresponding wallet detail on web console UI
+> The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
 >
 > block\_average\_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.
 
@@ -431,14 +552,18 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-[Get withdrawal transaction state](#query-withdrawal-transaction-state)
-
 <a name="query-withdrawal-transaction-state"></a>
-## Query withdrawal transaction state
+### Query Withdrawal Transaction State
 
-Used to check the withdrawal state.
+Check the withdrawal transaction state of certain order ID.
+
+> The order ID is used in the [withdraw assets](#withdraw) API.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`
+
+> `WALLET_ID` must be a withdrawal wallet ID
 
 - [Sample curl command](#curl-query-withdrawal-transaction-state)
 
@@ -483,11 +608,15 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 <a name="query-withdrawal-wallet-balance"></a>
-## Query withdrawal wallet balance
+### Query Withdrawal Wallet Balance
 
-Use to get the withdrawal wallet balance.
+Get the withdrawal wallet balance. Facilitate to establish a real-time balance monitoring mechanism.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/balance
+
+> `WALLET_ID` must be a withdrawal wallet ID
 
 - [Sample curl command](#curl-query-withdrawal-wallet-balance)
 
@@ -536,10 +665,12 @@ The response includes the following parameters:
 
 # Query API
 
-<a name="query-api-token-status"></a>
-## Query API token status
+<a name="query-api-code-status"></a>
+### Query API Code Status
 
-Used to check the api token status, you can see if the api token is expired or not. Every time you apply a new api token, you need to call at least one api to activate it, this query api will be useful in this case. 
+Query the API code info of a certain wallet. Use the `inactivated` API code in any request will activate it. Once activated, the currently activated API code will immediately become invalid.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/apisecret
 
@@ -575,21 +706,21 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| valid | object | Activated API token |
-| inactivated | object | Not active API token |
+| valid | object | Activated API code |
+| inactivated | object | Not active API code |
 | api_code | string | API code for querying wallet |
 | exp | int64 | API code expiration unix time in UTC |
 
-> The un-enabled API-CODE will automatically take effect when it is used for the first time (fill in **X-API-CODE**), and invalidate the currently enabled API-CODE
-
-> If you use the invalid API-CODE query, you will get 403 Forbidden
+> Use an invalid API-CODE, the caller will get a 403 Forbidden error.
 
 ##### [Back to top](#table-of-contents)
 
 <a name="query-notification-callback-history"></a>
-## Query notification callback history
+### Query Callback History
 
-Used to query some kind of callback during a time interval.
+Used to query some kind of callbacks within a time interval.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
 
@@ -607,13 +738,13 @@ An example of the request:
 
 The request includes the following parameters:
 
-###### API Parameters
+###### Query Parameters
 
-| Field | Type  | Required | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
-| from_time | int64 | NO | Start date (unix time in UTC) (default: 0) |
-| to_time | int64 | NO | End date (unix time in UTC) (default: current time) |
-| type | int | NO | Refer to [Notification Callback Type](#notification-callback-type-definition) (default: -1)  |
+| from_time | int64 | optional, default `0` | Start date (unix time in UTC) |
+| to_time | int64 | optional, default `current time` | End date (unix time in UTC) |
+| type | int | optional, default `-1` | Refer to [Callback Type](#callback-type-definition) |
 
 ##### Response Format
 
@@ -659,9 +790,11 @@ The response includes the following parameters:
 
 
 <a name="query-notification-callback-by-id"></a>
-## Query notification callback by ID
+### Query Callback Detail
 
-Used to query if the callback exist or not by id, you can use this api for double confirming if an deposit callback is really existed or not.
+Query the detailed information of the callback by its serial ID. It can be used to reconfirm whether a deposit callback exists.
+
+##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get\_by_id
 
@@ -692,9 +825,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type | Required | Description |
+| Field | Type | Note | Description |
 | :---  | :--- | :--- | :---        |
-| ids | array | YES | Specify the IDs for query |
+| ids | array | requried | Specify the IDs for query |
 
 
 ##### Response Format
@@ -761,14 +894,172 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+<a name="query-wallet-basic-info"></a>
+### Query Wallet Info
+
+Get wallet basic information.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/info
+
+- [Sample curl command](#curl-query-wallet-basic-info)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/info
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "currency": 60,
+  "currency_name": "ETH",
+  "address": "0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943",
+  "token_name": "TTF TOKEN",
+  "token_symbol": "TTF",
+  "token_contract_address": "0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40",
+  "token_decimals": "18"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| currency_name | string | Name of currency |
+| address | string | Wallet address |
+
+> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
+If `WALLET_ID` is a token wallet, the following fields present:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| token_name | string | Token name |
+| token_symbol | string | Token symbol |
+| token\_contract_address | string | Token contract address |
+| token_decimals | string | Token decimals |
+
+##### [Back to top](#table-of-contents)
+
+<a name="query-wallet-block-info"></a>
+### Query Wallet Synchronization Info
+
+Get the blockchain synchronization status of a wallet.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/blocks
+
+- [Sample curl command](#curl-query-deposit/withdraw-wallet-block-info)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/blocks
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "latest_block_height": 29317651,
+  "synced_block_height": 28529203
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| latest\_block_height | int64 | The latest block height on blockchain |
+| synced\_block_height | int64 | The current synced block height |
+
+##### [Back to top](#table-of-contents)
+
+<a name="query-wallet-transaction-autofee"></a>
+### Query Transaction Avarage Fee
+
+Query avarage blockchain fee within latest N blocks.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/autofee
+
+- [Sample curl command](#curl-query-wallet-transaction-autofee)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/autofee
+```
+
+###### Post body
+
+```json
+{
+  "block_num": 1
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---     | :---        |
+| block_num | int | optional, default `1`, range `1~30` | Get avarage blockchain fee within latest N blocks |
+
+##### Response Format
+
+An example of a successful response:
+	
+```json
+{
+	"auto_fee": "1"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| auto_fee | string | Mining fee denominated in the smallest cryptocurrency unit |
+
+
+##### [Back to top](#table-of-contents)
 
 
 <a name="query-vault/batch-wallet-transaction-history"></a>
-## Query vault/batch wallet transaction history
+### Query Transaction History
 
-Use to get the wallet’s transaction history.
+Get transaction history of vault or batch wallets.
+
+##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
+
+> `WALLET_ID` must be a vault or batch wallet ID
 
 - [Sample curl command](#curl-query-vault/batch-wallet-transaction-history)
 
@@ -784,15 +1075,15 @@ An example of the request:
 
 The request includes the following parameters:
 
-###### API Parameters
+###### Query Parameters
 
-| Field | Type | Required | Description |
+| Field | Type | Note | Description |
 | :---  | :--- | :--- | :---        |
-| from_item | int64 | NO | Start date (unix time in UTC) (default: 0) |
-| to_item | int64 | NO | End date (unix time in UTC) (default: current time) |
-| start_index | int | NO | Index of starting transaction record (default: 0) |
-| request_number | int | NO | Count of returning transaction record (default: 1000, max: 5000) |
-| state | int | NO | Refer to [Transaction State Filter](#transaction-state-filter-definition) (default: -1) |
+| from_item | int64 | optional, default `0` | Start date (unix time in UTC) |
+| to_item | int64 | optional, default `current time` | End date (unix time in UTC) |
+| start_index | int | optional, default `0` | Index of starting transaction record |
+| request_number | int | optional, default `1000`, max `5000` | Count of returning transaction record |
+| state | int | optional, default `-1` | Refer to [Transaction State Filter](#transaction-state-filter-definition) |
 
 ##### Response Format
 
@@ -859,145 +1150,14 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-wallet-block-info"></a>
-## Query wallet block info
-
-Use to get the wallet’s syncing block information.
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/blocks
-
-- [Sample curl command](#curl-query-deposit/withdraw-wallet-block-info)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/blocks
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "latest_block_height": 29317651,
-  "synced_block_height": 28529203
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| latest\_block_height | int64 | The latest block height on blockchain |
-| synced\_block_height | int64 | The current synced block height |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-invalid-deposit-addresses"></a>
-## Query invalid deposit addresses
-
-The fake deposit will make the address be added to invalid deposit address. Used this api to get the invalid list for further usage.
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
-
-- [Sample curl command](#curl-query-invalid-deposit-addresses)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/addresses/invalid-deposit
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "addresses": ["0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2"]
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| addresses | array | Array of invalid deposit address |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-wallet-basic-info"></a>
-## Query wallet basic info
-
-Use to get wallet basic information.
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/info
-
-- [Sample curl command](#curl-query-invalid-deposit-addresses)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/info
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "currency": 60,
-  "currency_name": "ETH",
-  "address": "0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943",
-  "token_name": "TTF TOKEN",
-  "token_symbol": "TTF",
-  "token_contract_address": "0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40",
-  "token_decimals": "18"
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
-| currency_name | string | Name of currency |
-| address | string | Wallet address |
-
-> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
-
-
-If `WALLET_ID` is a token wallet, the following fields present:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| token_name | string | Token name |
-| token_symbol | string | Token symbol |
-| token\_contract_address | string | Token contract address |
-| token_decimals | string | Token decimals |
-
-##### [Back to top](#table-of-contents)
-
 <a name="verify-addresses"></a>
-## Verify addresses
+### Verify Addresses
 
-Check if the addresses are well-formatted in this cryptocurrency, Ex. ETH must have the prefix 0x, BTC should be started with 1 or 3 or bc1, etc.
+Check if the address conforms to the wallet cryptocurrency address format (for example, ETH must have the prefix 0x, BTC should start with 1, 3 or bc1, etc).
 
-> If the wallet's cryptocurrency is BNB or XRP, there will be a `must_need_memo` flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address.
+> If the wallet's cryptocurrency is BNB or XRP, there will be a `must_need_memo` flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address.
+
+##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses/verify
 
@@ -1030,9 +1190,9 @@ The request includes the following parameters:
 
 ###### Post body
 
-| Field | Type  | Requried | Description |
+| Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
-| addresses | array | YES | Specify the address for verification |
+| addresses | array | requried | Specify the address for verification |
 
 ##### Response Format
 
@@ -1060,62 +1220,7 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | result | array | Array of addresses' verification result |
-| must\_need\_memo | boolean | Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to the address |
-
-##### [Back to top](#table-of-contents)
-
-
-<a name="query-wallet-transaction-autofee"></a>
-## Query wallet transaction avarage blockchain fee
-
-Query avarage blockchain fee within latest N blocks.
-
-**POST** /v1/sofa/wallets/`WALLET_ID`/autofee
-
-- [Sample curl command](#curl-query-wallet-transaction-autofee)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/autofee
-```
-
-###### Post body
-
-```json
-{
-  "block_num": 1
-}
-```
-
-The request includes the following parameters:
-
-###### Post body
-
-| Field | Type  | Requried | Description |
-| :---  | :---  | :--- | :---        |
-| block_num | int | NO | Get avarage blockchain fee within latest N blocks (acceptable value 1~30)(default: 1) |
-
-##### Response Format
-
-An example of a successful response:
-	
-```json
-{
-	"auto_fee": "1"
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| auto_fee | string | Mining fee denominated in the smallest cryptocurrency unit |
-
+| must\_need\_memo | boolean | Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1139,17 +1244,17 @@ api_server_url="BACKEND_SERVER_URL"
 ```
 
 ### Put wallet API code/secret into mock server
--	Get API code/secret on web console
-	-	API-CODE, API-SECRET, WALLET-ID
-- 	Put API code/secret to mock server's database
+-	Get API code/secret on web control panel
+	-	API_CODE, API\_SECRET, WALLET\_ID
+- 	Put API code/secret to mock server's databaså
 
 ```
-curl -X POST -d '{"api_code":"API-CODE","api_secret":"API-SECRET"}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apitoken
+curl -X POST -d '{"api_code":"API_CODE","api_secret":"API_SECRET"}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken
 ```
 
 ### Register mock server callback URL
->	Operate on web admin console
+>	Operate on web control panel
 
 Notification Callback URL
 
@@ -1173,155 +1278,156 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 # CURL Testing Commands
 
 <a name="curl-create-deposit-wallet-addresses"></a>
-### Create deposit wallet addresses
+### Create Deposit Addresses
 
-For BNB or EOS wallet:
+For BNB, XLM, XRP or EOS wallet:
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"count":2,"memos":["001","002"]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses
 ```
 
-For wallet excepts BNB or EOS:
+For wallet excepts BNB, XLM, XRP and EOS:
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"count":2}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses
 ```
 - [API definition](#create-deposit-wallet-addresses)
 
 <a name="curl-get-deposit-wallet-addresses"></a>
-### Get deposit wallet addresses
+### Get Deposit Addresses
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses?start_index=0&request_number=1000'
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&request_number=1000'
 ```
 - [API definition](#query-address-of-deposit-wallet)
 
-<a name="curl-get-deposit-wallet-pool-address"></a>
-### Get deposit wallet pool address
+<a name="curl-query-invalid-deposit-addresses"></a>
+### Query Invalid Deposit Addresses
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/pooladdress'
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid-deposit'
+```
+- [API definition](#query-invalid-deposit-addresses)
+
+
+<a name="curl-get-deposit-wallet-pool-address"></a>
+### Get Pool Address
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress'
 ```
 - [API definition](#query-pool-address-of-deposit-wallet)
 
 <a name="curl-resend-all-pending-or-failed-deposit-callbacks"></a>
-### Resend all pending or failed deposit callbacks
+### Resend Deposit Callbacks
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"notification_id":0}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/callback/resend
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend
 ```
 - [API definition](#resend-pending-or-failed-deposit-callbacks)
 
 <a name="curl-withdraw"></a>
-### Withdraw
+### Withdraw Assets
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/withdraw
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw
 ```
 - [API definition](#withdraw)
 
 <a name="curl-query-withdrawal-transaction-state"></a>
-### Query withdrawal transaction state
+### Query Withdrawal Transaction State
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/transactions/{ORDER_ID}
+curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}
 ```
 - [API definition](#query-withdrawal-transaction-state)
 
 <a name="curl-query-withdrawal-wallet-balance"></a>
-### curl-query-withdrawal-wallet-balance
+### Query Withdrawal Wallet Balance
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/sender/balance
+curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
 ```
 - [API definition](#query-withdrawal-wallet-balance)
 
 <a name="curl-query-api-token-status"></a>
-### Query API token status
+### Query API Code Status
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET-ID}/apisecret
+curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
 ```
-- [API definition](#query-api-token-status)
+- [API definition](#query-api-code-status)
 
 <a name="curl-query-notification-callback-history"></a>
-### Query notification callback history
+### Query Callback History
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
 ```
 - [API definition](#query-notification-callback-history)
 
 <a name="curl-query-notification-callback-by-id"></a>
-### Query notification callback by ID
+### Query Callback Detail
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"ids":[90000000140,90000000139]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/notifications/get_by_id
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id
 ```
 - [API definition](#query-notification-callback-by-id)
 
-<a name="curl-query-vault/batch-wallet-transaction-history"></a>
-### Query vault/batch wallet transaction history
-
-```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8'
-```
-- [API definition](#query-vault/batch-wallet-transaction-history)
-
-<a name="curl-query-deposit/withdraw-wallet-block-info"></a>
-### Query deposit/withdraw wallet block info
-
-```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/blocks'
-```
-- [API definition](#query-wallet-block-info)
-
-<a name="curl-query-invalid-deposit-addresses"></a>
-#### Query invalid deposit addresses
-
-```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/invalid-deposit'
-```
-- [API definition](#query-invalid-deposit-addresses)
-
 <a name="curl-query-wallet-basic-info"></a>
-### Query wallet basic info
+### Query Wallet Info
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET-ID}/info'
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info'
 ```
 - [API definition](#query-wallet-basic-info)
 
-<a name="curl-verify-addresses"></a>
-### Verify addresses
+<a name="curl-query-deposit/withdraw-wallet-block-info"></a>
+### Query Wallet Synchronization Info
 
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/addresses/verify
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks'
 ```
-
-- [API definition](#verify-addresses)
+- [API definition](#query-wallet-block-info)
 
 <a name="curl-query-wallet-transaction-autofee"></a>
-### Query wallet transaction avarage blockchain fee
+### Query Avarage Transaction Fee
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
-http://localhost:8889/v1/mock/wallets/{WALLET-ID}/autofee
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee
 ```
 
 - [API definition](#query-wallet-transaction-autofee)
+
+<a name="curl-query-vault/batch-wallet-transaction-history"></a>
+### Query Transaction History
+
+```
+curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8'
+```
+- [API definition](#query-vault/batch-wallet-transaction-history)
+
+<a name="curl-verify-addresses"></a>
+### Verify Addresses
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
+```
+
+- [API definition](#verify-addresses)
 
 ##### [Back to top](#table-of-contents)
 
 <a name="other-language-versions"></a>
 # Other Language Versions
-- [JAVA](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA)
+- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA)
 - [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT)
 - [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP)
 
@@ -1330,7 +1436,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET-ID}/autofee
 # Appendix
 
 <a name="callback-definition"></a>
-## Callback Definition
+### Callback Definition
 
 <table>
   <tr>
@@ -1495,8 +1601,8 @@ Callback sample:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="notification-callback-type-definition"></a>
-## Notification Callback Type Definition
+<a name="callback-type-definition"></a>
+### Callback Type Definition
 
 | ID   | Description |
 | :--- | :---        |
@@ -1509,7 +1615,7 @@ Callback sample:
 ##### [Back to top](#table-of-contents)
 
 <a name="transaction-state-filter-definition"></a>
-## Transaction State Filter Definition
+### Transaction State Filter Definition
 
 | ID   | Description |
 | :--- | :---        |
@@ -1525,7 +1631,7 @@ Callback sample:
 ##### [Back to top](#table-of-contents)
 
 <a name="currency-definition"></a>
-## Currency Definition
+### Currency Definition
 
 | ID   | Description |
 | :--- | :---        |
@@ -1547,7 +1653,7 @@ Callback sample:
 ##### [Back to top](#table-of-contents)
 
 <a name="memo-requirement"></a>
-## Memo Requirement
+### Memo Requirement
 
 | Currency | Description |
 | :--- | :---        |
