@@ -87,7 +87,7 @@
 
 - How to distinguish betwenn deposit and withdrawal callbacks?
 	- Deposit Callback (callback type 1)
-	  - The **serial** of the callback is unique, use this ID to identify the deposit request, not the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.
+	  - The combination of **txid** and **vout_index** of the callback is unique, use this combined ID to identify the deposit request, not to use only the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.
 	- Withdrawal Callback (callback type 2)
 	  - The **order_id** of the callback is unique, use this ID to identify the withdrawal request.
 
@@ -1275,7 +1275,7 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 ##### [Back to top](#table-of-contents)
 
 <a name="curl-testing-commands"></a>
-# CURL Testing Commands
+# cURL Testing Commands
 
 <a name="curl-create-deposit-wallet-addresses"></a>
 ### Create Deposit Addresses

@@ -487,7 +487,7 @@ kbd {
 <li>Deposit Callback (callback type 1)
 
 <ul>
-<li>The <strong>serial</strong> of the callback is unique, use this ID to identify the deposit request, not the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.</li>
+<li>The combination of <strong>txid</strong> and <strong>vout_index</strong> of the callback is unique, use this combined ID to identify the deposit request, not to use only the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.</li>
 </ul></li>
 <li>Withdrawal Callback (callback type 2)
 
@@ -2263,7 +2263,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken</code></pre></div>
 
 <p><a name="curl-testing-commands"></a></p>
 
-<h1 id="toc_129">CURL Testing Commands</h1>
+<h1 id="toc_129">cURL Testing Commands</h1>
 
 <p><a name="curl-create-deposit-wallet-addresses"></a></p>
 
