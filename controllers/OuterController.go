@@ -62,6 +62,15 @@ func (c *OuterController) getWalletID() int64 {
 	return walletID
 }
 
+func (c *OuterController) getOrderID() string {
+	orderID := c.Ctx.Input.Param(":order_id")
+	if orderID == "" {
+		logs.Error("Invalid order ID")
+		c.AbortWithError(http.StatusBadRequest, errors.New("invalid order id"))
+	}
+	return orderID
+}
+
 func (c *OuterController) AbortWithError(status int, err error) {
 	resp := api.ErrorCodeResponse{
 		ErrMsg:  err.Error(),
@@ -76,15 +85,10 @@ func (c *OuterController) AbortWithError(status int, err error) {
 func (c *OuterController) SetAPIToken() {
 	defer c.ServeJSON()
 
-	walletID, err := strconv.ParseInt(c.Ctx.Input.Param(":wallet_id"), 10, 64)
-	if err != nil {
-		logs.Error("Invalid walled ID =>", err)
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
+	walletID := c.getWalletID()
 
 	var request api.SetAPICodeRequest
-	err = json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
@@ -241,14 +245,34 @@ func (c *OuterController) CallbackResend() {
 
 // @Title Withdraw transactions
 // @router /wallets/:wallet_id/withdraw [post]
-func (c *OuterController) WithdrawTransactions() {
+func (c *OuterController) WithdrawAssets() {
 	defer c.ServeJSON()
 
 	walletID := c.getWalletID()
 	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions", walletID),
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
-		logs.Error("WithdrawTransactions failed", err)
+		logs.Error("WithdrawAssets failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Cancel withdraw request that current state is init
+// @router /wallets/:wallet_id/sender/transactions/:order_id/cancel [post]
+func (c *OuterController) CancelWithdrawTransactions() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	orderID := c.getOrderID()
+	resp, err := api.MakeRequest(walletID, "POST",
+		fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%s/cancel", walletID, orderID),
+		nil, nil)
+	if err != nil {
+		logs.Error("CancelWithdrawTransactions failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
@@ -262,14 +286,8 @@ func (c *OuterController) WithdrawTransactions() {
 func (c *OuterController) GetWithdrawTransactionState() {
 	defer c.ServeJSON()
 
-	orderID := c.Ctx.Input.Param(":order_id")
-	if orderID == "" {
-		logs.Error("Invalid order ID")
-		c.AbortWithError(http.StatusBadRequest, errors.New("invalid order id"))
-		return
-	}
-
 	walletID := c.getWalletID()
+	orderID := c.getOrderID()
 	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%s", walletID, orderID),
 		nil, nil)
 	if err != nil {
@@ -336,9 +354,9 @@ func (c *OuterController) GetNotifications() {
 	c.Data["json"] = m
 }
 
-// @Title Query notification by ID
+// @Title Query notification by serial
 // @router /wallets/:wallet_id/notifications/get_by_id [post]
-func (c *OuterController) GetWalletNotificationsByID() {
+func (c *OuterController) GetCallbackBySerial() {
 	defer c.ServeJSON()
 
 	walletID := c.getWalletID()
@@ -346,6 +364,56 @@ func (c *OuterController) GetWalletNotificationsByID() {
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("GetWalletNotificationsByID failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query deposit callback by txid and vout_index
+// @router /wallets/:wallet_id/receiver/notifications/txid/:txid/:vout_index [get]
+func (c *OuterController) GetDepositCallback() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	txID := c.Ctx.Input.Param(":txid")
+	if txID == "" {
+		logs.Error("Invalid txid")
+		c.AbortWithError(http.StatusBadRequest, errors.New("invalid txid"))
+	}
+	voutIndex, err := strconv.Atoi(c.Ctx.Input.Param(":vout_index"))
+	if err != nil {
+		logs.Error("Invalid vout_index =>", err)
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	resp, err := api.MakeRequest(walletID, "GET",
+		fmt.Sprintf("/v1/sofa/wallets/%d/receiver/notifications/txid/%s/%d", walletID, txID, voutIndex),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetDepositCallback failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query withdrawal callback by order_id
+// @router /wallets/:wallet_id/sender/notifications/order_id/:order_id [get]
+func (c *OuterController) GetWithdrawalCallback() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	orderID := c.getOrderID()
+	resp, err := api.MakeRequest(walletID, "GET",
+		fmt.Sprintf("/v1/sofa/wallets/%d/sender/notifications/order_id/%s", walletID, orderID),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetWithdrawalCallback failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 

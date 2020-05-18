@@ -10,11 +10,14 @@
 		- [Query Deposit Addresses](#query-address-of-deposit-wallet)
 		- [Query Pool Address](#query-pool-address-of-deposit-wallet)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
+		- [Query Deposit Callback Detail](#query-deposit-callback)
 		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
 	- Withdraw Wallet API
 		- [Withdraw Assets](#withdraw)
+		- [Cancel Withdrawal Request](#cancel-withdrawal)
 		- [Query Withdrawal Transaction State](#query-withdrawal-transaction-state)
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
+		- [Query Withdrawal Callback Detail](#query-withdrawal-callback)
 	- Query API
 		- [Query API Code Status](#query-api-code-status)
 		- [Query Callback History](#query-notification-callback-history)
@@ -382,6 +385,68 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
+<a name="query-deposit-callback"></a>
+### Query Deposit Callback Detail
+
+Query the detailed information of the deposit callback by the tx ID and the vout index.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/receiver/notifications/txid/`TX_ID`/`VOUT_INDEX`
+
+- [Sample curl command](#curl-query-deposit-callback)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/5/receiver/notifications/txid/0xb72a81976f780445decd13a35c24974c4e32665cb57d79b3f7a601c775f6a7d8/0
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "notification": {
+    "addon": {},
+    "amount": "2000000000000000000",
+    "block_height": 7757485,
+    "broadcast_at": 1587441501,
+    "chain_at": 1587441501,
+    "confirm_blocks": 166027,
+    "currency": "ETH",
+    "fees": "126000000000000",
+    "from_address": "0x8382Cc1B05649AfBe179e341179fa869C2A9862b",
+    "memo": "",
+    "order_id": "",
+    "processing_state": 2,
+    "serial": 90000000547,
+    "state": 3,
+    "tindex": 27,
+    "to_address": "0x32d638773cB85965422b3B98e9312Fc9392307BC",
+    "txid": "0xb72a81976f780445decd13a35c24974c4e32665cb57d79b3f7a601c775f6a7d8",
+    "type": 1,
+    "vout_index": 0,
+    "wallet_id": 5
+  }
+
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| notification | object | Refer to [Callback Definition](#callback-definition) |
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="resend-pending-or-failed-deposit-callbacks"></a>
 ### Resend Deposit Callbacks
 
@@ -445,13 +510,14 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-
 # Withdraw Wallet API
 
 <a name="withdraw"></a>
 ### Withdraw Assets
 
 To withdraw assets from an withdrawal wallet, the caller must to provide an unique **order_id** for each request, the CYBAVO SOFA system will send the callback with the unique **order_id** when the withdrawal is success (from `in pool` state to `in chain` state). 
+
+By default, the withdraw API will perform the address check to verify that the outgoing address is good or not. If the address in the request is marked as a problematic address, the request will be aborted. The error message will identify the problematic addresses. Set the `ignore_black_list` to true to skip the address check. 
 
 ##### Request
 
@@ -484,7 +550,7 @@ An example of the request:
   "requests": [
     {
       "order_id": "888888_1",
-      "address": "0x60589A749AAC632e9A830c8aBE042D1899d8Dd15",
+      "address": "0x83eE561B2aBD000FF00d6ca22f38b29d4a760d4D",
       "amount": "0.0001",
       "memo": "memo-001",
       "user_id": "USER01",
@@ -508,7 +574,8 @@ An example of the request:
       "user_id": "USER03",
       "message": "message-003"
     }
-  ]
+  ],
+  "ignore_black_list": false
 }
 ```
 
@@ -523,9 +590,10 @@ The request includes the following parameters:
 | amount | string | required | Withdrawal amount |
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
-| message | string | optional | Message (This message only savced on CYBAVO, not sent to blockchain) |
+| message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
 | block\_average_fee | int | optional, range `1~30` | Use avarage blockchain fee within latest N blocks |
 | manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency |
+| ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
 >
@@ -549,6 +617,58 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | results | array | Array of withdraw result (order ID/withdraw transaction ID pair), if succeeds |
+
+An example response of the request contains problematic addresses:
+
+```json
+{
+    "error_code": 827,
+    "error": "Outgoing address in black list, abort transaction",
+    "blacklist": {
+        "0x83eE561B2aBD000FF00d6ca22f38b29d4a760d4D": [
+            "Involve phishing activity",
+            "Involve cybercrime related"
+        ]
+    }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| error_code | int | The error code |
+| error | string | The error message |
+| blacklist | object | The object describes all problematic addresses and their causes. |
+
+##### [Back to top](#table-of-contents)
+
+<a name="cancel-withdrawal"></a>
+### Cancel Withdrawal Request
+
+To cancel the withdrawal request which state is `Init`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback) (represents `state` = 0).
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`/cancel
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-cancel-withdrawal)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/sender/transactions/94531/cancel
+```
+
+##### Response Format
+
+The HTTP 200 means the withdrawal request has been cancelled successfully.
 
 ##### [Back to top](#table-of-contents)
 
@@ -662,6 +782,67 @@ The response includes the following parameters:
 > The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH
 
 ##### [Back to top](#table-of-contents)
+
+<a name="query-withdrawal-callback"></a>
+### Query Withdrawal Callback Detail
+
+Query the detailed information of the withdrawal callback by the order ID.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/notifications/order_id/`ORDER_ID`
+
+- [Sample curl command](#curl-query-withdrawal-callback)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/2/sender/notifications/order_id/94531
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "notification": {
+    "addon": {},
+    "amount": "100000000000000",
+    "block_height": 7813953,
+    "broadcast_at": 1588211126,
+    "chain_at": 1588211126,
+    "confirm_blocks": 109490,
+    "currency": "ETH",
+    "fees": "21000000000000",
+    "from_address": "0xaa0cA2f9bA3A33a915a27e289C9719adB2ad7d73",
+    "memo": "",
+    "order_id": "94531",
+    "processing_state": 2,
+    "serial": 90000000554,
+    "state": 3,
+    "tindex": 30,
+    "to_address": "0x60589A749AAC632e9A830c8aBE042D1899d8Dd15",
+    "txid": "0x471c11f139ce1a7e0627a05cea50d64e47e797c94fd72025f1978cc919e07aa9",
+    "type": 2,
+    "vout_index": 0,
+    "wallet_id": 2
+  }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| notification | object | Refer to [Callback Definition](#callback-definition) |
+
+##### [Back to top](#table-of-contents)
+
 
 # Query API
 
@@ -1338,6 +1519,14 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw
 ```
 - [API definition](#withdraw)
 
+<a name="curl-cancel-withdrawal"></a>
+### Cancel Withdrawal
+
+```
+curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/cancel
+```
+- [API definition](#cancel-withdrawal)
+
 <a name="curl-query-withdrawal-transaction-state"></a>
 ### Query Withdrawal Transaction State
 
@@ -1378,6 +1567,22 @@ curl -X POST -H "Content-Type: application/json" -d '{"ids":[90000000140,9000000
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id
 ```
 - [API definition](#query-notification-callback-by-id)
+
+<a name="curl-query-deposit-callback"></a>
+### Query Deposit Callback
+
+```
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}'
+```
+- [API definition](#query-deposit-callback)
+
+<a name="curl-query-withdrawal-callback"></a>
+### Query Withdrawal Callback
+
+```
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}'
+```
+- [API definition](#query-withdrawal-callback)
 
 <a name="curl-query-wallet-basic-info"></a>
 ### Query Wallet Info

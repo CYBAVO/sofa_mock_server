@@ -11,6 +11,7 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -19,12 +20,17 @@ type CommonResponse struct {
 }
 
 type ErrorCodeResponse struct {
-	ErrMsg  string `json:"error,omitempty"`
-	ErrCode int    `json:"error_code,omitempty"`
-	Message string `json:"message,omitempty"`
+	ErrMsg    string              `json:"error,omitempty"`
+	ErrCode   int                 `json:"error_code,omitempty"`
+	Message   string              `json:"message,omitempty"`
+	Blacklist map[string][]string `json:"blacklist,omitempty"`
 }
 
 func (m *ErrorCodeResponse) String() string {
+	if len(m.Blacklist) > 0 {
+		blacklist, _ := json.Marshal(m.Blacklist)
+		return fmt.Sprintf("%s (msg:%s) (code:%d)", m.ErrMsg, string(blacklist), m.ErrCode)
+	}
 	return fmt.Sprintf("%s (msg:%s) (code:%d)", m.ErrMsg, m.Message, m.ErrCode)
 }
 
