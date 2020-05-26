@@ -195,6 +195,28 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | addresses | array | Array of just created deposit addresses |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 400 | 703 | Malformatted post body, error message returned by JSON parser | Malformatted post body |
+| 400 | 945 | The max length of BNB memo is 256 chars | Reached the limit of the length of BNB memo |
+| 400 | 946 | The max length of EOS memo is 128 chars | Reached the limit of the length of EOS memo |
+| 400 | 947 | The max length of XRP destination tag is 20 chars | Reached the limit of the length of XRP destination tag |
+| 400 | 948 | The max length of XLM memo is 20 chars | Reached the limit of the length of XLM memo |
+| 400 | 818 | Destination Tag must be integer | Wrong XRP destination tag format |
+| 403 | 706 | Exceed max allow wallet limitation, Upgrade your SKU to get more wallets | Reached the limit of the total number of deposit addresses |
+| 403 | 112 | Invalid parameter | The count and the count of memos mismatched |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
+
 ##### [Back to top](#table-of-contents)
 
 
@@ -297,6 +319,20 @@ The response includes the following parameters:
 
 > Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-invalid-deposit-addresses"></a>
@@ -337,6 +373,20 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | addresses | array | Array of invalid deposit address |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -382,6 +432,20 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | address  | string | Pool address of wallet |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -443,6 +507,20 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | notification | object | Refer to [Callback Definition](#callback-definition) |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request or the callback (txid+vout_index) not found |
 
 ##### [Back to top](#table-of-contents)
 
@@ -507,6 +585,21 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | count | int | Count of callbacks just resent |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 400 | 112 | Invalid parameter | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -641,6 +734,37 @@ The response includes the following parameters:
 | error | string | The error message |
 | blacklist | object | The object describes all problematic addresses and their causes. |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 400 | 112 | Invalid parameter | Malformatted post body |
+| 400 | 955 | There is no content in your withdrawal request, please check your input | The post body of request doesn't conform the API request specification |
+| 400 | 703 | order_id must start with {ORDERID\_PREFIX} | The prefix of order_id is incorrect |
+| 400 | 703 | order_id: {ORDER\_ID} - the character \\ or / is prohibited | {ORDER\_ID} is invalid |
+| 400 | 703 | order_id: {ORDER\_ID} is invalid | {ORDER\_ID} is invalid |
+| 400 | 703 | order_id: {ORDER\_ID} - memo is required | The outgoing address of {ORDER\_ID} needs memo specified |
+| 400 | 703 | order_id: {ORDER\_ID} - destination tag is required | The outgoing address of {ORDER\_ID} needs destination tag specified |
+| 400 | 703 | order_id: {ORDER\_ID} - invalid block\_average\_fee | The block\_average\_fee is out of range |
+| 400 | 703 | order_id: {ORDER\_ID} - invalid manual\_fee | The manual\_fee is out of range |
+| 400 | 945 | The max length of BNB memo is 256 chars | Reached the limit of the length of BNB memo |
+| 400 | 946 | The max length of EOS memo is 128 chars | Reached the limit of the length of EOS memo |
+| 400 | 947 | The max length of XRP destination tag is 20 chars | Reached the limit of the length of XRP destination tag |
+| 400 | 948 | The max length of XLM memo is 20 chars | Reached the limit of the length of XLM memo |
+| 400 | 818 | Destination Tag must be integer | Wrong XRP destination tag format |
+| 400 | 944 | The max length of order id is 255 chars | Reached the limit of the length of order_id |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
+| 404 | 312 | Policy not found | No active withdrawal policy found |
+| 404 | 703 | Unrecognized response: {RESPONSE}, 'OK' expected | The withdrawal request is not allowed by authentication callback URL |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="cancel-withdrawal"></a>
@@ -669,6 +793,21 @@ An example of the request:
 ##### Response Format
 
 The HTTP 200 means the withdrawal request has been cancelled successfully.
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 403 | 177 | Illegal state | The {ORDER\_ID} withdrawal request is not in `Init` state |
+| 404 | 304 | Wallet ID invalid | The {ORDER\_ID} not found |
 
 ##### [Back to top](#table-of-contents)
 
@@ -725,6 +864,20 @@ The response includes the following parameters:
 | txid | string | Transaction ID |
 | create_time | string | The withdrawal unix time in UTC |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The {ORDER\_ID} not found |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-withdrawal-wallet-balance"></a>
@@ -780,6 +933,20 @@ The response includes the following parameters:
 | err_reason | string | Error message if fail to get balance |
 
 > The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -841,6 +1008,20 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | notification | object | Refer to [Callback Definition](#callback-definition) |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | The wallet is not allowed to perform this request or the {ORDER\_ID} is not found |
+
 ##### [Back to top](#table-of-contents)
 
 
@@ -893,6 +1074,19 @@ The response includes the following parameters:
 | exp | int64 | API code expiration unix time in UTC |
 
 > Use an invalid API-CODE, the caller will get a 403 Forbidden error.
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
 
 ##### [Back to top](#table-of-contents)
 
@@ -966,6 +1160,19 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | notifications | array | Arrary of callbacks, refer to [Callback Definition](#callback-definition) |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1073,6 +1280,19 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | notifications | array | Arrary of callbacks, refer to [Callback Definition](#callback-definition) |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-wallet-basic-info"></a>
@@ -1131,6 +1351,19 @@ If `WALLET_ID` is a token wallet, the following fields present:
 | token\_contract_address | string | Token contract address |
 | token_decimals | string | Token decimals |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="query-wallet-block-info"></a>
@@ -1171,6 +1404,19 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | latest\_block_height | int64 | The latest block height on blockchain |
 | synced\_block_height | int64 | The current synced block height |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1227,6 +1473,19 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | auto_fee | string | Mining fee denominated in the smallest cryptocurrency unit |
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 400 | 112 | Invalid parameter | The `block_num` is out of range |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1329,6 +1588,19 @@ The response includes the following parameters:
 
 > Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+
 ##### [Back to top](#table-of-contents)
 
 <a name="verify-addresses"></a>
@@ -1402,6 +1674,20 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | result | array | Array of addresses' verification result |
 | must\_need\_memo | boolean | Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Description |
+| :---      | :---       | :---  | :---        |
+| 403 | - | Forbidden. Invalid wallet ID | No wallet ID found |
+| 403 | - | Forbidden. Header not found | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | - | Forbidden. Invalid timestamp | The timestamp `t` is not in the valid time range |
+| 403 | - | Forbidden. Invalid checksum | The request is considered a replay request |
+| 403 | - | Forbidden. Invalid API code | `X-API-CODE` header contains invalid API code |
+| 403 | - | Invalid API code for wallet {WALLET_ID} | The API code mismatched |
+| 403 | - | Forbidden. Checksum unmatch | `X-CHECKSUM` header contains wrong checksum |
+| 403 | - | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | Send requests too frequently |
+| 400 | 112 | Invalid parameter | Malformatted post body |
 
 ##### [Back to top](#table-of-contents)
 
