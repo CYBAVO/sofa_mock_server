@@ -361,7 +361,7 @@ kbd {
 <li>Query API
 
 <ul>
-<li><a href="#query-api-code-status">Query API Code Status</a></li>
+<li><a href="#query-api-token-status">Query API Code Status</a></li>
 <li><a href="#query-notification-callback-history">Query Callback History</a></li>
 <li><a href="#query-notification-callback-by-id">Query Callback Detail</a></li>
 <li><a href="#query-wallet-block-info">Query Wallet Synchronization Info</a></li>
@@ -646,6 +646,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -655,102 +656,119 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
-<td style="text-align: left">Malformatted post body, error message returned by JSON parser</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">Error message returned by JSON parser</td>
 <td style="text-align: left">Malformatted post body</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">945</td>
 <td style="text-align: left">The max length of BNB memo is 256 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of BNB memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">946</td>
 <td style="text-align: left">The max length of EOS memo is 128 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of EOS memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">947</td>
 <td style="text-align: left">The max length of XRP destination tag is 20 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of XRP destination tag</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">948</td>
 <td style="text-align: left">The max length of XLM memo is 20 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of XLM memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">818</td>
 <td style="text-align: left">Destination Tag must be integer</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Wrong XRP destination tag format</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">706</td>
 <td style="text-align: left">Exceed max allow wallet limitation, Upgrade your SKU to get more wallets</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the total number of deposit addresses</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The count and the count of memos mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -907,6 +925,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -916,54 +935,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -1033,6 +1061,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1042,54 +1071,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -1165,6 +1203,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1174,54 +1213,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -1308,6 +1356,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1317,55 +1366,57 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
-</tr>
-<tr>
-<td style="text-align: left">404</td>
-<td style="text-align: left">304</td>
-<td style="text-align: left">Wallet ID invalid</td>
-<td style="text-align: left">The wallet is not allowed to perform this request or the callback (txid+vout_index) not found</td>
 </tr>
 </tbody>
 </table>
@@ -1474,6 +1525,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1483,60 +1535,70 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Malformatted post body</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -1776,6 +1838,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1785,156 +1848,210 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Malformatted post body</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">955</td>
 <td style="text-align: left">There is no content in your withdrawal request, please check your input</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The post body of request doesn&#39;t conform the API request specification</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id must start with {ORDERID_PREFIX}</td>
 <td style="text-align: left">The prefix of order_id is incorrect</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} - the character \ or / is prohibited</td>
 <td style="text-align: left">{ORDER_ID} is invalid</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} is invalid</td>
 <td style="text-align: left">{ORDER_ID} is invalid</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} - memo is required</td>
 <td style="text-align: left">The outgoing address of {ORDER_ID} needs memo specified</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} - destination tag is required</td>
 <td style="text-align: left">The outgoing address of {ORDER_ID} needs destination tag specified</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} - invalid block_average_fee</td>
 <td style="text-align: left">The block_average_fee is out of range</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
 <td style="text-align: left">order_id: {ORDER_ID} - invalid manual_fee</td>
 <td style="text-align: left">The manual_fee is out of range</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
+<td style="text-align: left">399</td>
+<td style="text-align: left">Duplicated entry: {ORDER_ID}</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The {ORDER_ID} is duplicated</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
 <td style="text-align: left">945</td>
 <td style="text-align: left">The max length of BNB memo is 256 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of BNB memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">946</td>
 <td style="text-align: left">The max length of EOS memo is 128 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of EOS memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">947</td>
 <td style="text-align: left">The max length of XRP destination tag is 20 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of XRP destination tag</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">948</td>
 <td style="text-align: left">The max length of XLM memo is 20 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of XLM memo</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">818</td>
 <td style="text-align: left">Destination Tag must be integer</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Wrong XRP destination tag format</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">944</td>
 <td style="text-align: left">The max length of order id is 255 chars</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Reached the limit of the length of order_id</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">Detailed error message</td>
+<td style="text-align: left">Failed to connect to authentication callback URL</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">HTTP resp failed {HTTP<em>CODE}, body: {RESPONSE</em>BODY}</td>
+<td style="text-align: left">The authentication callback URL returned status code other than 200</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">827</td>
+<td style="text-align: left">Outgoing address in black list, abort transaction</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Some outgoing addresses are blacklisted, examine the response &#39;blacklist&#39; field for detailed information</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">312</td>
 <td style="text-align: left">Policy not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No active withdrawal policy found</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">703</td>
-<td style="text-align: left">Unrecognized response: {RESPONSE}, &#39;OK&#39; expected</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">Unrecognized response: {RESPONSE_BODY}, &#39;OK&#39; expected</td>
 <td style="text-align: left">The withdrawal request is not allowed by authentication callback URL</td>
 </tr>
 </tbody>
@@ -1980,6 +2097,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -1989,60 +2107,70 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">177</td>
 <td style="text-align: left">Illegal state</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The {ORDER_ID} withdrawal request is not in <code>Init</code> state</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The {ORDER_ID} not found</td>
 </tr>
 </tbody>
@@ -2152,6 +2280,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2161,54 +2290,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The {ORDER_ID} not found</td>
 </tr>
 </tbody>
@@ -2299,7 +2437,7 @@ kbd {
 <td style="text-align: left">Unconfirmed withdrawal wallet balance</td>
 </tr>
 <tr>
-<td style="text-align: left">unconfirm<em>token</em>balance</td>
+<td style="text-align: left">unconfirm_token_balance</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">Unconfirmed withdrawal wallet token balance</td>
 </tr>
@@ -2323,6 +2461,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2332,54 +2471,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -2466,6 +2614,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2475,54 +2624,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The wallet is not allowed to perform this request or the {ORDER_ID} is not found</td>
 </tr>
 </tbody>
@@ -2532,7 +2690,7 @@ kbd {
 
 <h1 id="toc_95">Query API</h1>
 
-<p><a name="query-api-code-status"></a></p>
+<p><a name="query-api-token-status"></a></p>
 
 <h3 id="toc_96">Query API Code Status</h3>
 
@@ -2615,6 +2773,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2624,48 +2783,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -2791,6 +2958,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2800,48 +2968,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -2986,6 +3162,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -2995,48 +3172,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -3157,6 +3342,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -3166,48 +3352,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -3279,6 +3473,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -3288,48 +3483,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -3425,6 +3628,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -3434,54 +3638,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The <code>block_num</code> is out of range</td>
 </tr>
 </tbody>
@@ -3652,6 +3865,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -3661,48 +3875,56 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 </tbody>
@@ -3825,6 +4047,7 @@ kbd {
 <th style="text-align: left">HTTP Code</th>
 <th style="text-align: left">Error Code</th>
 <th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
 <th style="text-align: left">Description</th>
 </tr>
 </thead>
@@ -3834,54 +4057,63 @@ kbd {
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The request is considered a replay request</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">The API code mismatched</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
 </tr>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Send requests too frequently</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
 <td style="text-align: left">Malformatted post body</td>
 </tr>
 </tbody>
@@ -4061,7 +4293,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 <div><pre><code class="language-none">curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret</code></pre></div>
 
 <ul>
-<li><a href="#query-api-code-status">API definition</a></li>
+<li><a href="#query-api-token-status">API definition</a></li>
 </ul>
 
 <p><a name="curl-query-notification-callback-history"></a></p>
