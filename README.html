@@ -4507,7 +4507,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
       <b>2</b> - TXID in pool<br>
       <b>3</b> - TXID in chain<br>
       <span style="text-decoration:line-through"><b>4 (DEPRECATED)</b> - TXID confirmed in N blocks</span><br>
-      <b>5</b> - Failed<br>
+      <b>5</b> - Failed (addon field of callback will contain detailed error reason)<br>
       <b>6</b> - Resent<br>
       <b>7</b> - Blocked due to risk controlled<br>
       <b>8</b> - Cancelled<br>
@@ -4544,6 +4544,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
   </tr>
 </table>
 
+<blockquote>
+<p>If the <code>state</code> of callback is 5 (Failed), the detailed failure reason will put in <code>addon</code> field (key is <code>err_reason</code>). See the callback sample bellow.</p>
+</blockquote>
+
 <p>Callback sample:</p>
 
 <div><pre><code class="language-javascript">{
@@ -4566,6 +4570,33 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
   &quot;confirm_blocks&quot;: 1,
   &quot;processing_state&quot;: 1,
   &quot;addon&quot;: {}
+}</code></pre></div>
+
+<p>Callback with state 5 (Failed) sample:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;type&quot;: 2,
+  &quot;serial&quot;: 20000000155,
+  &quot;order_id&quot;: &quot;1_69&quot;,
+  &quot;currency&quot;: &quot;ETH&quot;,
+  &quot;txid&quot;: &quot;&quot;,
+  &quot;block_height&quot;: 0,
+  &quot;tindex&quot;: 0,
+  &quot;vout_index&quot;: 0,
+  &quot;amount&quot;: &quot;1000000000000000&quot;,
+  &quot;fees&quot;: &quot;&quot;,
+  &quot;memo&quot;: &quot;&quot;,
+  &quot;broadcast_at&quot;: 0,
+  &quot;chain_at&quot;: 0,
+  &quot;from_address&quot;: &quot;&quot;,
+  &quot;to_address&quot;: &quot;0x60589A749AAC632e9A830c8aBE041899d8Dd15&quot;,
+  &quot;wallet_id&quot;: 2,
+  &quot;state&quot;: 5,
+  &quot;confirm_blocks&quot;: 0,
+  &quot;processing_state&quot;: 0,
+  &quot;addon&quot;: {
+    &quot;err_reason&quot;: &quot;Illegal Transaction Format: To 0x60589A749AAC632e9A830c8aBE041899d8Dd15&quot;
+  }
 }</code></pre></div>
 
 <h5 id="toc_191"><a href="#table-of-contents">Back to top</a></h5>

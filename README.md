@@ -2030,7 +2030,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
       <b>2</b> - TXID in pool<br>
       <b>3</b> - TXID in chain<br>
       <span style="text-decoration:line-through"><b>4 (DEPRECATED)</b> - TXID confirmed in N blocks</span><br>
-      <b>5</b> - Failed<br>
+      <b>5</b> - Failed (addon field of callback will contain detailed error reason)<br>
       <b>6</b> - Resent<br>
       <b>7</b> - Blocked due to risk controlled<br>
       <b>8</b> - Cancelled<br>
@@ -2066,6 +2066,9 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
     <td>The extra information of this callback</td>
   </tr>
 </table>
+
+> If the `state` of callback is 5 (Failed), the detailed failure reason will put in `addon` field (key is `err_reason`). See the callback sample bellow.
+
 Callback sample:
 
 ```json
@@ -2089,6 +2092,35 @@ Callback sample:
   "confirm_blocks": 1,
   "processing_state": 1,
   "addon": {}
+}
+```
+
+Callback with state 5 (Failed) sample:
+
+```json
+{
+  "type": 2,
+  "serial": 20000000155,
+  "order_id": "1_69",
+  "currency": "ETH",
+  "txid": "",
+  "block_height": 0,
+  "tindex": 0,
+  "vout_index": 0,
+  "amount": "1000000000000000",
+  "fees": "",
+  "memo": "",
+  "broadcast_at": 0,
+  "chain_at": 0,
+  "from_address": "",
+  "to_address": "0x60589A749AAC632e9A830c8aBE041899d8Dd15",
+  "wallet_id": 2,
+  "state": 5,
+  "confirm_blocks": 0,
+  "processing_state": 0,
+  "addon": {
+    "err_reason": "Illegal Transaction Format: To 0x60589A749AAC632e9A830c8aBE041899d8Dd15"
+  }
 }
 ```
 
