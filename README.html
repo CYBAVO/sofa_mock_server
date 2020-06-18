@@ -4157,7 +4157,7 @@ kbd {
 <li>  Put API code/secret to mock server&#39;s databaså</li>
 </ul>
 
-<div><pre><code class="language-none">curl -X POST -d &#39;{&quot;api_code&quot;:&quot;API_CODE&quot;,&quot;api_secret&quot;:&quot;API_SECRET&quot;}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;api_code&quot;:&quot;API_CODE&quot;,&quot;api_secret&quot;:&quot;API_SECRET&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken</code></pre></div>
 
 <h3 id="toc_164">Register mock server callback URL</h3>

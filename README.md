@@ -1719,7 +1719,7 @@ api_server_url="BACKEND_SERVER_URL"
 - 	Put API code/secret to mock server's databaså
 
 ```
-curl -X POST -d '{"api_code":"API_CODE","api_secret":"API_SECRET"}' \
+curl -X POST -H "Content-Type: application/json" -d '{"api_code":"API_CODE","api_secret":"API_SECRET"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken
 ```
 
