@@ -34,7 +34,6 @@
 - Appendix
 	- [Callback Definition](#callback-definition)
 	- [Callback Type Definition](#callback-type-definition)
-	- [Transaction State Filter Definition](#transaction-state-filter-definition)
 	- [Currency Definition](#currency-definition)
 	- [Memo Requirement](#memo-requirement)
 
@@ -1526,7 +1525,21 @@ The request includes the following parameters:
 | to_item | int64 | optional, default `current time` | End date (unix time in UTC) |
 | start_index | int | optional, default `0` | Index of starting transaction record |
 | request_number | int | optional, default `1000`, max `5000` | Count of returning transaction record |
-| state | int | optional, default `-1` | Refer to [Transaction State Filter](#transaction-state-filter-definition) |
+| state | int | optional, default `-1` | Refer to [Transaction State Filter Definition](#transaction-state-filter) bellow |
+
+<a name="transaction-state-filter"></a>
+###### Transaction State Filter Definition
+
+| ID   | Description |
+| :--- | :---        |
+| 0 | WaitApproval |
+| 1 | Rejected |
+| 2 | Approved |
+| 3 | Failed |
+| 4 | NextLevel |
+| 5 | Cancelled |
+| 6 | BatchDone |
+| -1 | All states (for inquiry) |
 
 ##### Response Format
 
@@ -2137,22 +2150,6 @@ Callback with state 5 (Failed) sample:
 | 3 | Collect Callback |
 | 4 | Airdrop Callback |
 | -1 | All callbacks (for inquiry) |
-
-##### [Back to top](#table-of-contents)
-
-<a name="transaction-state-filter-definition"></a>
-### Transaction State Filter Definition
-
-| ID   | Description |
-| :--- | :---        |
-| 0 | WaitApproval |
-| 1 | Rejected |
-| 2 | Approved |
-| 3 | Failed |
-| 4 | NextLevel |
-| 5 | Cancelled |
-| 6 | BatchDone |
-| -1 | All states (for inquiry) |
 
 ##### [Back to top](#table-of-contents)
 
