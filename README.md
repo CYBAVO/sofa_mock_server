@@ -29,7 +29,7 @@
 		- [Verify Addresses](#verify-addresses)
 - Testing
 	- [Mock Server](#mock-server)
-	- [CURL Testing Commands](#curl-testing-commands)
+	- [cURL Testing Commands](#curl-testing-commands)
 	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
@@ -2047,6 +2047,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
       <b>6</b> - Resent<br>
       <b>7</b> - Blocked due to risk controlled<br>
       <b>8</b> - Cancelled<br>
+      <b>9</b> - Retry for UTXO Temporarily Not Available<br>
+      <b>10</b> - Dropped<br>
+      <b>11</b> - Transaction Failed<br>
+      <b>12</b> - Paused<br>
     </td>
   </tr>
   <tr></tr>

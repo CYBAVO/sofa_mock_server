@@ -39,6 +39,15 @@ type SetAPICodeRequest struct {
 	ApiSecret string `json:"api_secret"`
 }
 
+type CallbackType int
+
+const (
+	DepositCallback  CallbackType = 1
+	WithdrawCallback CallbackType = 2
+	CollectCallback  CallbackType = 3
+	AirdropCallback  CallbackType = 4
+)
+
 type ProcessingState int8
 
 const (
@@ -46,6 +55,24 @@ const (
 	ProcessingStateInPool    ProcessingState = 0
 	ProcessingStateInChain   ProcessingState = 1
 	ProcessingStateDone      ProcessingState = 2
+)
+
+type CallbackState int64
+
+const (
+	CallbackStateInit            CallbackState = 0  // enqueue (0)
+	CallbackStateHolding         CallbackState = 1  // Processing batch in KMS (1)
+	CallbackStateInPool          CallbackState = 2  // KMS process done, TXID created (2)
+	CallbackStateInChain         CallbackState = 3  // TXID in chain (3)
+	CallbackStateDone            CallbackState = 4  // TXID confirmed in N blocks (4)
+	CallbackStateFailed          CallbackState = 5  // Failed (5)
+	CallbackStateResended        CallbackState = 6  // Resended (6)
+	CallbackStateRiskControl     CallbackState = 7  // blocked due to risk controlled (7)
+	CallbackStateCancelled       CallbackState = 8  // cancelled
+	CallbackStateUTXOUnavailable CallbackState = 9  // Retry for UTXO Temporarily Not Available
+	CallbackStateDropped         CallbackState = 10 // Dropped
+	CallbackStateInChainFailed   CallbackState = 11 // Transaction Failed (11)
+	CallbackStatePaused          CallbackState = 12 // Paused (12)
 )
 
 type CallbackStruct struct {
@@ -65,7 +92,7 @@ type CallbackStruct struct {
 	FromAddress     string                 `json:"from_address"`
 	ToAddress       string                 `json:"to_address"`
 	WalletID        int64                  `json:"wallet_id"`
-	State           int64                  `json:"state"`
+	State           CallbackState          `json:"state"`
 	ConfirmBlocks   int64                  `json:"confirm_blocks"`
 	ProcessingState ProcessingState        `json:"processing_state"`
 	Addon           map[string]interface{} `json:"addon"`

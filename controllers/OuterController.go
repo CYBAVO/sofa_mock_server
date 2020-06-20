@@ -177,13 +177,13 @@ func calcSHA256(data []byte) (calculatedHash []byte, err error) {
 // @Title Callback
 // @router /wallets/callback [post]
 func (c *OuterController) Callback() {
-	var request api.CallbackStruct
-	err := json.Unmarshal(c.Ctx.Input.RequestBody, &request)
+	var cb api.CallbackStruct
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &cb)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
 
-	apiCodeObj, err := models.GetWalletAPICode(request.WalletID)
+	apiCodeObj, err := models.GetWalletAPICode(cb.WalletID)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
@@ -199,6 +199,36 @@ func (c *OuterController) Callback() {
 
 	logs.Debug("Callback => %s", c.Ctx.Input.RequestBody)
 
+	cbType := api.CallbackType(cb.Type)
+	if cbType == api.DepositCallback {
+		//
+		// deposit unique ID
+		// uniqueID := fmt.Sprintf("%s_%d", cb.TXID, cb.VOutIndex)
+		//
+		if cb.ProcessingState == api.ProcessingStateDone {
+			// deposit succeeded, use the deposit unique ID to update your business logic
+		}
+	} else if cbType == api.WithdrawCallback {
+		//
+		// withdrawal unique ID
+		// uniqueID := cb.OrderID
+		//
+		if cb.State == api.CallbackStateInChain && cb.ProcessingState == api.ProcessingStateDone {
+			// withdrawal succeeded, use the withdrawal uniqueID to update your business logic
+		} else if cb.State == api.CallbackStateFailed || cb.State == api.CallbackStateInChainFailed {
+			// withdrawal failed, use the withdrawal unique ID to update your business logic
+		}
+	} else if cbType == api.AirdropCallback {
+		//
+		// airdrop unique ID
+		// uniqueID := fmt.Sprintf("%s_%d", cb.TXID, cb.VOutIndex)
+		//
+		if cb.ProcessingState == api.ProcessingStateDone {
+			// airdrop succeeded, use the airdrop unique ID to update your business logic
+		}
+	}
+
+	// reply 200 OK to confirm the callback has been processed
 	c.Ctx.WriteString("OK")
 }
 
