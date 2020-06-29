@@ -9,6 +9,7 @@
 		- [Create Deposit Addresses](#create-deposit-wallet-addresses)
 		- [Query Deposit Addresses](#query-address-of-deposit-wallet)
 		- [Query Pool Address](#query-pool-address-of-deposit-wallet)
+		- [Query Pool Address Balance](#query-pool-address-balance-of-deposit-wallet)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
 		- [Query Deposit Callback Detail](#query-deposit-callback)
 		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
@@ -431,6 +432,67 @@ The response includes the following parameters:
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | address  | string | Pool address of wallet |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+<a name="query-pool-address-balance-of-deposit-wallet"></a>
+### Query Pool Address Balance
+
+Get the pool address balance of a deposit wallet.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/pooladdress/balance
+
+> `WALLET_ID` must be a deposit wallet ID
+
+- [Sample curl command](#curl-get-deposit-wallet-pool-address-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/17/pooladdress/balance
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "balance": "0.515",
+  "currency": 60,
+  "unconfirm_balance": "0",
+  "wallet_address": "0xb6ad80c96D093EA584AfcB9443927812d3e4Bd94"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| balance | string | Pool address balance |
+| unconfirm\_balance | string | Unconfirmed pool address balance |
+| currency | int64 | Cryptocurrency of the wallet |
+| wallet_address  | string | Pool address of the wallet |
 
 ##### Error Code
 

@@ -148,11 +148,29 @@ func (c *OuterController) GetDepositWalletAddresses() {
 
 // @Title Get deposit wallet pool address
 // @router /wallets/:wallet_id/pooladdress [get]
-func (c *OuterController) GetDepositWalletPoolAddresses() {
+func (c *OuterController) GetDepositWalletPoolAddress() {
 	defer c.ServeJSON()
 
 	walletID := c.getWalletID()
 	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/pooladdress", walletID),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetDepositWalletPoolAddress failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Get balance of deposit wallet pool address
+// @router /wallets/:wallet_id/pooladdress/balance [get]
+func (c *OuterController) GetDepositWalletPoolAddressBalance() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/pooladdress/balance", walletID),
 		nil, nil)
 	if err != nil {
 		logs.Error("GetDepositWalletPoolAddress failed", err)
