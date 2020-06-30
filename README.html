@@ -367,7 +367,7 @@ kbd {
 <li><a href="#query-notification-callback-by-id">Query Callback Detail</a></li>
 <li><a href="#query-wallet-block-info">Query Wallet Synchronization Info</a></li>
 <li><a href="#query-wallet-basic-info">Query Wallet Info</a></li>
-<li><a href="#query-wallet-transaction-autofee">Query Transaction Avarage Fee</a></li>
+<li><a href="#query-wallet-transaction-autofee">Query Transaction Average Fee</a></li>
 <li><a href="#query-vault/batch-wallet-transaction-history">Query Transaction History</a></li>
 <li><a href="#verify-addresses">Verify Addresses</a></li>
 </ul></li>
@@ -1887,7 +1887,7 @@ kbd {
 <td style="text-align: left">block_average_fee</td>
 <td style="text-align: left">int</td>
 <td style="text-align: left">optional, range <code>1~30</code></td>
-<td style="text-align: left">Use avarage blockchain fee within latest N blocks</td>
+<td style="text-align: left">Use average blockchain fee within latest N blocks</td>
 </tr>
 <tr>
 <td style="text-align: left">manual_fee</td>
@@ -3696,9 +3696,9 @@ kbd {
 
 <p><a name="query-wallet-transaction-autofee"></a></p>
 
-<h3 id="toc_141">Query Transaction Avarage Fee</h3>
+<h3 id="toc_141">Query Transaction Average Fee</h3>
 
-<p>Query avarage blockchain fee within latest N blocks.</p>
+<p>Query average blockchain fee within latest N blocks.</p>
 
 <h5 id="toc_142">Request</h5>
 
@@ -3741,7 +3741,7 @@ kbd {
 <td style="text-align: left">block_num</td>
 <td style="text-align: left">int</td>
 <td style="text-align: left">optional, default <code>1</code>, range <code>1~30</code></td>
-<td style="text-align: left">Get avarage blockchain fee within latest N blocks</td>
+<td style="text-align: left">Get average blockchain fee within latest N blocks</td>
 </tr>
 </tbody>
 </table>
@@ -4561,7 +4561,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-wallet-transaction-autofee"></a></p>
 
-<h3 id="toc_191">Query Avarage Transaction Fee</h3>
+<h3 id="toc_191">Query Average Transaction Fee</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;block_num&quot;:1}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>

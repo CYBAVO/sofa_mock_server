@@ -25,7 +25,7 @@
 		- [Query Callback Detail](#query-notification-callback-by-id)
 		- [Query Wallet Synchronization Info](#query-wallet-block-info)
 		- [Query Wallet Info](#query-wallet-basic-info)
-		- [Query Transaction Avarage Fee](#query-wallet-transaction-autofee)
+		- [Query Transaction Average Fee](#query-wallet-transaction-autofee)
 		- [Query Transaction History](#query-vault/batch-wallet-transaction-history)
 		- [Verify Addresses](#verify-addresses)
 - Testing
@@ -744,7 +744,7 @@ The request includes the following parameters:
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
-| block\_average_fee | int | optional, range `1~30` | Use avarage blockchain fee within latest N blocks |
+| block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks |
 | manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
@@ -1485,9 +1485,9 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 <a name="query-wallet-transaction-autofee"></a>
-### Query Transaction Avarage Fee
+### Query Transaction Average Fee
 
-Query avarage blockchain fee within latest N blocks.
+Query average blockchain fee within latest N blocks.
 
 ##### Request
 
@@ -1519,7 +1519,7 @@ The request includes the following parameters:
 
 | Field | Type  | Note | Description |
 | :---  | :---  | :---     | :---        |
-| block_num | int | optional, default `1`, range `1~30` | Get avarage blockchain fee within latest N blocks |
+| block_num | int | optional, default `1`, range `1~30` | Get average blockchain fee within latest N blocks |
 
 ##### Response Format
 
@@ -1965,7 +1965,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks'
 - [API definition](#query-wallet-block-info)
 
 <a name="curl-query-wallet-transaction-autofee"></a>
-### Query Avarage Transaction Fee
+### Query Average Transaction Fee
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
