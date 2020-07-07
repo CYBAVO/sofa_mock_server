@@ -384,6 +384,24 @@ func (c *OuterController) GetTxAPITokenStatus() {
 	c.Data["json"] = m
 }
 
+// @Title Activate API token
+// @router /wallets/:wallet_id/apisecret/activate [post]
+func (c *OuterController) ActivateAPIToken() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/apisecret/activate", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("ActivateAPIToken failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
 // @Title Query notification history
 // @router /wallets/:wallet_id/notifications [get]
 func (c *OuterController) GetNotifications() {

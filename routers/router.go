@@ -27,6 +27,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/:order_id", &controllers.OuterController{}, "GET:GetWithdrawTransactionState")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/balance", &controllers.OuterController{}, "GET:GetWithdrawalWalletBalance")
 	beego.Router("/v1/mock/wallets/:wallet_id/apisecret", &controllers.OuterController{}, "GET:GetTxAPITokenStatus")
+	beego.Router("/v1/mock/wallets/:wallet_id/apisecret/activate", &controllers.OuterController{}, "POST:ActivateAPIToken")
 	beego.Router("/v1/mock/wallets/:wallet_id/notifications", &controllers.OuterController{}, "GET:GetNotifications")
 	beego.Router("/v1/mock/wallets/:wallet_id/notifications/get_by_id", &controllers.OuterController{}, "POST:GetCallbackBySerial")
 	beego.Router("/v1/mock/wallets/:wallet_id/receiver/notifications/txid/:txid/:vout_index", &controllers.OuterController{}, "GET:GetDepositCallback")

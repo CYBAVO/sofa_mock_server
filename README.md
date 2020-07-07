@@ -20,6 +20,7 @@
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback)
 	- Query API
+		- [Activate API Code](#activate-api-token)
 		- [Query API Code Status](#query-api-token-status)
 		- [Query Callback History](#query-notification-callback-history)
 		- [Query Callback Detail](#query-notification-callback-by-id)
@@ -77,6 +78,8 @@
 
 ### How to make a correct request?
 - Put the API code in the X-API-CODE header.
+	- Use the inactivated API code in any request will activate it automatically. Once activated, the currently activated API code will immediately become invalid.
+	- Or you can explicitly call the [activation API](#activate-api-token) to activate the API code before use
 - Calculate the checksum with the corresponding API secret and put the checksum in the X-CHECKSUM header.
   - The checksum calculation will use all the query parameters, the current timestamp, user-defined random string and the post body (if any).
 - Please refer to the code snippet on the github project to learn how to calculate the checksum.
@@ -88,7 +91,9 @@
 <a name="callback-integration"></a>
 # Callback Integration
 
-- How to distinguish betwenn deposit and withdrawal callbacks?
+- Please note that the wallet must have an activated API code, otherwise no callback will be sent.
+	- Use the [activation API](#activate-api-token) to activate an API code.
+- How to distinguish between deposit and withdrawal callbacks?
 	- Deposit Callback (callback type 1)
 	  - The combination of **txid** and **vout_index** of the callback is unique, use this combined ID to identify the deposit request, not to use only the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.
 	- Withdrawal Callback (callback type 2)
@@ -1091,6 +1096,60 @@ The response includes the following parameters:
 
 # Query API
 
+<a name="activate-api-token"></a>
+### Activate API Code
+
+Activate the API code of a certain wallet. Once activated, the currently activated API code will immediately become invalid.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/apisecret/activate
+
+- [Sample curl command](#curl-activate-api-token)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/apisecret/activate
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "api_code": "4PcdE9VjXfrk7WjC1",
+  "exp": 1609646716
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| api_code | string | The activated API code |
+| exp | int64 | The API code expiration unix time in UTC |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+
+##### [Back to top](#table-of-contents)
+
 <a name="query-api-token-status"></a>
 ### Query API Code Status
 
@@ -1132,10 +1191,10 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| valid | object | Activated API code |
+| valid | object | The activated API code |
 | inactivated | object | Not active API code |
-| api_code | string | API code for querying wallet |
-| exp | int64 | API code expiration unix time in UTC |
+| api_code | string | The API code for querying wallet |
+| exp | int64 | The API code expiration unix time in UTC |
 
 > Use an invalid API-CODE, the caller will get a 403 Forbidden error.
 
@@ -1907,6 +1966,14 @@ curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
 ```
 - [API definition](#query-withdrawal-wallet-balance)
 
+<a name="curl-activate-api-token"></a>
+### Activate API Code
+
+```
+curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activate
+```
+- [API definition](#activate-api-token)
+
 <a name="curl-query-api-token-status"></a>
 ### Query API Code Status
 
@@ -2099,7 +2166,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>state</td>
     <td>int</td>
-    <td rowspan="9">
+    <td rowspan="13">
       <b>0</b> - Enqueue<br>
       <b>1</b> - Processing batch in KMS<br>
       <b>2</b> - TXID in pool<br>
@@ -2115,6 +2182,10 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
       <b>12</b> - Paused<br>
     </td>
   </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
   <tr></tr>
   <tr></tr>
   <tr></tr>
@@ -2144,6 +2215,35 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
     <td>key-value pairs</td>
     <td>The extra information of this callback</td>
   </tr>
+  <tr>
+    <td>decimal</td>
+    <td>int</td>
+    <td>The decimal of cryptocurrency</td>
+  </tr>
+  <tr>
+    <td>currency_bip44</td>
+    <td>int64</td>
+    <td rowspan="">
+   	 	The coin type definition of cryptocurrency. <br>
+		0 - BTC<br>
+		2 - LTC<br>
+		5 - DASH<br>
+		60 - ETH<br>
+		144 - XRP<br>
+		145 - BCH<br>
+		148 - XLM<br>
+		194 - EOS<br>
+		195 - TRX<br>
+		236 - BSV<br>
+		714 - BNB<br>
+	   Refer to Currency Definition table below.
+    </td>
+  </tr>
+  <tr>
+    <td>token_address</td>
+    <td>string</td>
+    <td>The contract address of cryptocurrency</td>
+  </tr>
 </table>
 
 > If the `state` of callback is 5 (Failed), the detailed failure reason will put in `addon` field (key is `err_reason`). See the callback sample bellow.
@@ -2153,24 +2253,28 @@ Callback sample:
 ```json
 {
   "type": 1,
-  "serial": 90000000001,
+  "serial": 90000000613,
   "order_id": "",
   "currency": "ETH",
-  "txid": "0x100e84230923124582b7feb5daf638df79616fb3dea37fc2ea80659f5de3472e",
-  "block_height": 5905092,
-  "tindex": 11,
+  "txid": "0xee86974897249a3957c64034ac77565c2200cf823b5b91ba54a3225983b26978",
+  "block_height": 8243557,
+  "tindex": 1,
   "vout_index": 0,
   "amount": "500000000000000000",
-  "fees": "210000000000000",
-  "broadcast_at": 1562057483,
-  "chain_at": 1562057483,
+  "fees": "504000000000000",
+  "memo": "",
+  "broadcast_at": 1594090788,
+  "chain_at": 1594090788,
   "from_address": "0x8382Cc1B05649AfBe179e341179fa869C2A9862b",
-  "to_address": "0x87F907C868D92a5d97E59CD1E9383a2E51dC4778",
-  "wallet_id": 21,
+  "to_address": "0x32d638773cB85965422b3B98e9312Fc9392307BC",
+  "wallet_id": 5,
   "state": 3,
-  "confirm_blocks": 1,
-  "processing_state": 1,
-  "addon": {}
+  "confirm_blocks": 2,
+  "processing_state": 2,
+  "addon": {},
+  "decimal": 18,
+  "currency_bip44": 60,
+  "token_address": ""
 }
 ```
 
@@ -2199,7 +2303,10 @@ Callback with state 5 (Failed) sample:
   "processing_state": 0,
   "addon": {
     "err_reason": "Illegal Transaction Format: To 0x60589A749AAC632e9A830c8aBE041899d8Dd15"
-  }
+  },
+  "decimal": 18,
+  "currency_bip44": 60,
+  "token_address": ""
 }
 ```
 
