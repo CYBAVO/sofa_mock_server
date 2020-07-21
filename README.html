@@ -4572,15 +4572,25 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <h3 id="toc_185">Get Pool Address</h3>
 
-<div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress&#39;</code></pre></div>
+<div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress&#39;</code></pre></div>
 
 <ul>
 <li><a href="#query-pool-address-of-deposit-wallet">API definition</a></li>
 </ul>
 
+<p><a name="curl-get-deposit-wallet-pool-address-balance"></a></p>
+
+<h3 id="toc_186">Get Pool Address Balance</h3>
+
+<div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress/balance&#39;</code></pre></div>
+
+<ul>
+<li><a href="#query-pool-address-balance-of-deposit-wallet">API definition</a></li>
+</ul>
+
 <p><a name="curl-resend-all-pending-or-failed-deposit-callbacks"></a></p>
 
-<h3 id="toc_186">Resend Deposit Callbacks</h3>
+<h3 id="toc_187">Resend Deposit Callbacks</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;notification_id&quot;:0}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend</code></pre></div>
@@ -4591,7 +4601,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend</code></pre></
 
 <p><a name="curl-withdraw"></a></p>
 
-<h3 id="toc_187">Withdraw Assets</h3>
+<h3 id="toc_188">Withdraw Assets</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;888888_1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;888888_2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
@@ -4602,7 +4612,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-cancel-withdrawal"></a></p>
 
-<h3 id="toc_188">Cancel Withdrawal</h3>
+<h3 id="toc_189">Cancel Withdrawal</h3>
 
 <div><pre><code class="language-none">curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/cancel</code></pre></div>
 
@@ -4612,7 +4622,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-query-withdrawal-transaction-state"></a></p>
 
-<h3 id="toc_189">Query Withdrawal Transaction State</h3>
+<h3 id="toc_190">Query Withdrawal Transaction State</h3>
 
 <div><pre><code class="language-none">curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}</code></pre></div>
 
@@ -4622,7 +4632,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-query-withdrawal-wallet-balance"></a></p>
 
-<h3 id="toc_190">Query Withdrawal Wallet Balance</h3>
+<h3 id="toc_191">Query Withdrawal Wallet Balance</h3>
 
 <div><pre><code class="language-none">curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance</code></pre></div>
 
@@ -4632,7 +4642,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-activate-api-token"></a></p>
 
-<h3 id="toc_191">Activate API Code</h3>
+<h3 id="toc_192">Activate API Code</h3>
 
 <div><pre><code class="language-none">curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activate</code></pre></div>
 
@@ -4642,7 +4652,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-query-api-token-status"></a></p>
 
-<h3 id="toc_192">Query API Code Status</h3>
+<h3 id="toc_193">Query API Code Status</h3>
 
 <div><pre><code class="language-none">curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret</code></pre></div>
 
@@ -4652,7 +4662,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-query-notification-callback-history"></a></p>
 
-<h3 id="toc_193">Query Callback History</h3>
+<h3 id="toc_194">Query Callback History</h3>
 
 <div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2&#39;</code></pre></div>
 
@@ -4662,7 +4672,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 
 <p><a name="curl-query-notification-callback-by-id"></a></p>
 
-<h3 id="toc_194">Query Callback Detail</h3>
+<h3 id="toc_195">Query Callback Detail</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;ids&quot;:[90000000140,90000000139]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code></pre></div>
@@ -4673,7 +4683,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-deposit-callback"></a></p>
 
-<h3 id="toc_195">Query Deposit Callback</h3>
+<h3 id="toc_196">Query Deposit Callback</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}&#39;</code></pre></div>
 
@@ -4683,7 +4693,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-withdrawal-callback"></a></p>
 
-<h3 id="toc_196">Query Withdrawal Callback</h3>
+<h3 id="toc_197">Query Withdrawal Callback</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}&#39;</code></pre></div>
 
@@ -4693,7 +4703,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-wallet-basic-info"></a></p>
 
-<h3 id="toc_197">Query Wallet Info</h3>
+<h3 id="toc_198">Query Wallet Info</h3>
 
 <div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info&#39;</code></pre></div>
 
@@ -4703,7 +4713,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-deposit/withdraw-wallet-block-info"></a></p>
 
-<h3 id="toc_198">Query Wallet Synchronization Info</h3>
+<h3 id="toc_199">Query Wallet Synchronization Info</h3>
 
 <div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks&#39;</code></pre></div>
 
@@ -4713,7 +4723,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-wallet-transaction-autofee"></a></p>
 
-<h3 id="toc_199">Query Average Transaction Fee</h3>
+<h3 id="toc_200">Query Average Transaction Fee</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;block_num&quot;:1}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>
@@ -4724,7 +4734,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>
 
 <p><a name="curl-query-vault/batch-wallet-transaction-history"></a></p>
 
-<h3 id="toc_200">Query Transaction History</h3>
+<h3 id="toc_201">Query Transaction History</h3>
 
 <div><pre><code class="language-none">curl -X GET &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&amp;from_time=1559664000&amp;to_time=1562255999&amp;request_number=8&#39;</code></pre></div>
 
@@ -4734,7 +4744,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>
 
 <p><a name="curl-verify-addresses"></a></p>
 
-<h3 id="toc_201">Verify Addresses</h3>
+<h3 id="toc_202">Verify Addresses</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;addresses&quot;:[&quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,&quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre></div>
@@ -4743,11 +4753,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <li><a href="#verify-addresses">API definition</a></li>
 </ul>
 
-<h5 id="toc_202"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_203"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="other-language-versions"></a></p>
 
-<h1 id="toc_203">Other Language Versions</h1>
+<h1 id="toc_204">Other Language Versions</h1>
 
 <ul>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA">Java</a></li>
@@ -4755,13 +4765,13 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP">PHP</a></li>
 </ul>
 
-<h5 id="toc_204"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_205"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_205">Appendix</h1>
+<h1 id="toc_206">Appendix</h1>
 
 <p><a name="callback-definition"></a></p>
 
-<h3 id="toc_206">Callback Definition</h3>
+<h3 id="toc_207">Callback Definition</h3>
 
 <table>
   <tr>
@@ -4902,7 +4912,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
   <tr>
     <td>addon</td>
     <td>key-value pairs</td>
-    <td>The extra information of this callback</td>
+    <td>
+    The extra information of this callback<br>
+    <b>err_reason</b> - will contain detail error reason if state is 5(Failed)<br>
+    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee
+    </td>
   </tr>
   <tr>
     <td>decimal</td>
@@ -4943,25 +4957,27 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 
 <div><pre><code class="language-javascript">{
   &quot;type&quot;: 1,
-  &quot;serial&quot;: 90000000613,
+  &quot;serial&quot;: 90000000619,
   &quot;order_id&quot;: &quot;&quot;,
   &quot;currency&quot;: &quot;ETH&quot;,
-  &quot;txid&quot;: &quot;0xee86974897249a3957c64034ac77565c2200cf823b5b91ba54a3225983b26978&quot;,
-  &quot;block_height&quot;: 8243557,
-  &quot;tindex&quot;: 1,
+  &quot;txid&quot;: &quot;0xc99a4941f87364c9679fe834f99bc12cbacfc577dedf4f34c4fd8833a68a0b00&quot;,
+  &quot;block_height&quot;: 8336269,
+  &quot;tindex&quot;: 43,
   &quot;vout_index&quot;: 0,
   &quot;amount&quot;: &quot;500000000000000000&quot;,
-  &quot;fees&quot;: &quot;504000000000000&quot;,
+  &quot;fees&quot;: &quot;945000000000000&quot;,
   &quot;memo&quot;: &quot;&quot;,
-  &quot;broadcast_at&quot;: 1594090788,
-  &quot;chain_at&quot;: 1594090788,
+  &quot;broadcast_at&quot;: 1595296751,
+  &quot;chain_at&quot;: 1595296751,
   &quot;from_address&quot;: &quot;0x8382Cc1B05649AfBe179e341179fa869C2A9862b&quot;,
   &quot;to_address&quot;: &quot;0x32d638773cB85965422b3B98e9312Fc9392307BC&quot;,
   &quot;wallet_id&quot;: 5,
   &quot;state&quot;: 3,
   &quot;confirm_blocks&quot;: 2,
   &quot;processing_state&quot;: 2,
-  &quot;addon&quot;: {},
+  &quot;addon&quot;: {
+    &quot;fee_decimal&quot;: 18
+  },
   &quot;decimal&quot;: 18,
   &quot;currency_bip44&quot;: 60,
   &quot;token_address&quot;: &quot;&quot;
@@ -4997,11 +5013,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
   &quot;token_address&quot;: &quot;&quot;
 }</code></pre></div>
 
-<h5 id="toc_207"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_208"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="callback-type-definition"></a></p>
 
-<h3 id="toc_208">Callback Type Definition</h3>
+<h3 id="toc_209">Callback Type Definition</h3>
 
 <table>
 <thead>
@@ -5035,11 +5051,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 </tbody>
 </table>
 
-<h5 id="toc_209"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_210"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="currency-definition"></a></p>
 
-<h3 id="toc_210">Currency Definition</h3>
+<h3 id="toc_211">Currency Definition</h3>
 
 <table>
 <thead>
@@ -5105,11 +5121,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
 </blockquote>
 
-<h5 id="toc_211"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_212"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="memo-requirement"></a></p>
 
-<h3 id="toc_212">Memo Requirement</h3>
+<h3 id="toc_213">Memo Requirement</h3>
 
 <table>
 <thead>
@@ -5139,7 +5155,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 </tbody>
 </table>
 
-<h5 id="toc_213"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_214"><a href="#table-of-contents">Back to top</a></h5>
 
 
 

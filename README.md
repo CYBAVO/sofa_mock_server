@@ -1920,9 +1920,17 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid
 ### Get Pool Address
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress'
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress'
 ```
 - [API definition](#query-pool-address-of-deposit-wallet)
+
+<a name="curl-get-deposit-wallet-pool-address-balance"></a>
+### Get Pool Address Balance
+
+```
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress/balance'
+```
+- [API definition](#query-pool-address-balance-of-deposit-wallet)
 
 <a name="curl-resend-all-pending-or-failed-deposit-callbacks"></a>
 ### Resend Deposit Callbacks
@@ -2213,7 +2221,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>addon</td>
     <td>key-value pairs</td>
-    <td>The extra information of this callback</td>
+    <td>
+    The extra information of this callback<br>
+    <b>err_reason</b> - will contain detail error reason if state is 5(Failed)<br>
+    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee
+    </td>
   </tr>
   <tr>
     <td>decimal</td>
@@ -2253,25 +2265,27 @@ Callback sample:
 ```json
 {
   "type": 1,
-  "serial": 90000000613,
+  "serial": 90000000619,
   "order_id": "",
   "currency": "ETH",
-  "txid": "0xee86974897249a3957c64034ac77565c2200cf823b5b91ba54a3225983b26978",
-  "block_height": 8243557,
-  "tindex": 1,
+  "txid": "0xc99a4941f87364c9679fe834f99bc12cbacfc577dedf4f34c4fd8833a68a0b00",
+  "block_height": 8336269,
+  "tindex": 43,
   "vout_index": 0,
   "amount": "500000000000000000",
-  "fees": "504000000000000",
+  "fees": "945000000000000",
   "memo": "",
-  "broadcast_at": 1594090788,
-  "chain_at": 1594090788,
+  "broadcast_at": 1595296751,
+  "chain_at": 1595296751,
   "from_address": "0x8382Cc1B05649AfBe179e341179fa869C2A9862b",
   "to_address": "0x32d638773cB85965422b3B98e9312Fc9392307BC",
   "wallet_id": 5,
   "state": 3,
   "confirm_blocks": 2,
   "processing_state": 2,
-  "addon": {},
+  "addon": {
+    "fee_decimal": 18
+  },
   "decimal": 18,
   "currency_bip44": 60,
   "token_address": ""
