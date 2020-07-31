@@ -475,13 +475,13 @@ kbd {
 <ul>
 <li>The checksum calculation will use all the query parameters, the current timestamp, user-defined random string and the post body (if any).</li>
 </ul></li>
-<li>Please refer to the code snippet on the github project to learn how to calculate the checksum.
+<li>Please refer to the code snippet on the github project to know how to calculate the checksum.
 
 <ul>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/api/apicaller.go#L40">Go</a></li>
-<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java">Java</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L71">Java</a></li>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L54">Javascript</a></li>
-<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php">PHP</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L26">PHP</a></li>
 </ul></li>
 </ul>
 
@@ -522,6 +522,14 @@ kbd {
 <li>If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the <a href="#resend-pending-or-failed-deposit-callbacks">resend</a> API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.</li>
 </ul></li>
 <li><p>Refer to <a href="#callback-definition">Callback Definition</a>, <a href="#callback-type-definition">Callback Type Definition</a> for detailed definition.</p></li>
+<li><p>Please refer to the code snippet on the github project to know how to validate the callback payload.</p>
+
+<ul>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L197">Go</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L82">Java</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L343">Javascript</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L185">PHP</a></li>
+</ul></li>
 </ul>
 
 <h1 id="toc_9">REST API</h1>
@@ -1491,7 +1499,7 @@ kbd {
     &quot;vout_index&quot;: 0,
     &quot;wallet_id&quot;: 5
   }
-</code></pre></div>
+}</code></pre></div>
 
 <p>The response includes the following parameters:</p>
 
