@@ -1878,7 +1878,7 @@ Withdrawal Authentication Callback URL
 http://localhost:8889/v1/mock/wallets/withdrawal/callback
 ```
 
-> The withdrawal authentication callback URL once set, every withrawal request will callback this URL to get authentication to proceed withdrawal request.
+> The withdrawal authentication callback URL once set, every withdrawal request will callback this URL to get authentication to proceed withdrawal request.
 > 
 > Refer to [WithdrawalCallback()](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L183) function in mock server OuterController.go
 
