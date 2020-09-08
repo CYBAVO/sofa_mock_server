@@ -52,7 +52,6 @@
 - Handle the deposit callback
 	- Use the callback data to update certain data on your system.
 	- <b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
-</div>
 	- Refer to [Callback Integration](#callback-integration) for detailed information.
 
 ### How to withdraw?
