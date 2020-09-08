@@ -48,6 +48,9 @@
 - Request an API code/secret (via web control panel)
 - Create deposit addresses (via CYBAVO SOFA API)
 	- Refer to [Create deposit wallet addresses](#create-deposit-wallet-addresses) API
+<div class="alert alert-warning">
+<b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
+</div>
 - Waiting for the CYBAVO SOFA system detecting transactions to those deposit addresses
 - Handle the deposit callback
 	- Use the callback data to update certain data on your system.
@@ -59,6 +62,9 @@
 - Request an API code/secret (via web control panel)
 - Make withdraw request (via CYBAVI SOFA API)
 	- Refer to [Withdraw](#withdraw) API
+<div class="alert alert-warning">
+<b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.
+</div>
 - Waiting for the CYBAVO SOFA system broadcasting transactions to blockchain
 - Handle the withdrawal callback
 	- Use the callback data to update certain data on your system.
@@ -99,7 +105,9 @@
 	- Withdrawal Callback (callback type 2)
 	  - The **order_id** of the callback is unique, use this ID to identify the withdrawal request.
 
-> It is important to distinguish between unique callbacks to avoid improper handling of deposit / withdrawal requests.
+<div class="alert alert-warning">
+It is important to distinguish between unique callbacks to avoid improper handling of deposit / withdrawal requests.
+</div>
 
 - To ensure that the callbacks have processed by callback handler, the CYBAVO SOFA system will continue to send the callbacks to the callback URL until a callback confirmation (HTTP/1.1 200 OK) is received or exceeds the number of retries (retry time interval: 1-3-5-15-45 mins).
 	- If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the [resend](#resend-pending-or-failed-deposit-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.
@@ -2379,4 +2387,17 @@ Callback with state 5 (Failed) sample:
 | BNB | Up to 128 chars |
 
 ##### [Back to top](#table-of-contents)
+
+<style>
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-top: .5rem;
+}
+.alert-warning {
+    border-style: solid;
+    border-color: #ffc107;
+    border-width: 0 0 0 4px;
+}
+</style>
 
