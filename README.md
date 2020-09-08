@@ -48,12 +48,11 @@
 - Request an API code/secret (via web control panel)
 - Create deposit addresses (via CYBAVO SOFA API)
 	- Refer to [Create deposit wallet addresses](#create-deposit-wallet-addresses) API
-<div class="alert alert-warning">
-<b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
-</div>
 - Waiting for the CYBAVO SOFA system detecting transactions to those deposit addresses
 - Handle the deposit callback
 	- Use the callback data to update certain data on your system.
+	- <b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
+</div>
 	- Refer to [Callback Integration](#callback-integration) for detailed information.
 
 ### How to withdraw?
@@ -62,9 +61,7 @@
 - Request an API code/secret (via web control panel)
 - Make withdraw request (via CYBAVI SOFA API)
 	- Refer to [Withdraw](#withdraw) API
-<div class="alert alert-warning">
-<b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.
-</div>
+	- <b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.
 - Waiting for the CYBAVO SOFA system broadcasting transactions to blockchain
 - Handle the withdrawal callback
 	- Use the callback data to update certain data on your system.
@@ -2387,17 +2384,3 @@ Callback with state 5 (Failed) sample:
 | BNB | Up to 128 chars |
 
 ##### [Back to top](#table-of-contents)
-
-<style>
-.alert {
-    position: relative;
-    padding: .75rem 1.25rem;
-    margin-top: .5rem;
-}
-.alert-warning {
-    border-style: solid;
-    border-color: #ffc107;
-    border-width: 0 0 0 4px;
-}
-</style>
-

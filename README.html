@@ -406,16 +406,15 @@ kbd {
 <li>Create deposit addresses (via CYBAVO SOFA API)
 
 <ul>
-<li>Refer to <a href="#create-deposit-wallet-addresses">Create deposit wallet addresses</a> API
-<div class="alert alert-warning">
-<b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
-</div></li>
+<li>Refer to <a href="#create-deposit-wallet-addresses">Create deposit wallet addresses</a> API</li>
 </ul></li>
 <li>Waiting for the CYBAVO SOFA system detecting transactions to those deposit addresses</li>
 <li>Handle the deposit callback
 
 <ul>
 <li>Use the callback data to update certain data on your system.</li>
+<li><b>Security Enhancement</b>: Use the Query Callback Detail API to confirm the callback is sent from the CYBAVO SOFA system.
+</div></li>
 <li>Refer to <a href="#callback-integration">Callback Integration</a> for detailed information.</li>
 </ul></li>
 </ul>
@@ -432,10 +431,8 @@ kbd {
 <li>Make withdraw request (via CYBAVI SOFA API)
 
 <ul>
-<li>Refer to <a href="#withdraw">Withdraw</a> API
-<div class="alert alert-warning">
-<b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.
-</div></li>
+<li>Refer to <a href="#withdraw">Withdraw</a> API</li>
+<li><b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.</li>
 </ul></li>
 <li>Waiting for the CYBAVO SOFA system broadcasting transactions to blockchain</li>
 <li>Handle the withdrawal callback
@@ -5170,19 +5167,6 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 </table>
 
 <h5 id="toc_214"><a href="#table-of-contents">Back to top</a></h5>
-
-<style>
-.alert {
-    position: relative;
-    padding: .75rem 1.25rem;
-    margin-top: .5rem;
-}
-.alert-warning {
-    border-style: solid;
-    border-color: #ffc107;
-    border-width: 0 0 0 4px;
-}
-</style>
 
 
 
