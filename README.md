@@ -13,6 +13,7 @@
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
 		- [Query Deposit Callback Detail](#query-deposit-callback)
 		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
+		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 	- Withdraw Wallet API
 		- [Withdraw Assets](#withdraw)
 		- [Cancel Withdrawal Request](#cancel-withdrawal)
@@ -674,6 +675,68 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-deposit-wallet-balance"></a>
+### Query Deposit Wallet Balance
+
+Get the deposit wallet balance.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/receiver/balance
+
+> `WALLET_ID` must be a deposit wallet ID
+
+- [Sample curl command](#curl-query-deposit-wallet-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/959272/receiver/balance
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "currency": 60,
+  "token_address": "",
+  "balance": "0.619673333517576",
+  "token_balance": ""
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| token_address | string | Token contract address |
+| balance | string | Deposit wallet balance |
+| token_balance | string | Deposit wallet token balance |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
@@ -1913,7 +1976,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses
 ### Get Deposit Addresses
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&request_number=1000'
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&request_number=1000
 ```
 - [API definition](#query-address-of-deposit-wallet)
 
@@ -1921,7 +1984,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_i
 ### Query Invalid Deposit Addresses
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid-deposit'
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid-deposit
 ```
 - [API definition](#query-invalid-deposit-addresses)
 
@@ -1951,6 +2014,14 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend
 ```
 - [API definition](#resend-pending-or-failed-deposit-callbacks)
 
+<a name="curl-query-deposit-wallet-balance"></a>
+### Query Deposit Wallet Balance
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/balance
+```
+- [API definition](#query-deposit-wallet-balance)
+
 <a name="curl-withdraw"></a>
 ### Withdraw Assets
 
@@ -1972,7 +2043,7 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactio
 ### Query Withdrawal Transaction State
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}
 ```
 - [API definition](#query-withdrawal-transaction-state)
 
@@ -1980,7 +2051,7 @@ curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transaction
 ### Query Withdrawal Wallet Balance
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
 ```
 - [API definition](#query-withdrawal-wallet-balance)
 
@@ -1996,7 +2067,7 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activat
 ### Query API Code Status
 
 ```
-curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
 ```
 - [API definition](#query-api-token-status)
 
@@ -2004,7 +2075,7 @@ curl -X GET http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
 ### Query Callback History
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
 ```
 - [API definition](#query-notification-callback-history)
 
@@ -2037,7 +2108,7 @@ curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/ord
 ### Query Wallet Info
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info'
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info
 ```
 - [API definition](#query-wallet-basic-info)
 
@@ -2045,7 +2116,7 @@ curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info'
 ### Query Wallet Synchronization Info
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks'
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks
 ```
 - [API definition](#query-wallet-block-info)
 
@@ -2063,7 +2134,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee
 ### Query Transaction History
 
 ```
-curl -X GET 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8'
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8
 ```
 - [API definition](#query-vault/batch-wallet-transaction-history)
 

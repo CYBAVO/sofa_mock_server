@@ -595,3 +595,21 @@ func (c *OuterController) GetAutoFee() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Get balance of deposit wallet
+// @router /wallets/:wallet_id/receiver/balance [get]
+func (c *OuterController) GetDepositWalletBalance() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/receiver/balance", walletID),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetDepositWalletBalance failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
