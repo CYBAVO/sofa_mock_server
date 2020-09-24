@@ -11,15 +11,16 @@
 		- [Query Pool Address](#query-pool-address-of-deposit-wallet)
 		- [Query Pool Address Balance](#query-pool-address-balance-of-deposit-wallet)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
-		- [Query Deposit Callback Detail](#query-deposit-callback)
+		- [Query Deposit Callback Detail](#query-deposit-callback-detail)
 		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
 		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 	- Withdraw Wallet API
 		- [Withdraw Assets](#withdraw)
 		- [Cancel Withdrawal Request](#cancel-withdrawal)
-		- [Query Withdrawal Transaction State](#query-withdrawal-transaction-state)
+		- [Query Latest Withdrawal Transaction State](#query-latest-withdrawal-transaction-state)
+		- [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states)
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
-		- [Query Withdrawal Callback Detail](#query-withdrawal-callback)
+		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
 	- Query API
 		- [Activate API Code](#activate-api-token)
 		- [Query API Code Status](#query-api-token-status)
@@ -527,7 +528,7 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-<a name="query-deposit-callback"></a>
+<a name="query-deposit-callback-detail"></a>
 ### Query Deposit Callback Detail
 
 Query the detailed information of the deposit callback by the tx ID and the vout index.
@@ -536,7 +537,7 @@ Query the detailed information of the deposit callback by the tx ID and the vout
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/receiver/notifications/txid/`TX_ID`/`VOUT_INDEX`
 
-- [Sample curl command](#curl-query-deposit-callback)
+- [Sample curl command](#curl-query-deposit-callback-detail)
 
 ##### Request Format
 
@@ -901,7 +902,7 @@ The response includes the following parameters:
 | 400 | 818 | Destination Tag must be integer | - | Wrong XRP destination tag format |
 | 400 | 944 | The max length of order id is 255 chars | - | Reached the limit of the length of order_id |
 | 400 | 703 | Operation failed | Detailed error message | Failed to connect to authentication callback URL |
-| 400 | 703 | Operation failed | HTTP resp failed {HTTP_CODE}, body: {RESPONSE_BODY} | The authentication callback URL returned status code other than 200 |
+| 400 | 703 | Operation failed | HTTP resp failed {HTTP\_CODE}, body: {RESPONSE_BODY} | The authentication callback URL returned status code other than 200 |
 | 403 | 827 | Outgoing address in black list, abort transaction | - | Some outgoing addresses are blacklisted, examine the response 'blacklist' field for detailed information |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 | 404 | 312 | Policy not found | - | No active withdrawal policy found |
@@ -912,7 +913,7 @@ The response includes the following parameters:
 <a name="cancel-withdrawal"></a>
 ### Cancel Withdrawal Request
 
-To cancel the withdrawal request which state is `Init`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback) (represents `state` = 0).
+To cancel the withdrawal request which state is `Init`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback-detail) (represents `state` = 0).
 
 ##### Request
 
@@ -953,7 +954,7 @@ The HTTP 200 means the withdrawal request has been cancelled successfully.
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-withdrawal-transaction-state"></a>
+<a name="query-latest-withdrawal-transaction-state"></a>
 ### Query Latest Withdrawal Transaction State
 
 Check the latest withdrawal transaction state of certain order ID.
@@ -966,7 +967,7 @@ Check the latest withdrawal transaction state of certain order ID.
 
 > `WALLET_ID` must be a withdrawal wallet ID
 
-- [Sample curl command](#curl-query-withdrawal-transaction-state)
+- [Sample curl command](#curl-query-latest-withdrawal-transaction-state)
 
 ##### Request Format
 
@@ -1022,7 +1023,7 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-withdrawal-transaction-state-all"></a>
+<a name="query-all-withdrawal-transaction-states"></a>
 ### Query All Withdrawal Transaction States
 
 Check the all withdrawal transaction state of certain order ID.
@@ -1035,7 +1036,7 @@ Check the all withdrawal transaction state of certain order ID.
 
 > `WALLET_ID` must be a withdrawal wallet ID
 
-- [Sample curl command](#curl-query-withdrawal-transaction-state-all)
+- [Sample curl command](#curl-query-all-withdrawal-transaction-states)
 
 ##### Request Format
 
@@ -1178,7 +1179,7 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-withdrawal-callback"></a>
+<a name="query-withdrawal-callback-detail"></a>
 ### Query Withdrawal Callback Detail
 
 Query the detailed information of the withdrawal callback by the order ID.
@@ -1187,7 +1188,7 @@ Query the detailed information of the withdrawal callback by the order ID.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/notifications/order_id/`ORDER_ID`
 
-- [Sample curl command](#curl-query-withdrawal-callback)
+- [Sample curl command](#curl-query-withdrawal-callback-detail)
 
 ##### Request Format
 
@@ -2125,7 +2126,7 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactio
 ```
 - [API definition](#cancel-withdrawal)
 
-<a name="curl-query-withdrawal-transaction-state"></a>
+<a name="curl-query-latest-withdrawal-transaction-state"></a>
 ### Query Latest Withdrawal Transaction State
 
 ```
@@ -2133,13 +2134,13 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDE
 ```
 - [API definition](#query-withdrawal-transaction-state)
 
-<a name="curl-query-withdrawal-transaction-state-all"></a>
+<a name="curl-query-all-withdrawal-transaction-states"></a>
 ### Query All Withdrawal Transaction States
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/all
 ```
-- [API definition](#query-withdrawal-transaction-state-all)
+- [API definition](#query-all-withdrawal-transaction-states)
 
 <a name="curl-query-withdrawal-wallet-balance"></a>
 ### Query Withdrawal Wallet Balance
@@ -2182,21 +2183,21 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id
 ```
 - [API definition](#query-notification-callback-by-id)
 
-<a name="curl-query-deposit-callback"></a>
-### Query Deposit Callback
+<a name="curl-query-deposit-callback-detail"></a>
+### Query Deposit Callback Detail
 
 ```
 curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}'
 ```
-- [API definition](#query-deposit-callback)
+- [API definition](#query-deposit-callback-detail)
 
-<a name="curl-query-withdrawal-callback"></a>
-### Query Withdrawal Callback
+<a name="curl-query-withdrawal-callback-detail"></a>
+### Query Withdrawal Callback Detail
 
 ```
 curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}'
 ```
-- [API definition](#query-withdrawal-callback)
+- [API definition](#query-withdrawal-callback-detail)
 
 <a name="curl-query-wallet-basic-info"></a>
 ### Query Wallet Info

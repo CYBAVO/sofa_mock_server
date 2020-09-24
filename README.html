@@ -347,7 +347,7 @@ kbd {
 <li><a href="#query-pool-address-of-deposit-wallet">Query Pool Address</a></li>
 <li><a href="#query-pool-address-balance-of-deposit-wallet">Query Pool Address Balance</a></li>
 <li><a href="#query-invalid-deposit-addresses">Query Invalid Deposit Addresses</a></li>
-<li><a href="#query-deposit-callback">Query Deposit Callback Detail</a></li>
+<li><a href="#query-deposit-callback-detail">Query Deposit Callback Detail</a></li>
 <li><a href="#resend-pending-or-failed-deposit-callbacks">Resend Deposit Callbacks</a></li>
 <li><a href="#query-deposit-wallet-balance">Query Deposit Wallet Balance</a></li>
 </ul></li>
@@ -356,9 +356,10 @@ kbd {
 <ul>
 <li><a href="#withdraw">Withdraw Assets</a></li>
 <li><a href="#cancel-withdrawal">Cancel Withdrawal Request</a></li>
-<li><a href="#query-withdrawal-transaction-state">Query Withdrawal Transaction State</a></li>
+<li><a href="#query-latest-withdrawal-transaction-state">Query Latest Withdrawal Transaction State</a></li>
+<li><a href="#query-all-withdrawal-transaction-states">Query All Withdrawal Transaction States</a></li>
 <li><a href="#query-withdrawal-wallet-balance">Query Withdrawal Wallet Balance</a></li>
-<li><a href="#query-withdrawal-callback">Query Withdrawal Callback Detail</a></li>
+<li><a href="#query-withdrawal-callback-detail">Query Withdrawal Callback Detail</a></li>
 </ul></li>
 <li>Query API
 
@@ -1453,7 +1454,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h5 id="toc_47"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-deposit-callback"></a></p>
+<p><a name="query-deposit-callback-detail"></a></p>
 
 <h3 id="toc_48">Query Deposit Callback Detail</h3>
 
@@ -1464,7 +1465,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/receiver/notifications/txid/<code>TX_ID</code>/<code>VOUT_INDEX</code></p>
 
 <ul>
-<li><a href="#curl-query-deposit-callback">Sample curl command</a></li>
+<li><a href="#curl-query-deposit-callback-detail">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_50">Request Format</h5>
@@ -2353,7 +2354,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">400</td>
 <td style="text-align: left">703</td>
 <td style="text-align: left">Operation failed</td>
-<td style="text-align: left">HTTP resp failed {HTTP<em>CODE}, body: {RESPONSE</em>BODY}</td>
+<td style="text-align: left">HTTP resp failed {HTTP_CODE}, body: {RESPONSE_BODY}</td>
 <td style="text-align: left">The authentication callback URL returned status code other than 200</td>
 </tr>
 <tr>
@@ -2393,7 +2394,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h3 id="toc_81">Cancel Withdrawal Request</h3>
 
-<p>To cancel the withdrawal request which state is <code>Init</code>. The request state can be checked on web control panel or query through this <a href="#query-withdrawal-callback">API</a> (represents <code>state</code> = 0).</p>
+<p>To cancel the withdrawal request which state is <code>Init</code>. The request state can be checked on web control panel or query through this <a href="#query-withdrawal-callback-detail">API</a> (represents <code>state</code> = 0).</p>
 
 <h5 id="toc_82">Request</h5>
 
@@ -2508,7 +2509,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h5 id="toc_87"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-withdrawal-transaction-state"></a></p>
+<p><a name="query-latest-withdrawal-transaction-state"></a></p>
 
 <h3 id="toc_88">Query Latest Withdrawal Transaction State</h3>
 
@@ -2527,7 +2528,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-withdrawal-transaction-state">Sample curl command</a></li>
+<li><a href="#curl-query-latest-withdrawal-transaction-state">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_90">Request Format</h5>
@@ -2684,7 +2685,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h5 id="toc_94"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-withdrawal-transaction-state-all"></a></p>
+<p><a name="query-all-withdrawal-transaction-states"></a></p>
 
 <h3 id="toc_95">Query All Withdrawal Transaction States</h3>
 
@@ -2703,7 +2704,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-withdrawal-transaction-state-all">Sample curl command</a></li>
+<li><a href="#curl-query-all-withdrawal-transaction-states">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_97">Request Format</h5>
@@ -3060,7 +3061,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h5 id="toc_108"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-withdrawal-callback"></a></p>
+<p><a name="query-withdrawal-callback-detail"></a></p>
 
 <h3 id="toc_109">Query Withdrawal Callback Detail</h3>
 
@@ -3071,7 +3072,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <p><strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/sender/notifications/order_id/<code>ORDER_ID</code></p>
 
 <ul>
-<li><a href="#curl-query-withdrawal-callback">Sample curl command</a></li>
+<li><a href="#curl-query-withdrawal-callback-detail">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_111">Request Format</h5>
@@ -4990,7 +4991,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 <li><a href="#cancel-withdrawal">API definition</a></li>
 </ul>
 
-<p><a name="curl-query-withdrawal-transaction-state"></a></p>
+<p><a name="curl-query-latest-withdrawal-transaction-state"></a></p>
 
 <h3 id="toc_205">Query Latest Withdrawal Transaction State</h3>
 
@@ -5000,14 +5001,14 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw</code></pre></div>
 <li><a href="#query-withdrawal-transaction-state">API definition</a></li>
 </ul>
 
-<p><a name="curl-query-withdrawal-transaction-state-all"></a></p>
+<p><a name="curl-query-all-withdrawal-transaction-states"></a></p>
 
 <h3 id="toc_206">Query All Withdrawal Transaction States</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/all</code></pre></div>
 
 <ul>
-<li><a href="#query-withdrawal-transaction-state-all">API definition</a></li>
+<li><a href="#query-all-withdrawal-transaction-states">API definition</a></li>
 </ul>
 
 <p><a name="curl-query-withdrawal-wallet-balance"></a></p>
@@ -5061,24 +5062,24 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 <li><a href="#query-notification-callback-by-id">API definition</a></li>
 </ul>
 
-<p><a name="curl-query-deposit-callback"></a></p>
+<p><a name="curl-query-deposit-callback-detail"></a></p>
 
-<h3 id="toc_212">Query Deposit Callback</h3>
+<h3 id="toc_212">Query Deposit Callback Detail</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}&#39;</code></pre></div>
 
 <ul>
-<li><a href="#query-deposit-callback">API definition</a></li>
+<li><a href="#query-deposit-callback-detail">API definition</a></li>
 </ul>
 
-<p><a name="curl-query-withdrawal-callback"></a></p>
+<p><a name="curl-query-withdrawal-callback-detail"></a></p>
 
-<h3 id="toc_213">Query Withdrawal Callback</h3>
+<h3 id="toc_213">Query Withdrawal Callback Detail</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}&#39;</code></pre></div>
 
 <ul>
-<li><a href="#query-withdrawal-callback">API definition</a></li>
+<li><a href="#query-withdrawal-callback-detail">API definition</a></li>
 </ul>
 
 <p><a name="curl-query-wallet-basic-info"></a></p>
