@@ -348,6 +348,25 @@ func (c *OuterController) GetWithdrawTransactionState() {
 	c.Data["json"] = m
 }
 
+// @Title Get state of withdrawal transaction
+// @router /wallets/:wallet_id/sender/transactions/:order_id/all [get]
+func (c *OuterController) GetWithdrawTransactionStateAll() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	orderID := c.getOrderID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/%s/all", walletID, orderID),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetWithdrawTransactionStateAll failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
 // @Title Get balance of withdrawal wallet
 // @router /wallets/:wallet_id/sender/balance [get]
 func (c *OuterController) GetWithdrawalWalletBalance() {

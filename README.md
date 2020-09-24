@@ -954,9 +954,9 @@ The HTTP 200 means the withdrawal request has been cancelled successfully.
 ##### [Back to top](#table-of-contents)
 
 <a name="query-withdrawal-transaction-state"></a>
-### Query Withdrawal Transaction State
+### Query Latest Withdrawal Transaction State
 
-Check the withdrawal transaction state of certain order ID.
+Check the latest withdrawal transaction state of certain order ID.
 
 > The order ID is used in the [withdraw assets](#withdraw) API.
 
@@ -991,6 +991,92 @@ An example of a successful response:
   "in_chain_block": 1016603,
   "txid": "db0f3a27de564a411aeff1d2cb3234c54817de1ecc2258a510a50c5a1063d41c",
   "create_time": "2020-03-16T10:27:57Z"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| order_id | string | The unique ID specified in `sender/transactions` API |
+| address | string | Outgoing address |
+| amount | string | Withdrawal amount |
+| memo | string | Memo on blockchain |
+| in\_chain\_block | int64 | The block that contains this transaction |
+| txid | string | Transaction ID |
+| create_time | string | The withdrawal unix time in UTC |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The {ORDER\_ID} not found |
+
+##### [Back to top](#table-of-contents)
+
+<a name="query-withdrawal-transaction-state-all"></a>
+### Query All Withdrawal Transaction States
+
+Check the all withdrawal transaction state of certain order ID.
+
+> The order ID is used in the [withdraw assets](#withdraw) API.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`/all
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-query-withdrawal-transaction-state-all)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/sender/transactions/100005/all
+```
+
+##### Response Format
+
+An example of a successful response:
+
+> The sample shows the states of a resent transaction
+
+```json
+{
+  "transactions": [
+    {
+      "address": "0x36a49c68EF1e3f39CDbaE2f5636C74BA10815cea",
+      "amount": "0.105",
+      "create_time": "2020-09-24T03:43:17Z",
+      "in_chain_block": 0,
+      "memo": "",
+      "order_id": "100005",
+      "state": 6,
+      "txid": "0x2a8a44f1cfed9cd7b86d86170e2418566765f88c5186246f571374df218fd1a1"
+    },
+    {
+      "address": "0x36a49c68EF1e3f39CDbaE2f5636C74BA10815cea",
+      "amount": "0.105",
+      "create_time": "2020-09-24T03:44:35Z",
+      "in_chain_block": 8742982,
+      "memo": "",
+      "order_id": "100005",
+      "state": 4,
+      "txid": "0xfbeaae4b87f977bcce8ef44672e035d287b96be24e779757c1a7f598501881ef"
+    }
+  ]
 }
 ```
 
@@ -2040,12 +2126,20 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactio
 - [API definition](#cancel-withdrawal)
 
 <a name="curl-query-withdrawal-transaction-state"></a>
-### Query Withdrawal Transaction State
+### Query Latest Withdrawal Transaction State
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}
 ```
 - [API definition](#query-withdrawal-transaction-state)
+
+<a name="curl-query-withdrawal-transaction-state-all"></a>
+### Query All Withdrawal Transaction States
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/all
+```
+- [API definition](#query-withdrawal-transaction-state-all)
 
 <a name="curl-query-withdrawal-wallet-balance"></a>
 ### Query Withdrawal Wallet Balance
@@ -2256,11 +2350,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
     <td>state</td>
     <td>int</td>
     <td rowspan="13">
-      <b>0</b> - Enqueue<br>
+      <b>0</b> - Init<br>
       <b>1</b> - Processing batch in KMS<br>
       <b>2</b> - TXID in pool<br>
       <b>3</b> - TXID in chain<br>
-      <span style="text-decoration:line-through"><b>4 (DEPRECATED)</b> - TXID confirmed in N blocks</span><br>
+      <b>4</b> - TXID confirmed in N blocks<br>
       <b>5</b> - Failed (addon field of callback will contain detailed error reason)<br>
       <b>6</b> - Resent<br>
       <b>7</b> - Blocked due to risk controlled<br>
