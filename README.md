@@ -2400,7 +2400,8 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
     <td>
     The extra information of this callback<br>
     <b>err_reason</b> - will contain detail error reason if state is 5(Failed)<br>
-    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee
+    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee<br>
+    <b>blocklist_tags</b> - the tags of CYBAVO AML detection
     </td>
   </tr>
   <tr>
@@ -2493,6 +2494,42 @@ Callback with state 5 (Failed) sample:
   "processing_state": 0,
   "addon": {
     "err_reason": "Illegal Transaction Format: To 0x60589A749AAC632e9A830c8aBE041899d8Dd15"
+  },
+  "decimal": 18,
+  "currency_bip44": 60,
+  "token_address": ""
+}
+```
+
+Deposit callback with blocklist_tags sample:
+
+```json
+{
+  "type": 4,
+  "serial": 90000009949,
+  "order_id": "",
+  "currency": "ETH",
+  "txid": "0xb74bb5cccf7c024b1b86ded449a7f40e01a2a81dc2298af1eee452de64a7bd15",
+  "block_height": 8771833,
+  "tindex": 1,
+  "vout_index": 0,
+  "amount": "88800000000000",
+  "fees": "2142000000000000",
+  "memo": "",
+  "broadcast_at": 1601287122,
+  "chain_at": 1601287122,
+  "from_address": "0xf6DabB290FCE73f5617ED381ca90dBb7af0E8295",
+  "to_address": "0x42214E5c0eb0960f14AEd3623c172986d5c24A0D",
+  "wallet_id": 2,
+  "state": 3,
+  "confirm_blocks": 2,
+  "processing_state": 2,
+  "addon": {
+    "blocklist_tags": [
+      "Involve phishing activity",
+      "Involve cybercrime related"
+    ],
+    "fee_decimal": 18
   },
   "decimal": 18,
   "currency_bip44": 60,

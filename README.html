@@ -5296,7 +5296,8 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
     <td>
     The extra information of this callback<br>
     <b>err_reason</b> - will contain detail error reason if state is 5(Failed)<br>
-    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee
+    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee<br>
+    <b>blocklist_tags</b> - the tags of CYBAVO AML detection
     </td>
   </tr>
   <tr>
@@ -5388,6 +5389,40 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
   &quot;processing_state&quot;: 0,
   &quot;addon&quot;: {
     &quot;err_reason&quot;: &quot;Illegal Transaction Format: To 0x60589A749AAC632e9A830c8aBE041899d8Dd15&quot;
+  },
+  &quot;decimal&quot;: 18,
+  &quot;currency_bip44&quot;: 60,
+  &quot;token_address&quot;: &quot;&quot;
+}</code></pre></div>
+
+<p>Deposit callback with blocklist_tags sample:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;type&quot;: 4,
+  &quot;serial&quot;: 90000009949,
+  &quot;order_id&quot;: &quot;&quot;,
+  &quot;currency&quot;: &quot;ETH&quot;,
+  &quot;txid&quot;: &quot;0xb74bb5cccf7c024b1b86ded449a7f40e01a2a81dc2298af1eee452de64a7bd15&quot;,
+  &quot;block_height&quot;: 8771833,
+  &quot;tindex&quot;: 1,
+  &quot;vout_index&quot;: 0,
+  &quot;amount&quot;: &quot;88800000000000&quot;,
+  &quot;fees&quot;: &quot;2142000000000000&quot;,
+  &quot;memo&quot;: &quot;&quot;,
+  &quot;broadcast_at&quot;: 1601287122,
+  &quot;chain_at&quot;: 1601287122,
+  &quot;from_address&quot;: &quot;0xf6DabB290FCE73f5617ED381ca90dBb7af0E8295&quot;,
+  &quot;to_address&quot;: &quot;0x42214E5c0eb0960f14AEd3623c172986d5c24A0D&quot;,
+  &quot;wallet_id&quot;: 2,
+  &quot;state&quot;: 3,
+  &quot;confirm_blocks&quot;: 2,
+  &quot;processing_state&quot;: 2,
+  &quot;addon&quot;: {
+    &quot;blocklist_tags&quot;: [
+      &quot;Involve phishing activity&quot;,
+      &quot;Involve cybercrime related&quot;
+    ],
+    &quot;fee_decimal&quot;: 18
   },
   &quot;decimal&quot;: 18,
   &quot;currency_bip44&quot;: 60,
