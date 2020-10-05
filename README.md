@@ -1092,6 +1092,7 @@ The response includes the following parameters:
 | in\_chain\_block | int64 | The block that contains this transaction |
 | txid | string | Transaction ID |
 | create_time | string | The withdrawal unix time in UTC |
+| state | int | Refer to `state` field in [Callback Definition](#callback-definition) |
 
 ##### Error Code
 
