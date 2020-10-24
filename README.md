@@ -6,30 +6,33 @@
 - [Callback Integration](#callback-integration)
 - REST API
 	- Deposit Wallet API
-		- [Create Deposit Addresses](#create-deposit-wallet-addresses)
-		- [Query Deposit Addresses](#query-address-of-deposit-wallet)
-		- [Query Pool Address](#query-pool-address-of-deposit-wallet)
-		- [Query Pool Address Balance](#query-pool-address-balance-of-deposit-wallet)
+		- [Create Deposit Addresses](#create-deposit-addresses)
+		- [Query Deposit Addresses](#query-deposit-addresses)
+		- [Query Pool Address](#query-pool-address)
+		- [Query Pool Address Balance](#query-pool-address-balance)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
 		- [Query Deposit Callback Detail](#query-deposit-callback-detail)
-		- [Resend Deposit Callbacks](#resend-pending-or-failed-deposit-callbacks)
+		- [Resend Deposit Callbacks](#resend-deposit-callbacks)
 		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 	- Withdraw Wallet API
-		- [Withdraw Assets](#withdraw)
-		- [Cancel Withdrawal Request](#cancel-withdrawal)
+		- [Withdraw Assets](#withdraw-assets)
+		- [Cancel Withdrawal Request](#cancel-withdrawal-request)
 		- [Query Latest Withdrawal Transaction State](#query-latest-withdrawal-transaction-state)
 		- [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states)
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
-	- Query API
-		- [Activate API Code](#activate-api-token)
-		- [Query API Code Status](#query-api-token-status)
-		- [Query Callback History](#query-notification-callback-history)
-		- [Query Callback Detail](#query-notification-callback-by-id)
-		- [Query Wallet Synchronization Info](#query-wallet-block-info)
-		- [Query Wallet Info](#query-wallet-basic-info)
-		- [Query Transaction Average Fee](#query-wallet-transaction-autofee)
-		- [Query Transaction History](#query-vault/batch-wallet-transaction-history)
+	- Deposit / Withdraw Wallet Common API
+		- [Query Callback History](#query-callback-history)
+		- [Query Callback Detail](#query-callback-detail)
+		- [Query Wallet Synchronization Info](#query-wallet-synchronization-info)
+		- [Query Transaction Average Fee](#query-transaction-average-fee)
+	- Vault Wallet API
+		- [Query Vault Wallet Transaction History](#query-vault-wallet-transaction-history)
+		- [Query Vault Wallet Balance](#query-vault-wallet-balance)
+	- Common API
+		- [Activate API Code](#activate-api-code)
+		- [Query API Code Status](#query-api-code-status)
+		- [Query Wallet Info](#query-wallet-info)
 		- [Verify Addresses](#verify-addresses)
 - Testing
 	- [Mock Server](#mock-server)
@@ -49,7 +52,7 @@
 	- Refer to CYBAVO VAULT SOFA User Manual for detailed steps.
 - Request an API code/secret (via web control panel)
 - Create deposit addresses (via CYBAVO SOFA API)
-	- Refer to [Create deposit wallet addresses](#create-deposit-wallet-addresses) API
+	- Refer to [Create deposit addresses](#create-deposit-addresses) API
 - Waiting for the CYBAVO SOFA system detecting transactions to those deposit addresses
 - Handle the deposit callback
 	- Use the callback data to update certain data on your system.
@@ -61,7 +64,7 @@
 	- Refer to CYBAVO VAULT SOFA User Manual for detailed steps.
 - Request an API code/secret (via web control panel)
 - Make withdraw request (via CYBAVI SOFA API)
-	- Refer to [Withdraw](#withdraw) API
+	- Refer to [Withdraw Assets](#withdraw-assets) API
 	- <b>Security Enhancement</b>: Also set the withdrawal authentication callback URL to authorize the withdrawal requests sent to the CYBAVO SOFA system.
 - Waiting for the CYBAVO SOFA system broadcasting transactions to blockchain
 - Handle the withdrawal callback
@@ -83,7 +86,7 @@
 ### How to make a correct request?
 - Put the API code in the X-API-CODE header.
 	- Use the inactivated API code in any request will activate it automatically. Once activated, the currently activated API code will immediately become invalid.
-	- Or you can explicitly call the [activation API](#activate-api-token) to activate the API code before use
+	- Or you can explicitly call the [activation API](#activate-api-code) to activate the API code before use
 - Calculate the checksum with the corresponding API secret and put the checksum in the X-CHECKSUM header.
   - The checksum calculation will use all the query parameters, the current timestamp, user-defined random string and the post body (if any).
 - Please refer to the code snippet on the github project to know how to calculate the checksum.
@@ -96,7 +99,7 @@
 # Callback Integration
 
 - Please note that the wallet must have an activated API code, otherwise no callback will be sent.
-	- Use the [activation API](#activate-api-token) to activate an API code.
+	- Use the [activation API](#activate-api-code) to activate an API code.
 - How to distinguish between deposit and withdrawal callbacks?
 	- Deposit Callback (callback type 1)
 	  - The combination of **txid** and **vout_index** of the callback is unique, use this combined ID to identify the deposit request, not to use only the transaction ID (txid field). Because multiple deposit callbacks may have the same transaction ID, for example, BTC many-to-many transactions.
@@ -108,7 +111,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 </div>
 
 - To ensure that the callbacks have processed by callback handler, the CYBAVO SOFA system will continue to send the callbacks to the callback URL until a callback confirmation (HTTP/1.1 200 OK) is received or exceeds the number of retries (retry time interval: 1-3-5-15-45 mins).
-	- If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the [resend](#resend-pending-or-failed-deposit-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.
+	- If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the [resend](#resend-deposit-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.
 
 - Refer to [Callback Definition](#callback-definition), [Callback Type Definition](#callback-type-definition) for detailed definition.
 - Please refer to the code snippet on the github project to know how to validate the callback payload.
@@ -123,7 +126,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 # Deposit Wallet API
 
-<a name="create-deposit-wallet-addresses"></a>
+<a name="create-deposit-addresses"></a>
 ### Create Deposit Addresses
 
 Create deposit addresses on certain wallet. Once addresses are created, the CYBAVO SOFA system will callback when transactions are detected on these addresses.
@@ -134,7 +137,7 @@ Create deposit addresses on certain wallet. Once addresses are created, the CYBA
 
 > `WALLET_ID` must be a deposit wallet ID
 
-- [Sample curl command](#curl-create-deposit-wallet-addresses)
+- [Sample curl command](#curl-create-deposit-addresses)
 
 ##### Request Format
 
@@ -237,10 +240,10 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-<a name="query-address-of-deposit-wallet"></a>
+<a name="query-deposit-addresses"></a>
 ### Query Deposit Addresses
 
-Query the deposit addresses created by the [Create Deposit Addresses](#create-deposit-wallet-addresses) API.
+Query the deposit addresses created by the [Create Deposit Addresses](#create-deposit-addresses) API.
 
 ##### Request
 
@@ -248,7 +251,7 @@ Query the deposit addresses created by the [Create Deposit Addresses](#create-de
 
 > `WALLET_ID` must be a deposit wallet ID
 
-- [Sample curl command](#curl-get-deposit-wallet-addresses)
+- [Sample curl command](#curl-query-deposit-addresses)
 
 ##### Request Format
 
@@ -352,62 +355,8 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-invalid-deposit-addresses"></a>
-### Query Invalid Deposit Addresses
 
-When an abnormal deposit is detected, the CYBAVO SOFA system will set the deposit address to invalid. Use this API to obtain the all invalid deposit addresses for further usage.
-
-##### Request
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
-
-> `WALLET_ID` must be a deposit wallet ID
-
-- [Sample curl command](#curl-query-invalid-deposit-addresses)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/addresses/invalid-deposit
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "addresses": ["0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2"]
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| addresses | array | Array of invalid deposit address |
-
-##### Error Code
-
-| HTTP Code | Error Code | Error | Message | Description |
-| :---      | :---       | :---  | :---    | :---        |
-| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
-| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
-| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
-| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
-| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
-| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
-| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
-| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
-| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-pool-address-of-deposit-wallet"></a>
+<a name="query-pool-address"></a>
 ### Query Pool Address
 
 Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrencies.
@@ -422,7 +371,7 @@ Get the pool address of a deposit wallet. The pool address has different functio
 
 > `WALLET_ID` must be a deposit wallet ID
 
-- [Sample curl command](#curl-get-deposit-wallet-pool-address)
+- [Sample curl command](#curl-get-pool-address)
 
 ##### Request Format
 
@@ -466,7 +415,8 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-pool-address-balance-of-deposit-wallet"></a>
+
+<a name="query-pool-address-balance"></a>
 ### Query Pool Address Balance
 
 Get the pool address balance of a deposit wallet.
@@ -477,7 +427,7 @@ Get the pool address balance of a deposit wallet.
 
 > `WALLET_ID` must be a deposit wallet ID
 
-- [Sample curl command](#curl-get-deposit-wallet-pool-address-balance)
+- [Sample curl command](#curl-query-pool-address-balance)
 
 ##### Request Format
 
@@ -510,6 +460,63 @@ The response includes the following parameters:
 | unconfirm\_balance | string | Unconfirmed pool address balance |
 | currency | int64 | Cryptocurrency of the wallet |
 | wallet_address  | string | Pool address of the wallet |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+
+<a name="query-invalid-deposit-addresses"></a>
+### Query Invalid Deposit Addresses
+
+When an abnormal deposit is detected, the CYBAVO SOFA system will set the deposit address to invalid. Use this API to obtain the all invalid deposit addresses for further usage.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
+
+> `WALLET_ID` must be a deposit wallet ID
+
+- [Sample curl command](#curl-query-invalid-deposit-addresses)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/addresses/invalid-deposit
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "addresses": ["0x5dB3d8C70dAa9C919F9962221c2fDDbe8EBAa5F2"]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| addresses | array | Array of invalid deposit address |
 
 ##### Error Code
 
@@ -602,7 +609,7 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-<a name="resend-pending-or-failed-deposit-callbacks"></a>
+<a name="resend-deposit-callbacks"></a>
 ### Resend Deposit Callbacks
 
 The callback handler can call this API to resend pending or failed deposit callbacks.
@@ -617,7 +624,7 @@ Refer to [Callback Integration](#callback-integration) for callback rules.
 
 > `WALLET_ID` must be a deposit wallet ID
 
-- [Sample curl command](#curl-resend-all-pending-or-failed-deposit-callbacks)
+- [Sample curl command](#curl-resend-deposit-callbacks)
 
 ##### Request Format
 
@@ -742,9 +749,10 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
 # Withdraw Wallet API
 
-<a name="withdraw"></a>
+<a name="withdraw-assets"></a>
 ### Withdraw Assets
 
 To withdraw assets from an withdrawal wallet, the caller must to provide an unique **order_id** for each request, the CYBAVO SOFA system will send the callback with the unique **order_id** when the withdrawal is success (from `in pool` state to `in chain` state). 
@@ -761,7 +769,7 @@ By default, the withdraw API will perform the address check to verify that the o
 >
 > If withdraw BNB or XRP, this API will check whether the destination addresse needs memo / destination tag or not. If the address does need memo / destination tag, the API will fail without memo / destination tag specified.
 
-- [Sample curl command](#curl-withdraw)
+- [Sample curl command](#curl-withdraw-assets)
 
 ##### Request Format
 
@@ -910,7 +918,8 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="cancel-withdrawal"></a>
+
+<a name="cancel-withdrawal-request"></a>
 ### Cancel Withdrawal Request
 
 To cancel the withdrawal request which state is `Init`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback-detail) (represents `state` = 0).
@@ -921,7 +930,7 @@ To cancel the withdrawal request which state is `Init`. The request state can be
 
 > `WALLET_ID` must be a withdrawal wallet ID
 
-- [Sample curl command](#curl-cancel-withdrawal)
+- [Sample curl command](#curl-cancel-withdrawal-request)
 
 ##### Request Format
 
@@ -954,12 +963,13 @@ The HTTP 200 means the withdrawal request has been cancelled successfully.
 
 ##### [Back to top](#table-of-contents)
 
+
 <a name="query-latest-withdrawal-transaction-state"></a>
 ### Query Latest Withdrawal Transaction State
 
 Check the latest withdrawal transaction state of certain order ID.
 
-> The order ID is used in the [withdraw assets](#withdraw) API.
+> The order ID is used in the [withdraw assets](#withdraw-assets) API.
 
 ##### Request
 
@@ -1023,12 +1033,13 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
 <a name="query-all-withdrawal-transaction-states"></a>
 ### Query All Withdrawal Transaction States
 
 Check the all withdrawal transaction state of certain order ID.
 
-> The order ID is used in the [withdraw assets](#withdraw) API.
+> The order ID is used in the [withdraw assets](#withdraw-assets) API.
 
 ##### Request
 
@@ -1110,6 +1121,7 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
 <a name="query-withdrawal-wallet-balance"></a>
 ### Query Withdrawal Wallet Balance
 
@@ -1179,6 +1191,7 @@ The response includes the following parameters:
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
+
 
 <a name="query-withdrawal-callback-detail"></a>
 ### Query Withdrawal Callback Detail
@@ -1255,126 +1268,9 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-# Query API
+# Deposit / Withdraw Wallet Common API
 
-<a name="activate-api-token"></a>
-### Activate API Code
-
-Activate the API code of a certain wallet. Once activated, the currently activated API code will immediately become invalid.
-
-##### Request
-
-**POST** /v1/sofa/wallets/`WALLET_ID`/apisecret/activate
-
-- [Sample curl command](#curl-activate-api-token)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/apisecret/activate
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "api_code": "4PcdE9VjXfrk7WjC1",
-  "exp": 1609646716
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| api_code | string | The activated API code |
-| exp | int64 | The API code expiration unix time in UTC |
-
-##### Error Code
-
-| HTTP Code | Error Code | Error | Message | Description |
-| :---      | :---       | :---  | :---    | :---        |
-| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
-| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
-| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
-| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
-| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
-| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
-| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
-| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-api-token-status"></a>
-### Query API Code Status
-
-Query the API code info of a certain wallet. Use the `inactivated` API code in any request will activate it. Once activated, the currently activated API code will immediately become invalid.
-
-##### Request
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/apisecret
-
-- [Sample curl command](#curl-query-api-token-status)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/apisecret
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "valid": {
-    "api_code": "H4Q6xFZgiTZb37GN",
-    "exp": 1583144863
-  },
-  "inactivated": {
-    "api_code": "32PmGCjNzXda4mNHX"
-  }
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| valid | object | The activated API code |
-| inactivated | object | Not active API code |
-| api_code | string | The API code for querying wallet |
-| exp | int64 | The API code expiration unix time in UTC |
-
-> Use an invalid API-CODE, the caller will get a 403 Forbidden error.
-
-##### Error Code
-
-| HTTP Code | Error Code | Error | Message | Description |
-| :---      | :---       | :---  | :---    | :---        |
-| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
-| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
-| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
-| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
-| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
-| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
-| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
-| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-notification-callback-history"></a>
+<a name="query-callback-history"></a>
 ### Query Callback History
 
 Used to query some kind of callbacks within a time interval.
@@ -1383,7 +1279,7 @@ Used to query some kind of callbacks within a time interval.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
 
-- [Sample curl command](#curl-query-notification-callback-history)
+- [Sample curl command](#curl-query-callback-history)
 
 ##### Request Format
 
@@ -1461,7 +1357,7 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-<a name="query-notification-callback-by-id"></a>
+<a name="query-callback-detail"></a>
 ### Query Callback Detail
 
 Query the detailed information of the callback by its serial ID. It can be used to reconfirm whether a deposit callback exists.
@@ -1470,7 +1366,7 @@ Query the detailed information of the callback by its serial ID. It can be used 
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get\_by_id
 
-- [Sample curl command](#curl-query-notification-callback-by-id)
+- [Sample curl command](#curl-query-callback-detail)
 
 ##### Request Format
 
@@ -1579,78 +1475,8 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-wallet-basic-info"></a>
-### Query Wallet Info
 
-Get wallet basic information.
-
-##### Request
-
-**GET** /v1/sofa/wallets/`WALLET_ID`/info
-
-- [Sample curl command](#curl-query-wallet-basic-info)
-
-##### Request Format
-
-An example of the request:
-
-###### API
-
-```
-/v1/sofa/wallets/1/info
-```
-
-##### Response Format
-
-An example of a successful response:
-
-```json
-{
-  "currency": 60,
-  "currency_name": "ETH",
-  "address": "0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943",
-  "token_name": "TTF TOKEN",
-  "token_symbol": "TTF",
-  "token_contract_address": "0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40",
-  "token_decimals": "18"
-}
-```
-
-The response includes the following parameters:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
-| currency_name | string | Name of currency |
-| address | string | Wallet address |
-
-> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
-
-If `WALLET_ID` is a token wallet, the following fields present:
-
-| Field | Type  | Description |
-| :---  | :---  | :---        |
-| token_name | string | Token name |
-| token_symbol | string | Token symbol |
-| token\_contract_address | string | Token contract address |
-| token_decimals | string | Token decimals |
-
-##### Error Code
-
-| HTTP Code | Error Code | Error | Message | Description |
-| :---      | :---       | :---  | :---    | :---        |
-| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
-| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
-| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
-| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
-| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
-| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
-| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
-| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
-
-##### [Back to top](#table-of-contents)
-
-<a name="query-wallet-block-info"></a>
+<a name="query-wallet-synchronization-info"></a>
 ### Query Wallet Synchronization Info
 
 Get the blockchain synchronization status of a wallet.
@@ -1659,7 +1485,7 @@ Get the blockchain synchronization status of a wallet.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/blocks
 
-- [Sample curl command](#curl-query-deposit/withdraw-wallet-block-info)
+- [Sample curl command](#curl-query-wallet-synchronization-info)
 
 ##### Request Format
 
@@ -1704,7 +1530,8 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
-<a name="query-wallet-transaction-autofee"></a>
+
+<a name="query-transaction-average-fee"></a>
 ### Query Transaction Average Fee
 
 Query average blockchain fee within latest N blocks.
@@ -1713,7 +1540,7 @@ Query average blockchain fee within latest N blocks.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/autofee
 
-- [Sample curl command](#curl-query-wallet-transaction-autofee)
+- [Sample curl command](#curl-query-transaction-average-fee)
 
 ##### Request Format
 
@@ -1774,18 +1601,20 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-<a name="query-vault/batch-wallet-transaction-history"></a>
-### Query Transaction History
+# Vault Wallet API
 
-Get transaction history of vault or batch wallets.
+<a name="query-vault-wallet-transaction-history"></a>
+### Query Vault Wallet Transaction History
+
+Get transaction history of vault wallets.
 
 ##### Request
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
 
-> `WALLET_ID` must be a vault or batch wallet ID
+> `WALLET_ID` must be a vault wallet ID
 
-- [Sample curl command](#curl-query-vault/batch-wallet-transaction-history)
+- [Sample curl command](#curl-query-vault-wallet-transaction-history)
 
 ##### Request Format
 
@@ -1900,6 +1729,287 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 
 ##### [Back to top](#table-of-contents)
+
+
+<a name="query-vault-wallet-balance"></a>
+### Query Vault Wallet Balance
+
+Get the vault wallet balance. Facilitate to establish a real-time balance monitoring mechanism.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/vault/balance
+
+> `WALLET_ID` must be a vault wallet ID
+
+- [Sample curl command](#curl-query-vault-wallet-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/7/vault/balance
+```
+
+##### Response Format
+
+An example of a successful response:
+
+BTC vault wallet
+
+```json
+{
+  "balance": "0.00009798",
+  "currency": 0,
+  "token_address": "",
+  "token_balance": "",
+  "unconfirm_balance": "0",
+  "unconfirm_token_balance": "",
+  "wallet_address": "2Mw1iJnQvAt3hNEvEZKdHkij8TNtzjaF3LH"
+}
+```
+
+USDT-Omni vault wallet that mapping to above BTC vault wallet
+
+```json
+{
+  "balance": "0.00009798",
+  "currency": 0,
+  "token_address": "31",
+  "token_balance": "0.1",
+  "unconfirm_balance": "0",
+  "unconfirm_token_balance": "",
+  "wallet_address": "2Mw1iJnQvAt3hNEvEZKdHkij8TNtzjaF3LH"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| wallet_address | string | Wallet address |
+| token_address | string | Token contract address |
+| balance | string | Withdrawal wallet balance |
+| token_balance | string | Withdrawal wallet token balance |
+| unconfirm\_balance | string | Unconfirmed withdrawal wallet balance |
+| unconfirm\_token_balance | string | Unconfirmed withdrawal wallet token balance |
+| err_reason | string | Error message if fail to get balance |
+
+> The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+# Common API
+
+<a name="activate-api-code"></a>
+### Activate API Code
+
+Activate the API code of a certain wallet. Once activated, the currently activated API code will immediately become invalid.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/apisecret/activate
+
+- [Sample curl command](#curl-activate-api-code)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/apisecret/activate
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "api_code": "4PcdE9VjXfrk7WjC1",
+  "exp": 1609646716
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| api_code | string | The activated API code |
+| exp | int64 | The API code expiration unix time in UTC |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-api-code-status"></a>
+### Query API Code Status
+
+Query the API code info of a certain wallet. Use the `inactivated` API code in any request will activate it. Once activated, the currently activated API code will immediately become invalid.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/apisecret
+
+- [Sample curl command](#curl-query-api-code-status)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/apisecret
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "valid": {
+    "api_code": "H4Q6xFZgiTZb37GN",
+    "exp": 1583144863
+  },
+  "inactivated": {
+    "api_code": "32PmGCjNzXda4mNHX"
+  }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| valid | object | The activated API code |
+| inactivated | object | Not active API code |
+| api_code | string | The API code for querying wallet |
+| exp | int64 | The API code expiration unix time in UTC |
+
+> Use an invalid API-CODE, the caller will get a 403 Forbidden error.
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-wallet-info"></a>
+### Query Wallet Info
+
+Get wallet basic information.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/info
+
+- [Sample curl command](#curl-query-wallet-info)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/1/info
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "currency": 60,
+  "currency_name": "ETH",
+  "address": "0xd11Bd6E308b8DC1c5243D54cf41A427Ca0F46943",
+  "token_name": "TTF TOKEN",
+  "token_symbol": "TTF",
+  "token_contract_address": "0xd0ee17a4e1866c1ac53a54cc2cd4dd64b503cf40",
+  "token_decimals": "18"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| currency_name | string | Name of currency |
+| address | string | Wallet address |
+
+> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
+If `WALLET_ID` is a token wallet, the following fields present:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| token_name | string | Token name |
+| token_symbol | string | Token symbol |
+| token\_contract_address | string | Token contract address |
+| token_decimals | string | Token decimals |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+
+##### [Back to top](#table-of-contents)
+
 
 <a name="verify-addresses"></a>
 ### Verify Addresses
@@ -2042,7 +2152,7 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 <a name="curl-testing-commands"></a>
 # cURL Testing Commands
 
-<a name="curl-create-deposit-wallet-addresses"></a>
+<a name="curl-create-deposit-addresses"></a>
 ### Create Deposit Addresses
 
 For BNB, XLM, XRP or EOS wallet:
@@ -2058,15 +2168,34 @@ For wallet excepts BNB, XLM, XRP and EOS:
 curl -X POST -H "Content-Type: application/json" -d '{"count":2}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses
 ```
-- [API definition](#create-deposit-wallet-addresses)
+- [API definition](#create-deposit-addresses)
 
-<a name="curl-get-deposit-wallet-addresses"></a>
-### Get Deposit Addresses
+<a name="curl-query-deposit-addresses"></a>
+### Query Deposit Addresses
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&request_number=1000
 ```
-- [API definition](#query-address-of-deposit-wallet)
+- [API definition](#query-deposit-addresses)
+
+
+<a name="curl-query-pool-address"></a>
+### Query Pool Address
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress
+```
+- [API definition](#query-pool-address)
+
+
+<a name="curl-query-pool-address-balance"></a>
+### Query Pool Address Balance
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress/balance
+```
+- [API definition](#query-pool-address-balance)
+
 
 <a name="curl-query-invalid-deposit-addresses"></a>
 ### Query Invalid Deposit Addresses
@@ -2077,30 +2206,24 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid-deposit
 - [API definition](#query-invalid-deposit-addresses)
 
 
-<a name="curl-get-deposit-wallet-pool-address"></a>
-### Get Pool Address
+<a name="curl-query-deposit-callback-detail"></a>
+### Query Deposit Callback Detail
 
 ```
-curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress'
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}'
 ```
-- [API definition](#query-pool-address-of-deposit-wallet)
+- [API definition](#query-deposit-callback-detail)
 
-<a name="curl-get-deposit-wallet-pool-address-balance"></a>
-### Get Pool Address Balance
 
-```
-curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress/balance'
-```
-- [API definition](#query-pool-address-balance-of-deposit-wallet)
-
-<a name="curl-resend-all-pending-or-failed-deposit-callbacks"></a>
+<a name="curl-resend-deposit-callbacks"></a>
 ### Resend Deposit Callbacks
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"notification_id":0}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend
 ```
-- [API definition](#resend-pending-or-failed-deposit-callbacks)
+- [API definition](#resend-deposit-callbacks)
+
 
 <a name="curl-query-deposit-wallet-balance"></a>
 ### Query Deposit Wallet Balance
@@ -2110,22 +2233,25 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/balance
 ```
 - [API definition](#query-deposit-wallet-balance)
 
-<a name="curl-withdraw"></a>
+
+<a name="curl-withdraw-assets"></a>
 ### Withdraw Assets
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw
 ```
-- [API definition](#withdraw)
+- [API definition](#withdraw-assets)
 
-<a name="curl-cancel-withdrawal"></a>
-### Cancel Withdrawal
+
+<a name="curl-cancel-withdrawal-request"></a>
+### Cancel Withdrawal Request
 
 ```
 curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/cancel
 ```
-- [API definition](#cancel-withdrawal)
+- [API definition](#cancel-withdrawal-request)
+
 
 <a name="curl-query-latest-withdrawal-transaction-state"></a>
 ### Query Latest Withdrawal Transaction State
@@ -2133,7 +2259,8 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactio
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}
 ```
-- [API definition](#query-withdrawal-transaction-state)
+- [API definition](#query-latest-withdrawal-transaction-state)
+
 
 <a name="curl-query-all-withdrawal-transaction-states"></a>
 ### Query All Withdrawal Transaction States
@@ -2143,6 +2270,7 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDE
 ```
 - [API definition](#query-all-withdrawal-transaction-states)
 
+
 <a name="curl-query-withdrawal-wallet-balance"></a>
 ### Query Withdrawal Wallet Balance
 
@@ -2151,46 +2279,6 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
 ```
 - [API definition](#query-withdrawal-wallet-balance)
 
-<a name="curl-activate-api-token"></a>
-### Activate API Code
-
-```
-curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activate
-```
-- [API definition](#activate-api-token)
-
-<a name="curl-query-api-token-status"></a>
-### Query API Code Status
-
-```
-curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
-```
-- [API definition](#query-api-token-status)
-
-<a name="curl-query-notification-callback-history"></a>
-### Query Callback History
-
-```
-curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
-```
-- [API definition](#query-notification-callback-history)
-
-<a name="curl-query-notification-callback-by-id"></a>
-### Query Callback Detail
-
-```
-curl -X POST -H "Content-Type: application/json" -d '{"ids":[90000000140,90000000139]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id
-```
-- [API definition](#query-notification-callback-by-id)
-
-<a name="curl-query-deposit-callback-detail"></a>
-### Query Deposit Callback Detail
-
-```
-curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}'
-```
-- [API definition](#query-deposit-callback-detail)
 
 <a name="curl-query-withdrawal-callback-detail"></a>
 ### Query Withdrawal Callback Detail
@@ -2200,39 +2288,88 @@ curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/ord
 ```
 - [API definition](#query-withdrawal-callback-detail)
 
-<a name="curl-query-wallet-basic-info"></a>
-### Query Wallet Info
+
+<a name="curl-query-callback-history"></a>
+### Query Callback History
 
 ```
-curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&to_time=1562255999&type=2'
 ```
-- [API definition](#query-wallet-basic-info)
+- [API definition](#query-callback-history)
 
-<a name="curl-query-deposit/withdraw-wallet-block-info"></a>
+
+<a name="curl-query-callback-detail"></a>
+### Query Callback Detail
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"ids":[90000000140,90000000139]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id
+```
+- [API definition](#query-callback-detail)
+
+
+<a name="curl-query-wallet-synchronization-info"></a>
 ### Query Wallet Synchronization Info
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks
 ```
-- [API definition](#query-wallet-block-info)
+- [API definition](#query-wallet-synchronization-info)
 
-<a name="curl-query-wallet-transaction-autofee"></a>
-### Query Average Transaction Fee
+
+<a name="curl-query-transaction-average-fee"></a>
+### Query Transaction Average Fee
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee
 ```
+- [API definition](#query-transaction-average-fee)
 
-- [API definition](#query-wallet-transaction-autofee)
 
-<a name="curl-query-vault/batch-wallet-transaction-history"></a>
-### Query Transaction History
+<a name="curl-query-vault-wallet-transaction-history"></a>
+### Query Vault Wallet Transaction History
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&from_time=1559664000&to_time=1562255999&request_number=8
 ```
-- [API definition](#query-vault/batch-wallet-transaction-history)
+- [API definition](#query-vault-wallet-transaction-history)
+
+<a name="curl-query-vault-wallet-balance"></a>
+### Query Vault Wallet Balance
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/vault/balance
+```
+- [API definition](#query-vault-wallet-balance)
+
+
+<a name="curl-activate-api-code"></a>
+### Activate API Code
+
+```
+curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activate
+```
+- [API definition](#activate-api-code)
+
+
+<a name="curl-query-api-code-status"></a>
+### Query API Code Status
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
+```
+- [API definition](#query-api-code-status)
+
+
+<a name="curl-query-wallet-info"></a>
+### Query Wallet Info
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info
+```
+- [API definition](#query-wallet-info)
+
 
 <a name="curl-verify-addresses"></a>
 ### Verify Addresses
@@ -2241,7 +2378,6 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=
 curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x635B4764D1939DfAcD3a8014726159abC277BecC","1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE"]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
 ```
-
 - [API definition](#verify-addresses)
 
 ##### [Back to top](#table-of-contents)
@@ -2425,6 +2561,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
 		194 - EOS<br>
 		195 - TRX<br>
 		236 - BSV<br>
+		461 - FIL<br>
 		714 - BNB<br>
 	   Refer to Currency Definition table below.
     </td>
@@ -2569,6 +2706,7 @@ Deposit callback with blocklist_tags sample:
 | 194 | EOS |
 | 195 | TRX |
 | 236 | BSV |
+| 461 | FIL |
 | 714| BNB |
 | 1815| ADA |
   

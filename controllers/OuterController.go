@@ -632,3 +632,21 @@ func (c *OuterController) GetDepositWalletBalance() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Get balance of the vault wallet
+// @router /wallets/:wallet_id/vault/balance [get]
+func (c *OuterController) GetVaultWalletBalance() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/vault/balance", walletID),
+		nil, nil)
+	if err != nil {
+		logs.Error("GetVaultWalletBalance failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
