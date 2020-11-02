@@ -8,6 +8,7 @@
 	- Deposit Wallet API
 		- [Create Deposit Addresses](#create-deposit-addresses)
 		- [Query Deposit Addresses](#query-deposit-addresses)
+		- [Query Deployed Contract Deposit Addresses](#query-deployed-contract-deposit-addresses)
 		- [Query Pool Address](#query-pool-address)
 		- [Query Pool Address Balance](#query-pool-address-balance)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
@@ -92,7 +93,7 @@
 - Please refer to the code snippet on the github project to know how to calculate the checksum.
 	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/api/apicaller.go#L40)
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L71)
-	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L54)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L58)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L26)
 
 <a name="callback-integration"></a>
@@ -117,8 +118,8 @@ It is important to distinguish between unique callbacks to avoid improper handli
 - Please refer to the code snippet on the github project to know how to validate the callback payload.
 	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L197)
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L82)
-	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L343)
-	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L185)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L385)
+	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L203)
 
 
 
@@ -209,11 +210,29 @@ For wallet excepts BNB, XLM, XRP or EOS:
 }
 ```
 
+For the ETH wallet that uses contract collection:
+
+```json
+{
+  "txids": [
+    "0xe6dfe0d283690f636df5ea4b9df25552e6b576b88887bfb5837016cdd696e754",
+    "0xdb18fd33c9a6809bfc341a1c0b2c092be5a360f394c85367f9cf316579281ab4",
+    "0x18075ff1693026f93722f8b2cc0e29bf148ded5bce4dc173c8118951eceabe60",
+    "0x7c6acb506ef033c09f781cc5ad6b2d0a216346758d7f955e720d6bc7a52731a5",
+    "0x7da19f8c0d82cde16636da3307a6bef46eb9f398af3eb2362d230ce300509d63"
+  ]
+}
+```
+
+Use [Query Deployed Contract Deposit Addresses](#query-deployed-contract-deposit-addresses) API to query deployed contract addresses.
+
+
 The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
 | addresses | array | Array of just created deposit addresses |
+| txids | array | Array of transaction IDs used to deploy collection contract |
 
 ##### Error Code
 
@@ -233,6 +252,7 @@ The response includes the following parameters:
 | 400 | 947 | The max length of XRP destination tag is 20 chars | - | Reached the limit of the length of XRP destination tag |
 | 400 | 948 | The max length of XLM memo is 20 chars | - | Reached the limit of the length of XLM memo |
 | 400 | 818 | Destination Tag must be integer | - | Wrong XRP destination tag format |
+| 400 | 500 | insufficient fund | - | Insufficient balance to deploy collection contract |
 | 403 | 706 | Exceed max allow wallet limitation, Upgrade your SKU to get more wallets | - | Reached the limit of the total number of deposit addresses |
 | 403 | 112 | Invalid parameter | - | The count and the count of memos mismatched |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
@@ -281,6 +301,7 @@ An example of a successful response:
 ```json
 {
   "wallet_id": 17,
+  "wallet_count": 6,
   "wallet_address": [
     {
       "currency": 60,
@@ -307,6 +328,7 @@ An example of a successful response:
 
 {
   "wallet_id": 17,
+  "wallet_count": 6,
   "wallet_address": [
     {
       "currency": 60,
@@ -336,8 +358,88 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | wallet_id | int64 | ID of request wallet |
 | wallet_address | array | Array of wallet addresses |
+| wallet_count | int64 | Total count of deposit addresses |
 
 > Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+
+> If this is an ETH contract collection deposit wallet, only the deployed address will be returned.
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-deployed-contract-deposit-addresses"></a>
+### Query Deployed Contract Deposit Addresses
+
+Query deployed contract deposit addresses created by the [Create Deposit Addresses](#create-deposit-addresses) API.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/addresses/contract_txid?txids=`txid1,txid2`
+
+> `WALLET_ID` must be an ETH contract collection deposit wallet ID
+> 
+> Only deployed addresses will be returned
+
+- [Sample curl command](#curl-query-deployed-contract-deposit-addresses)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/17/addresses/contract_txid?txids=0xe6dfe0d283690f636df5ea4b9df25552e6b576b88887bfb5837016cdd696e754,0xdb18fd33c9a6809bfc341a1c0b2c092be5a360f394c85367f9cf316579281ab4
+```
+
+The request includes the following parameters:
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| txids | string | requried, max `10` transaction IDs | Transaction ID used to deploy collection contract |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "addresses": {
+    "0xdb18fd33c9a6809bfc341a1c0b2c092be5a360f394c85367f9cf316579281ab4": {
+      "address": "0x00926cE2BbF56317c72234a0Fb8A65A1A15F7103",
+      "currency": 60,
+      "memo": "",
+      "token_address": ""
+    },
+    "0xe6dfe0d283690f636df5ea4b9df25552e6b576b88887bfb5837016cdd696e754": {
+      "address": "0xf3747e3edbd8B8414718dd51330415c171e79208",
+      "currency": 60,
+      "memo": "",
+      "token_address": ""
+    }
+  }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| addresses | map object | The map KEY is Transaction ID used to deploy collection contract and the map VALUE is the address information |
 
 ##### Error Code
 
@@ -1037,7 +1139,7 @@ The response includes the following parameters:
 <a name="query-all-withdrawal-transaction-states"></a>
 ### Query All Withdrawal Transaction States
 
-Check the all withdrawal transaction state of certain order ID.
+Check the all withdrawal transaction states of certain order ID.
 
 > The order ID is used in the [withdraw assets](#withdraw-assets) API.
 
@@ -1197,6 +1299,8 @@ The response includes the following parameters:
 ### Query Withdrawal Callback Detail
 
 Query the detailed information of the withdrawal callback by the order ID.
+
+> This API only provides in-chain transactions query, for those in-pool transactions use [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states) API instead.
 
 ##### Request
 
@@ -1797,7 +1901,6 @@ The response includes the following parameters:
 | token_balance | string | Withdrawal wallet token balance |
 | unconfirm\_balance | string | Unconfirmed withdrawal wallet balance |
 | unconfirm\_token_balance | string | Unconfirmed withdrawal wallet token balance |
-| err_reason | string | Error message if fail to get balance |
 
 > The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH
 
@@ -2178,6 +2281,13 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&r
 ```
 - [API definition](#query-deposit-addresses)
 
+<a name="curl-query-deployed-contract-deposit-addresses"></a>
+### Query Deployed Contract Deposit Addresses
+
+```
+curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/contract_txid?txids={TXID1},{TXID2}'
+```
+- [API definition](#query-deployed-contract-deposit-addresses)
 
 <a name="curl-query-pool-address"></a>
 ### Query Pool Address

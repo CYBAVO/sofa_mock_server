@@ -650,3 +650,21 @@ func (c *OuterController) GetVaultWalletBalance() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Query the deployed contract collection addresses
+// @router /wallets/:wallet_id/addresses/contract_txid [get]
+func (c *OuterController) GetDeployedContractCollectionAddresses() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/addresses/contract_txid", walletID),
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetDeployedContractCollectionAddresses failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

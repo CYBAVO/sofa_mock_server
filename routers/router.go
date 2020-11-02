@@ -41,6 +41,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/autofee", &controllers.OuterController{}, "POST:GetAutoFee")
 	beego.Router("/v1/mock/wallets/:wallet_id/receiver/balance", &controllers.OuterController{}, "GET:GetDepositWalletBalance")
 	beego.Router("/v1/mock/wallets/:wallet_id/vault/balance", &controllers.OuterController{}, "GET:GetVaultWalletBalance")
+	beego.Router("/v1/mock/wallets/:wallet_id/addresses/contract_txid", &controllers.OuterController{}, "GET:GetDeployedContractCollectionAddresses")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")
