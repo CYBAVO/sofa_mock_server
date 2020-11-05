@@ -4,6 +4,7 @@
 - [Get Started](#get-started)
 - [API Authentication](#api-authentication)
 - [Callback Integration](#callback-integration)
+- [Cryptocurrency Unit Conversion](#cryptocurrency-unit-conversion)
 - REST API
 	- Deposit Wallet API
 		- [Create Deposit Addresses](#create-deposit-addresses)
@@ -41,6 +42,7 @@
 	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
+	- [Transaction State Definition](#transaction-state-definition)
 	- [Callback Type Definition](#callback-type-definition)
 	- [Currency Definition](#currency-definition)
 	- [Memo Requirement](#memo-requirement)
@@ -121,6 +123,31 @@ It is important to distinguish between unique callbacks to avoid improper handli
 	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L385)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L203)
 
+<a name="callback-state-change"></a>
+# Callback State Change
+
+#### The state of a successful withdrawal request is changed as follows:
+
+processing state(1) -> transaction in pool state(2) -> transaction in chain state(3) -> repeats state 3 until the confirmation count is met
+
+#### The state of a successful deposit request is changed as follows:
+
+transaction in chain state(3) -> repeats state 3 until the confirmation count is met
+
+> Refer to [Transaction State Definition](#transaction-state-definition) for all transaction states definition.
+
+
+<a name="cryptocurrency-unit-conversion"></a>
+# Cryptocurrency Unit Conversion
+
+#### For callback
+
+- The amount and fees fields in the callback are in the smallest cryptocurrency unit, use decimal and fee_decimal of the addon to convert the unit.
+
+#### For API
+
+- Refer to decimals of [Currency Definition](#currency-definition) to convert main cryptocurrency unit.
+- For the cryptocurrency token, use the token_decimals field of the [Wallet Info](#query-wallet-info) API to convert cryptocurrency token unit.
 
 
 # REST API
@@ -1205,7 +1232,7 @@ The response includes the following parameters:
 | in\_chain\_block | int64 | The block that contains this transaction |
 | txid | string | Transaction ID |
 | create_time | string | The withdrawal unix time in UTC |
-| state | int | Refer to `state` field in [Callback Definition](#callback-definition) |
+| state | int | Refer to [Transaction State Definition](#transaction-state-definition) |
 
 ##### Error Code
 
@@ -1300,7 +1327,7 @@ The response includes the following parameters:
 
 Query the detailed information of the withdrawal callback by the order ID.
 
-> This API only provides in-chain transactions query, for those in-pool transactions use [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states) API instead.
+> This API only provides in-chain transactions query, for those not in-chain transactions use [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states) API instead.
 
 ##### Request
 
@@ -2514,16 +2541,18 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>type</td>
     <td>int</td>
-    <td rowspan="4">
-      <b>1</b> - Deposit Callback<br>
-      <b>2</b> - Withdraw Callback<br>
-      <b>3</b> - Collect Callback<br>
-      <b>4</b> - Airdrop Callback<br>
+    <td>
+   	 	<table>
+   	 	  <thead><tr><td>ID</td><td>Type</td></tr></thead>
+   	 	  <tbody>
+		    <tr><td>1</td><td>Deposit</td></tr>
+  		    <tr><td>2</td><td>Withdraw</td></tr>
+  		    <tr><td>3</td><td>Collect</td></tr>
+  		    <tr><td>4</td><td>Airdrop</td></tr>
+   	 	  </tbody>
+		</table>
     </td>
   </tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
   <tr>
     <td>serial</td>
     <td>int</td>
@@ -2597,34 +2626,21 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>state</td>
     <td>int</td>
-    <td rowspan="13">
-      <b>0</b> - Init<br>
-      <b>1</b> - Processing batch in KMS<br>
-      <b>2</b> - TXID in pool<br>
-      <b>3</b> - TXID in chain<br>
-      <b>4</b> - TXID confirmed in N blocks<br>
-      <b>5</b> - Failed (addon field of callback will contain detailed error reason)<br>
-      <b>6</b> - Resent<br>
-      <b>7</b> - Blocked due to risk controlled<br>
-      <b>8</b> - Cancelled<br>
-      <b>9</b> - Retry for UTXO Temporarily Not Available<br>
-      <b>10</b> - Dropped<br>
-      <b>11</b> - Transaction Failed<br>
-      <b>12</b> - Paused<br>
+    <td>
+      Possible states (listed in the Transaction State Definition table)
+	 	<table>
+	 	  <thead><tr><td>ID</td><td>Description</td></tr></thead>
+	 	  <tbody>
+		    <tr><td>1</td><td>Processing</td></tr>
+		    <tr><td>2</td><td>TXID in pool</td></tr>
+		    <tr><td>3</td><td>TXID in chain</td></tr>
+		    <tr><td>5</td><td>Failed (the err_reason of addon field will contain detailed error reason)</td></tr>
+		    <tr><td>8</td><td>Cancelled</td></tr>
+		    <tr><td>10</td><td>Dropped</td></tr>
+	 	  </tbody>
+		</table>
     </td>
   </tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
-  <tr></tr>
   <tr>
     <td>confirm_blocks</td>
     <td>int64</td>
@@ -2633,22 +2649,30 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>processing_state</td>
     <td>int</td>
-    <td rowspan="3">
-      <b>0</b> - in pool (in fullnode mempool)<br>
-      <b>1</b> - in chain (the transaction is already on the blockchain but the confirmations have not been met)<br>
-      <b>2</b> - done (the transaction is already on the blockchain and satisfy confirmations)<br>
+    <td>
+	 	<table>
+	 	  <thead><tr><td>ID</td><td>Description</td></tr></thead>
+	 	  <tbody>
+		    <tr><td>0</td><td>In fullnode mempool</td></tr>
+		    <tr><td>1</td><td>In chain (the transaction is already on the blockchain but the confirmations have not been met)</td></tr>
+		    <tr><td>2</td><td>Done (the transaction is already on the blockchain and satisfy confirmations)</td></tr>
+	 	  </tbody>
+		</table>
     </td>
   </tr>
-  <tr></tr>
-  <tr></tr>
   <tr>
     <td>addon</td>
     <td>key-value pairs</td>
     <td>
-    The extra information of this callback<br>
-    <b>err_reason</b> - will contain detail error reason if state is 5(Failed)<br>
-    <b>fee_decimal</b> - the decimal of cryptocurrency miner fee<br>
-    <b>blocklist_tags</b> - the tags of CYBAVO AML detection
+    The extra information of this callback
+	 	<table>
+	 	  <thead><tr><td>Key</td><td>Value (Description)</td></tr></thead>
+	 	  <tbody>
+		    <tr><td>err_reason</td><td>Will contain detail error reason if state is 5(Failed)</td></tr>
+		    <tr><td>fee_decimal</td><td>The decimal of cryptocurrency miner fee</td></tr>
+		    <tr><td>blocklist_tags</td><td>The tags of CYBAVO AML detection</td></tr>
+	 	  </tbody>
+		</table>
     </td>
   </tr>
   <tr>
@@ -2659,21 +2683,25 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   <tr>
     <td>currency_bip44</td>
     <td>int64</td>
-    <td rowspan="">
-   	 	The coin type definition of cryptocurrency. <br>
-		0 - BTC<br>
-		2 - LTC<br>
-		5 - DASH<br>
-		60 - ETH<br>
-		144 - XRP<br>
-		145 - BCH<br>
-		148 - XLM<br>
-		194 - EOS<br>
-		195 - TRX<br>
-		236 - BSV<br>
-		461 - FIL<br>
-		714 - BNB<br>
-	   Refer to Currency Definition table below.
+    <td>
+   	 	<table>
+   	 	  <thead><tr><td>ID</td><td>Currency Symbol</td><td>Decimals</td></tr></thead>
+   	 	  <tbody>
+		    <tr><td>0</td><td>BTC</td><td>8</td></tr>
+  		    <tr><td>2</td><td>LTC</td><td>8</td></tr>
+  		    <tr><td>5</td><td>DASH</td><td>8</td></tr>
+  		    <tr><td>60</td><td>ETH</td><td>18</td></tr>
+  		    <tr><td>144</td><td>XRP</td><td>6</td></tr>
+  		    <tr><td>145</td><td>BCH</td><td>8</td></tr>
+  		    <tr><td>148</td><td>XLM</td><td>7</td></tr>
+  		    <tr><td>194</td><td>EOS</td><td>4</td></tr>
+   		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
+   		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
+   		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
+   		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
+   		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
+   	 	  </tbody>
+		</table>
     </td>
   </tr>
   <tr>
@@ -2683,9 +2711,28 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
   </tr>
 </table>
 
-> If the `state` of callback is 5 (Failed), the detailed failure reason will put in `addon` field (key is `err_reason`). See the callback sample bellow.
+<a name="transaction-state-definition"></a>
+### Transaction State Definition
+
+| ID   | State | Description | Callback | Callback Type |
+| :-:  | :---  | :--- | :-: | :-- |
+| 0    | Init        | The withdrawal request has been enqueued in the CYBAVO SOFA system | - | - |
+| 1    | Processing  | The withdrawal request is processing in the CYBAVO SOFA system | O | Withdrawal(2) |
+| 2    | TXID in pool | The withdrawal transaction is pending in the fullnode mempool | O | Withdrawal(2) |
+| 3    | TXID in chain | The transaction is already on the blockchain | O | Deposit(1), Withdrawal(2), Collect(3) |
+| 4    | TXID confirmed in N blocks | The withdrawal transaction is already on the blockchain and satisfy confirmations | - | - |
+| 5    | Failed | Fail to create the withdrawal transaction | O | Withdrawal(2) |
+| 6    | Resent | The transaction has been successfully resent | - | - |
+| 7    | Blocked due to risk controlled | The deposit or withdrawal transaction was temporarily blocked due to a violation of the risk control rules | - | - |
+| 8    | Cancelled | The withdrawal request is cancelled via web console | O | Withdrawal(2) |
+| 9    | UTXO temporarily not available | The withdrawal request has been set as pending due to no available UTXO | - | - |
+| 10   | Dropped | A long-awaited withdrawal transaction that does not appear in the memory pool of the fullnode will be regarded as dropped  | O | Withdrawal(2) |
+| 11   | Transaction Failed | The withdrawal transaction is regarded as a failed transaction by the fullnode | - | - |
+| 12   | Paused | The withdrawal request has been paused | - | - |
 
 Callback sample:
+
+> If the `state` of callback is 5 (Failed), the detailed failure reason will put in `addon` field (key is `err_reason`). See the callback sample bellow.
 
 ```json
 {
@@ -2804,21 +2851,21 @@ Deposit callback with blocklist_tags sample:
 <a name="currency-definition"></a>
 ### Currency Definition
 
-| ID   | Description |
-| :--- | :---        |
-| 0 | BTC |
-| 2 | LTC |
-| 5 | DASH |
-| 60 | ETH |
-| 144 | XRP |
-| 145 | BCH |
-| 148 | XLM |
-| 194 | EOS |
-| 195 | TRX |
-| 236 | BSV |
-| 461 | FIL |
-| 714| BNB |
-| 1815| ADA |
+| ID   | Currency Symbol | Decimals |
+| :--- | :---            | :---     |
+| 0    | BTC             | 8 |
+| 2    | LTC             | 8 |
+| 5    | DASH            | 8 |
+| 60   | ETH             | 18 |
+| 144  | XRP             | 6 |
+| 145  | BCH             | 8 |
+| 148  | XLM             | 7 |
+| 194  | EOS             | 4 |
+| 195  | TRX             | 6 |
+| 236  | BSV             | 8 |
+| 461  | FIL             | 18 |
+| 714  | BNB             | 8 |
+| 1815 | ADA             | 6 |
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
  
