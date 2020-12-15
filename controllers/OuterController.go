@@ -668,3 +668,21 @@ func (c *OuterController) GetDeployedContractCollectionAddresses() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Set Withdrawal Request ACL
+// @router /wallets/:wallet_id/sender/transactions/acl [post]
+func (c *OuterController) SetWithdrawalACL() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/acl", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("SetWithdrawalACL failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

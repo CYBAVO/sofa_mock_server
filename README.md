@@ -23,6 +23,7 @@
 		- [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states)
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
+		- [Set Withdrawal Request ACL](#set-withdrawal-request-acl)
 	- Deposit / Withdraw Wallet Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
@@ -1399,6 +1400,81 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="set-withdrawal-request-acl"></a>
+### Set Withdrawal Request ACL
+
+Set an authorized IP to the withdrawal request ACL dynamically.
+
+> If a static ACL has been set in web control panel, the API will fail.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/acl
+
+- [Sample curl command](#curl-set-withdrawal-request-acl)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/120/sender/transactions/acl
+```
+
+###### Post body
+
+```json
+{
+  "acl": "192.168.101.55"
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type | Note | Description |
+| :---  | :--- | :--- | :---        |
+| acl | string | requried | Specify an authorized IP in IPv4 format |
+
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "result": 1
+}
+
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| result | int | Specify a successful API call |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 180 | Invalid format | - | The acl field is empty or does not conform to the IPv4 format |
+| 400 | 180 | Operation failed | ACL has been set via web | The static ACL is not empty |
+
+##### [Back to top](#table-of-contents)
+
+
 # Deposit / Withdraw Wallet Common API
 
 <a name="query-callback-history"></a>
@@ -2424,6 +2500,16 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance
 curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}'
 ```
 - [API definition](#query-withdrawal-callback-detail)
+
+
+<a name="curl-set-withdrawal-request-acl"></a>
+### Set Withdrawal Request ACL
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"acl":"192.168.101.55"}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl
+```
+- [API definition](#set-withdrawal-request-acl)
 
 
 <a name="curl-query-callback-history"></a>
