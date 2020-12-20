@@ -273,16 +273,16 @@ func (c *OuterController) WithdrawalCallback() {
 	c.Ctx.WriteString("OK")
 }
 
-// @Title Resend Callback
-// @router /wallets/:wallet_id/callback/resend [post]
-func (c *OuterController) CallbackResend() {
+// @Title Resend Deposit/Collection Callback
+// @router /wallets/:wallet_id/collection/notifications/manual [post]
+func (c *OuterController) ResendDepositCollectionCallbacks() {
 	defer c.ServeJSON()
 
 	walletID := c.getWalletID()
 	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/collection/notifications/manual", walletID),
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
-		logs.Error("ResendCallback failed", err)
+		logs.Error("ResendDepositCollectionCallbacks failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 
@@ -292,7 +292,7 @@ func (c *OuterController) CallbackResend() {
 }
 
 // @Title Withdraw transactions
-// @router /wallets/:wallet_id/withdraw [post]
+// @router /wallets/:wallet_id/sender/transactions [post]
 func (c *OuterController) WithdrawAssets() {
 	defer c.ServeJSON()
 
@@ -679,6 +679,24 @@ func (c *OuterController) SetWithdrawalACL() {
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("SetWithdrawalACL failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Resend Withdrawal Callback
+// @router /wallets/:wallet_id/sender/notifications/manual [post]
+func (c *OuterController) ResendWithdrawalCallbacks() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/notifications/manual", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("ResendWithdrawalCallbacks failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 

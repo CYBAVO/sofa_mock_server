@@ -14,7 +14,7 @@
 		- [Query Pool Address Balance](#query-pool-address-balance)
 		- [Query Invalid Deposit Addresses](#query-invalid-deposit-addresses)
 		- [Query Deposit Callback Detail](#query-deposit-callback-detail)
-		- [Resend Deposit Callbacks](#resend-deposit-callbacks)
+		- [Resend Deposit/Collection Callbacks](#resend-deposit-callbacks)
 		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 	- Withdraw Wallet API
 		- [Withdraw Assets](#withdraw-assets)
@@ -24,6 +24,7 @@
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
 		- [Set Withdrawal Request ACL](#set-withdrawal-request-acl)
+		- [Resend Withdrawal Callbacks](#resend-withdrawal-callbacks)
 	- Deposit / Withdraw Wallet Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
@@ -115,7 +116,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 </div>
 
 - To ensure that the callbacks have processed by callback handler, the CYBAVO SOFA system will continue to send the callbacks to the callback URL until a callback confirmation (HTTP/1.1 200 OK) is received or exceeds the number of retries (retry time interval: 1-3-5-15-45 mins).
-	- If all attempts fail, the callback will be set to a failed state, for deposit callbacks the callback handler can call the [resend](#resend-deposit-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel. For withdrawal callbacks, the resend operation must be completed on the web control panel.
+	- If all attempts fail, the callback will be set to a failed state, the callback handler can call the [resend deposit callback](#resend-deposit-callbacks) or [resend withdrawal callback](#resend-withdrawal-callbacks) API to request CYBAVO SOFA system to resend such kind of callback(s) or through the web control panel.
 
 - Refer to [Callback Definition](#callback-definition), [Callback Type Definition](#callback-type-definition) for detailed definition.
 - Please refer to the code snippet on the github project to know how to validate the callback payload.
@@ -740,9 +741,9 @@ The response includes the following parameters:
 
 
 <a name="resend-deposit-callbacks"></a>
-### Resend Deposit Callbacks
+### Resend Deposit/Collection Callbacks
 
-The callback handler can call this API to resend pending or failed deposit callbacks.
+The callback handler can call this API to resend pending, risk-controlled or failed deposit/collection callbacks.
 
 Refer to [Callback Integration](#callback-integration) for callback rules.
 
@@ -782,7 +783,7 @@ The request includes the following parameters:
 | :---  | :---  | :---  | :---        |
 | notification_id | int64 | required, 0 means all | Specify callback ID to resend |
 
-> This ID equal to callback data's serial/order_id
+> This ID equal to the serial field of callback data.
 
 ##### Response Format
 
@@ -1045,6 +1046,7 @@ The response includes the following parameters:
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 | 404 | 312 | Policy not found | - | No active withdrawal policy found |
 | 404 | 703 | Operation failed | Unrecognized response: {RESPONSE_BODY}, 'OK' expected | The withdrawal request is not allowed by authentication callback URL |
+| 400 | 703 | Operation failed | request IP ({IPv4}) not in ACL | The request IP not in the withdrawal ACL |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1052,7 +1054,7 @@ The response includes the following parameters:
 <a name="cancel-withdrawal-request"></a>
 ### Cancel Withdrawal Request
 
-To cancel the withdrawal request which state is `Init`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback-detail) (represents `state` = 0).
+To cancel the withdrawal request which state is `Init` or `Failed`. The request state can be checked on web control panel or query through this [API](#query-withdrawal-callback-detail) (represents `state` = 0 or 5 ).
 
 ##### Request
 
@@ -1088,7 +1090,7 @@ The HTTP 200 means the withdrawal request has been cancelled successfully.
 | 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
 | 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
-| 403 | 177 | Illegal state | - | The {ORDER\_ID} withdrawal request is not in `Init` state |
+| 403 | 177 | Illegal state | - | The {ORDER\_ID} withdrawal request is not in `Init` or `Failed` state |
 | 404 | 304 | Wallet ID invalid | - | The {ORDER\_ID} not found |
 
 ##### [Back to top](#table-of-contents)
@@ -1469,8 +1471,87 @@ The response includes the following parameters:
 | 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
 | 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is invalid to perform this API call |
 | 400 | 180 | Invalid format | - | The acl field is empty or does not conform to the IPv4 format |
 | 400 | 180 | Operation failed | ACL has been set via web | The static ACL is not empty |
+
+##### [Back to top](#table-of-contents)
+
+<a name="resend-withdrawal-callbacks"></a>
+### Resend Withdrawal Callbacks
+
+The callback handler can call this API to resend pending, risk-controlled or failed withdrawal callbacks.
+
+Refer to [Callback Integration](#callback-integration) for callback rules.
+
+> The resend operation could be requested on the web control panel as well.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/sender/notifications/manual
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-resend-withdrawal-callbacks)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/55743/sender/notifications/manual
+```
+
+###### Post body
+
+```json
+{
+  "notification_id": 0
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---  | :---        |
+| notification_id | int64 | required, 0 means all | Specify callback ID to resend |
+
+> This ID equal to the serial field of callback data.
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "count": 3
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| count | int | Count of callbacks just resent |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -2429,11 +2510,11 @@ curl 'http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/t
 
 
 <a name="curl-resend-deposit-callbacks"></a>
-### Resend Deposit Callbacks
+### Resend Deposit/Collection Callbacks
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"notification_id":0}' \
-http://localhost:8889/v1/mock/wallets/{WALLET_ID}/callback/resend
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/collection/notifications/manual
 ```
 - [API definition](#resend-deposit-callbacks)
 
@@ -2452,7 +2533,7 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/balance
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"requests":[{"order_id":"888888_1","address":"0x60589A749AAC632e9A830c8aBE042D1899d8Dd15","amount":"0.0001","memo":"memo-001","user_id":"USER01","message":"message-001"},{"order_id":"888888_2","address":"0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015","amount":"0.0002","memo":"memo-002","user_id":"USER01","message":"message-002"}]}' \
-http://localhost:8889/v1/mock/wallets/{WALLET_ID}/withdraw
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions
 ```
 - [API definition](#withdraw-assets)
 
@@ -2510,6 +2591,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"acl":"192.168.101.55"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl
 ```
 - [API definition](#set-withdrawal-request-acl)
+
+
+<a name="curl-resend-withdrawal-callbacks"></a>
+### Resend Withdrawal Callbacks
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"notification_id":0}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/manual
+```
+- [API definition](#resend-withdrawal-callbacks)
 
 
 <a name="curl-query-callback-history"></a>
