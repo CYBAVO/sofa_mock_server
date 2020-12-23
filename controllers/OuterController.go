@@ -704,3 +704,21 @@ func (c *OuterController) ResendWithdrawalCallbacks() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Refresh API code and secret
+// @router /wallets/:wallet_id/refreshsecret [post]
+func (c *OuterController) RefreshSecret() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/refreshsecret", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("RefreshSecret failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

@@ -36,6 +36,7 @@
 	- Common API
 		- [Activate API Code](#activate-api-code)
 		- [Query API Code Status](#query-api-code-status)
+		- [Refresh API Code](#refresh-api-code)
 		- [Query Wallet Info](#query-wallet-info)
 		- [Verify Addresses](#verify-addresses)
 - Testing
@@ -88,6 +89,12 @@
 
 - The CYBAVO SOFA system verifies all incoming requests. All requests must include X-API-CODE, X-CHECKSUM headers otherwise caller will get a 403 Forbidden error.
 
+### How to acquire and refresh API code and secret
+- Request the API code/secret from the **Wallet Details** page on the web control panel for the first time.
+- A paired refresh code can be used in the [refresh API](#refresh-api-code) to acquire the new inactive API code/secret of the wallet.
+	- Before the inactive API code is activated, the currently activated API code is still valid.
+	- Once the paired API code becomes invalid, the paired refresh code will also become invalid.
+
 ### How to make a correct request?
 - Put the API code in the X-API-CODE header.
 	- Use the inactivated API code in any request will activate it automatically. Once activated, the currently activated API code will immediately become invalid.
@@ -99,6 +106,7 @@
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L71)
 	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L58)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L26)
+
 
 <a name="callback-integration"></a>
 # Callback Integration
@@ -144,7 +152,7 @@ transaction in chain state(3) -> repeats state 3 until the confirmation count is
 
 #### For callback
 
-- The amount and fees fields in the callback are in the smallest cryptocurrency unit, use decimal and fee_decimal of the addon to convert the unit.
+- The amount and fees fields in the callback are in the smallest cryptocurrency unit, use `decimal` and `fee_decimal`(in the addon field) fields of callback data to convert the unit.
 
 #### For API
 
@@ -1041,12 +1049,14 @@ The response includes the following parameters:
 | 400 | 818 | Destination Tag must be integer | - | Wrong XRP destination tag format |
 | 400 | 944 | The max length of order id is 255 chars | - | Reached the limit of the length of order_id |
 | 400 | 703 | Operation failed | Detailed error message | Failed to connect to authentication callback URL |
-| 400 | 703 | Operation failed | HTTP resp failed {HTTP\_CODE}, body: {RESPONSE_BODY} | The authentication callback URL returned status code other than 200 |
+| 400 | 703 | Operation failed | The withdrawal request has been rejected, {RESPONSE_BODY} | The withdrawal request has been rejected by the authentication callback |
+| 400 | 703 | Operation failed | The withdrawal request has been rejected, unexpected response {HTTP\_CODE}: {RESPONSE_BODY} | The authentication callback URL returned status code other than 200 or 400 |
+| 400 | 703 | Operation failed | Unrecognized response: {RESPONSE_BODY}, 'OK' expected | The returned status code is 200 but the body is not **OK** |
+| 400 | 703 | Operation failed | request IP ({IPv4}) not in ACL | The request IP not in the withdrawal ACL |
 | 403 | 827 | Outgoing address in black list, abort transaction | - | Some outgoing addresses are blacklisted, examine the response 'blacklist' field for detailed information |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 | 404 | 312 | Policy not found | - | No active withdrawal policy found |
-| 404 | 703 | Operation failed | Unrecognized response: {RESPONSE_BODY}, 'OK' expected | The withdrawal request is not allowed by authentication callback URL |
-| 400 | 703 | Operation failed | request IP ({IPv4}) not in ACL | The request IP not in the withdrawal ACL |
+
 
 ##### [Back to top](#table-of-contents)
 
@@ -2226,6 +2236,65 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="refresh-api-code"></a>
+### Refresh API Code
+
+Use paired refresh code to acquire the new inactive API code/secret of the wallet.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/refreshsecret
+
+- [Sample curl command](#curl-refresh-api-code)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/357818/refreshsecret
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "api_code": "4QjbY3qES4tEh19PU",
+  "api_secret": "3jC1qjr4mrKxfoXkxoN27Uhmbm1E",
+  "refresh_code": "HcN17gxZ3ojrBYSXnjKsU9Pun8krP6J9Pn678k4rZ13m"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| api_code | string | The new inactive API code |
+| api_secret | string | The API secret |
+| refresh_code | string | The paired refresh code |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 112 | Invalid parameter | - | Malformatted post body or the refresh code is invalid |
+
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="query-wallet-info"></a>
 ### Query Wallet Info
 
@@ -2672,6 +2741,16 @@ curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activat
 
 ```
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
+```
+- [API definition](#query-api-code-status)
+
+
+<a name="curl-refresh-api-code"></a>
+### Refresh API Code
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"refresh_code":"3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra"}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/refreshsecret
 ```
 - [API definition](#query-api-code-status)
 
