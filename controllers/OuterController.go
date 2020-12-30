@@ -722,3 +722,93 @@ func (c *OuterController) RefreshSecret() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Query the whitelist of the withdrawal wallet
+// @router /wallets/:wallet_id/sender/whitelist [get]
+func (c *OuterController) GetSenderWhitelist() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/whitelist", walletID),
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetSenderWhitelist failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Add the outgoing address to the withdrawal wallet's whitelist
+// @router /wallets/:wallet_id/sender/whitelist [post]
+func (c *OuterController) AddSenderWhitelist() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/whitelist", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("AddSenderWhitelist failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Remove the outgoing address from the withdrawal wallet's whitelist
+// @router /wallets/:wallet_id/sender/whitelist [delete]
+func (c *OuterController) RemoveSenderWhitelist() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "DELETE", fmt.Sprintf("/v1/sofa/wallets/%d/sender/whitelist", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("RemoveSenderWhitelist failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query the withdrawal wallet's whitelist config
+// @router /wallets/:wallet_id/sender/whitelist/config [get]
+func (c *OuterController) QuerySenderWhitelistConfig() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/whitelist/config", walletID),
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("QuerySenderWhitelistConfig failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Check the outgoing address status in the withdrawal wallet's whitelist
+// @router /wallets/:wallet_id/sender/whitelist/check [post]
+func (c *OuterController) CheckSenderWhitelist() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/sender/whitelist/check", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("CheckSenderWhitelist failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

@@ -57,7 +57,7 @@ func MakeRequest(walletID int64, method string, api string, params []string, pos
 	if postBody == nil || len(postBody) == 0 {
 		req, err = http.NewRequest(method, url, nil)
 	} else {
-		req, err = http.NewRequest("POST", url, bytes.NewReader(postBody))
+		req, err = http.NewRequest(method, url, bytes.NewReader(postBody))
 		params = append(params, string(postBody))
 	}
 	if err != nil {

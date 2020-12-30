@@ -25,6 +25,11 @@
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
 		- [Set Withdrawal Request ACL](#set-withdrawal-request-acl)
 		- [Resend Withdrawal Callbacks](#resend-withdrawal-callbacks)
+		- [Query Withdrawal Whitelist Configuration](#query-withdrawal-whitelist-configuration)
+		- [Add Withdrawal Whitelist Entry](#add-withdrawal-whitelist-entry)
+		- [Remove Withdrawal Whitelist Entry](#remove-withdrawal-whitelist-entry)
+		- [Check Withdrawal Whitelist](#check-withdrawal-whitelist)
+		- [Query Withdrawal Whitelist](#query-withdrawal-whitelist)
 	- Deposit / Withdraw Wallet Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
@@ -1157,7 +1162,7 @@ The response includes the following parameters:
 | memo | string | Memo on blockchain |
 | in\_chain\_block | int64 | The block that contains this transaction |
 | txid | string | Transaction ID |
-| create_time | string | The withdrawal unix time in UTC |
+| create_time | string | The withdrawal time in UTC |
 
 ##### Error Code
 
@@ -1244,7 +1249,7 @@ The response includes the following parameters:
 | memo | string | Memo on blockchain |
 | in\_chain\_block | int64 | The block that contains this transaction |
 | txid | string | Transaction ID |
-| create_time | string | The withdrawal unix time in UTC |
+| create_time | string | The withdrawal time in UTC |
 | state | int | Refer to [Transaction State Definition](#transaction-state-definition) |
 
 ##### Error Code
@@ -1487,6 +1492,7 @@ The response includes the following parameters:
 
 ##### [Back to top](#table-of-contents)
 
+
 <a name="resend-withdrawal-callbacks"></a>
 ### Resend Withdrawal Callbacks
 
@@ -1561,6 +1567,432 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-withdrawal-whitelist-configuration"></a>
+### Query Withdrawal Whitelist Configuration
+
+Query the whitelist configuration of the withdrawal wallet.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/config
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-query-withdrawal-whitelist-configuration)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/2/sender/whitelist/config
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "effective_latency": 0,
+  "whitelist_check": true
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| effective_latency | int64 | The effective latency of the whitelist entry, 0 means the whitelist entry will take effect immediately. |
+| whitelist_check | boolean | Indicate whether the withdrawal wallet has enabled whitelist checking. |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="add-withdrawal-whitelist-entry"></a>
+### Add Withdrawal Whitelist Entry
+
+Add an outgoing address to the withdrawal wallet's whitelist.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-add-withdrawal-whitelist-entry)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/55743/sender/whitelist
+```
+
+###### Post body
+
+```json
+{
+  "items": [
+    {
+      "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+      "memo": "865314",
+      "user_id": "USER001"
+    }
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| items | array | required | Specify the whitelist entries |
+| address | string | required | The outgoing address |
+| memo | string | optional | The memo of the outgoing address |
+| user_id | string | optional, max length `255` | The custom user ID of the outgoing address |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "added_items": [
+    {
+      "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+      "memo": "865314",
+      "user_id": "USER001"
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| added_items | array | Array of the added whitelist entry |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 400 | 703 | Operation failed | invalid address: {INVALID_ADDRESS} | The address format does not comply with the cryptocurrency specification |
+| 400 | 703 | Operation failed | invalid user id: {INVALID_USER_ID} | The length of the user ID exceeds 255 characters |
+| 400 | 703 | Operation failed | this wallet does not support memo | The cryptocurrency does not support memo |
+| 400 | 945 | The max length of BNB memo is 256 chars | - | Reached the limit of the length of BNB memo |
+| 400 | 946 | The max length of EOS memo is 128 chars | - | Reached the limit of the length of EOS memo |
+| 400 | 947 | The max length of XRP destination tag is 20 chars | - | Reached the limit of the length of XRP destination tag |
+| 400 | 948 | The max length of XLM memo is 20 chars | - | Reached the limit of the length of XLM memo |
+| 400 | 818 | Destination Tag must be integer | - | Wrong XRP destination tag format |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="remove-withdrawal-whitelist-entry"></a>
+### Remove Withdrawal Whitelist Entry
+
+Remove an outgoing address from the withdrawal wallet's whitelist.
+
+##### Request
+
+**DELETE** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+> Only the entry exactly matches all the fields will be removed.
+
+- [Sample curl command](#curl-remove-withdrawal-whitelist-entry)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/55743/sender/whitelist
+```
+
+###### Post body
+
+```json
+{
+  "items": [
+    {
+      "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+      "memo": "865314",
+      "user_id": "USER001"
+    }
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| items | array | required | Specify the whitelist entries |
+| address | string | required | The outgoing address |
+| memo | string | optional | The memo of the outgoing address |
+| user_id | string | optional | The custom user ID of the outgoing address |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "removed_items": [
+    {
+      "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+      "memo": "865314",
+      "user_id": "USER001"
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| removed_items | array | Array of the added whitelist entry |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="check-withdrawal-whitelist"></a>
+### Check Withdrawal Whitelist
+
+Check the withdrawal whitelist entry status in the withdrawal whitelist.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/check
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-check-withdrawal-whitelist)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/55743/sender/whitelist/check
+```
+
+###### Post body
+
+```json
+{
+  "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+  "memo": "865314",
+  "user_id": "USER001"
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| address | string | required | The inquiry whitelist entry address |
+| memo | string | optional | The memo of the whitelist entry |
+| user_id | string | optional | The custom user ID of the whitelist entry |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+  "create_time": "2020-12-30T06:02:25Z",
+  "effective": true,
+  "effective_latency": 0,
+  "memo": "865314",
+  "state": 1,
+  "update_time": "2020-12-30T06:02:25Z",
+  "user_id": "USER001",
+  "wallet_id": 55743,
+  "whitelist_check": true
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| address | string | The inquiry whitelist entry address |
+| create_time | string | The creation time in UTC |
+| effective | boolean | Indicate whether the whitelist entry has took effect |
+| effective_latency | int64 | The effective latency of the whitelist entry, 0 means the whitelist entry will take effect immediately |
+| memo | string | The memo of the whitelist entry |
+| state | int | `1` means the entry is active, `2` means the entry is removed |
+| update_time | string | Last modification time in UTC |
+| user_id | string | The custom user ID of the whitelist entry |
+| wallet_id | int64 | The withdrawal wallet ID |
+| whitelist_check | boolean | Indicate whether the withdrawal wallet has enabled whitelist checking |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 400 | 703 | Operation failed | not found | Cannot find the inquiry whitelist entry |
+| 400 | 703 | Operation failed | this wallet does not support memo | The cryptocurrency does not support memo |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-withdrawal-whitelist"></a>
+### Query Withdrawal Whitelist
+
+Used to query some kind of callbacks within a time interval.
+
+##### Request
+
+**GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist?from\_time=`from`&to\_time=`to`&start\_index=`offset`&request_number=`count`&state=`state`
+
+- [Sample curl command](#curl-query-withdrawal-whitelist)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/55743/sender/whitelist
+```
+
+The request includes the following parameters:
+
+###### Query Parameters
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| from_time | int64 | optional, default `0` | Start date (unix time in UTC) |
+| to_time | int64 | optional, default `current time` | End date (unix time in UTC) |
+| start_index | int64 | optional, default `0` | The offset to the first entry |
+| request_number | int64 | optional, default `1000`, max `2000` | The count to request |
+| state | int | optional, default `-1` | Use `1` to query the active entries and `2` to query the removed entries, `-1` means all entries |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "items": [
+    {
+      "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
+      "create_time": "2020-12-30T06:02:25Z",
+      "memo": "",
+      "state": 1,
+      "update_time": "2020-12-30T06:02:25Z",
+      "user_id": "USER001",
+      "wallet_id": 55743,
+    },
+  ],
+  "total_count": 1
+}
+
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| items | array | Arrary of the whitelist entries |
+| address | string | The whitelist entry address |
+| create_time | string | The creation time in UTC |
+| memo | string | The memo of the whitelist entry |
+| state | int | `1` means the entry is active, `2` means the entry is removed |
+| update_time | string | Last modification time in UTC |
+| user_id | string | The custom user ID of the whitelist entry |
+| wallet_id | int64 | The withdrawal wallet ID |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid wallet ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
@@ -2660,6 +3092,54 @@ curl -X POST -H "Content-Type: application/json" -d '{"acl":"192.168.101.55"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl
 ```
 - [API definition](#set-withdrawal-request-acl)
+
+
+<a name="curl-query-withdrawal-whitelist-configuration"></a>
+### Query Withdrawal Whitelist Configuration
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/config
+```
+- [API definition](#query-withdrawal-whitelist-configuration)
+
+
+<a name="curl-add-withdrawal-whitelist-entry"></a>
+### Add Withdrawal Whitelist Entry
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"items":[{"address":"GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ","memo":"85666","user_id":"USER002"}]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist
+```
+- [API definition](#add-withdrawal-whitelist-entry)
+
+
+<a name="curl-remove-withdrawal-whitelist-entry"></a>
+### Remove Withdrawal Whitelist Entry
+
+```
+curl -X DELETE -H "Content-Type: application/json" -d '{"items":[{"address":"GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ","memo":"85666","user_id":"USER002"}]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist
+```
+- [API definition](#remove-withdrawal-whitelist-entry)
+
+
+<a name="curl-check-withdrawal-whitelist"></a>
+### Check Withdrawal Whitelist
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"items":[{"address":"GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ","memo":"85666","user_id":"USER002"}]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/check
+```
+- [API definition](#check-withdrawal-whitelist)
+
+
+<a name="curl-query-withdrawal-whitelist"></a>
+### Query Withdrawal Whitelis
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist
+```
+- [API definition](#query-withdrawal-whitelist)
 
 
 <a name="curl-resend-withdrawal-callbacks"></a>

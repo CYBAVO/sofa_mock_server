@@ -45,6 +45,11 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/acl", &controllers.OuterController{}, "POST:SetWithdrawalACL")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/notifications/manual", &controllers.OuterController{}, "POST:ResendWithdrawalCallbacks")
 	beego.Router("/v1/mock/wallets/:wallet_id/refreshsecret", &controllers.OuterController{}, "POST:RefreshSecret")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist", &controllers.OuterController{}, "GET:GetSenderWhitelist")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist", &controllers.OuterController{}, "POST:AddSenderWhitelist")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist", &controllers.OuterController{}, "DELETE:RemoveSenderWhitelist")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/config", &controllers.OuterController{}, "GET:QuerySenderWhitelistConfig")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/check", &controllers.OuterController{}, "POST:CheckSenderWhitelist")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")
