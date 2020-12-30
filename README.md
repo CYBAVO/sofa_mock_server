@@ -1867,6 +1867,7 @@ An example of a successful response:
 {
   "address": "0x79D6660b2aB1d37AD5D11C2ca2B3EBba7Efd13F6",
   "create_time": "2020-12-30T13:09:39Z",
+  "effective": true,
   "effective_time": "2020-12-30T13:09:39Z",
   "memo": "",
   "state": 1,
@@ -1881,6 +1882,7 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | address | string | The inquiry whitelist entry address |
 | create_time | string | The creation time in UTC |
+| effective | boolean | Indicate whether the whitelist entry has taken effect |
 | effective_time | string | The effective time in UTC |
 | memo | string | The memo of the whitelist entry |
 | state | int | `1` means the entry is active, `2` means the entry is removed |
@@ -1952,6 +1954,7 @@ An example of a successful response:
     {
       "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
       "create_time": "2020-12-30T06:02:25Z",
+      "effective": false,
       "effective_time": "2020-12-30T13:27:37Z",
       "memo": "",
       "state": 1,
@@ -1970,6 +1973,7 @@ The response includes the following parameters:
 | items | array | Arrary of the whitelist entries |
 | address | string | The whitelist entry address |
 | create_time | string | The creation time in UTC |
+| effective | boolean | Indicate whether the whitelist entry has taken effect |
 | effective_time | string | The effective time in UTC |
 | memo | string | The memo of the whitelist entry |
 | state | int | `1` means the entry is active, `2` means the entry is removed |
