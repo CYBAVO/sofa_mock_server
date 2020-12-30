@@ -1592,7 +1592,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/2/sender/whitelist/config
+/v1/sofa/wallets/55743/sender/whitelist/config
 ```
 
 ##### Response Format
@@ -1698,7 +1698,7 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| added_items | array | Array of the added whitelist entry |
+| added_items | array | Array of added whitelist entries |
 
 ##### Error Code
 
@@ -1737,7 +1737,7 @@ Remove an outgoing address from the withdrawal wallet's whitelist.
 
 > `WALLET_ID` must be a withdrawal wallet ID
 
-> Only the entry exactly matches all the fields will be removed.
+> Only the entries exactly matches all the fields will be removed.
 
 - [Sample curl command](#curl-remove-withdrawal-whitelist-entry)
 
@@ -1796,7 +1796,7 @@ The response includes the following parameters:
 
 | Field | Type  | Description |
 | :---  | :---  | :---        |
-| removed_items | array | Array of the added whitelist entry |
+| removed_items | array | Array of removed whitelist entries |
 
 ##### Error Code
 
@@ -1865,16 +1865,13 @@ An example of a successful response:
 
 ```json
 {
-  "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
-  "create_time": "2020-12-30T06:02:25Z",
-  "effective": true,
-  "effective_latency": 0,
-  "memo": "865314",
+  "address": "0x79D6660b2aB1d37AD5D11C2ca2B3EBba7Efd13F6",
+  "create_time": "2020-12-30T13:09:39Z",
+  "effective_time": "2020-12-30T13:09:39Z",
+  "memo": "",
   "state": 1,
-  "update_time": "2020-12-30T06:02:25Z",
-  "user_id": "USER001",
-  "wallet_id": 55743,
-  "whitelist_check": true
+  "update_time": "2020-12-30T13:09:39Z",
+  "user_id": "USER001"
 }
 ```
 
@@ -1884,14 +1881,11 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | address | string | The inquiry whitelist entry address |
 | create_time | string | The creation time in UTC |
-| effective | boolean | Indicate whether the whitelist entry has took effect |
-| effective_latency | int64 | The effective latency of the whitelist entry, 0 means the whitelist entry will take effect immediately |
+| effective_time | string | The effective time in UTC |
 | memo | string | The memo of the whitelist entry |
 | state | int | `1` means the entry is active, `2` means the entry is removed |
 | update_time | string | Last modification time in UTC |
 | user_id | string | The custom user ID of the whitelist entry |
-| wallet_id | int64 | The withdrawal wallet ID |
-| whitelist_check | boolean | Indicate whether the withdrawal wallet has enabled whitelist checking |
 
 ##### Error Code
 
@@ -1907,6 +1901,8 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
 | 400 | 703 | Operation failed | not found | Cannot find the inquiry whitelist entry |
+| 400 | 703 | Operation failed | invalid address: {INVALID_ADDRESS} | The address format does not comply with the cryptocurrency specification |
+| 400 | 703 | Operation failed | invalid user id: {INVALID_USER_ID} | The length of the user ID exceeds 255 characters |
 | 400 | 703 | Operation failed | this wallet does not support memo | The cryptocurrency does not support memo |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
@@ -1956,16 +1952,15 @@ An example of a successful response:
     {
       "address": "GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ",
       "create_time": "2020-12-30T06:02:25Z",
+      "effective_time": "2020-12-30T13:27:37Z",
       "memo": "",
       "state": 1,
       "update_time": "2020-12-30T06:02:25Z",
-      "user_id": "USER001",
-      "wallet_id": 55743,
+      "user_id": "USER001"
     },
   ],
   "total_count": 1
 }
-
 ```
 
 The response includes the following parameters:
@@ -1975,11 +1970,11 @@ The response includes the following parameters:
 | items | array | Arrary of the whitelist entries |
 | address | string | The whitelist entry address |
 | create_time | string | The creation time in UTC |
+| effective_time | string | The effective time in UTC |
 | memo | string | The memo of the whitelist entry |
 | state | int | `1` means the entry is active, `2` means the entry is removed |
 | update_time | string | Last modification time in UTC |
 | user_id | string | The custom user ID of the whitelist entry |
-| wallet_id | int64 | The withdrawal wallet ID |
 
 ##### Error Code
 

@@ -3898,7 +3898,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <h6 id="toc_151">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/2/sender/whitelist/config</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/55743/sender/whitelist/config</code></pre></div>
 
 <h5 id="toc_152">Response Format</h5>
 
@@ -4125,7 +4125,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <tr>
 <td style="text-align: left">added_items</td>
 <td style="text-align: left">array</td>
-<td style="text-align: left">Array of the added whitelist entry</td>
+<td style="text-align: left">Array of added whitelist entries</td>
 </tr>
 </tbody>
 </table>
@@ -4288,7 +4288,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <blockquote>
 <p><code>WALLET_ID</code> must be a withdrawal wallet ID</p>
 
-<p>Only the entry exactly matches all the fields will be removed.</p>
+<p>Only the entries exactly matches all the fields will be removed.</p>
 </blockquote>
 
 <ul>
@@ -4386,7 +4386,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <tr>
 <td style="text-align: left">removed_items</td>
 <td style="text-align: left">array</td>
-<td style="text-align: left">Array of the added whitelist entry</td>
+<td style="text-align: left">Array of removed whitelist entries</td>
 </tr>
 </tbody>
 </table>
@@ -4555,16 +4555,13 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;address&quot;: &quot;GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ&quot;,
-  &quot;create_time&quot;: &quot;2020-12-30T06:02:25Z&quot;,
-  &quot;effective&quot;: true,
-  &quot;effective_latency&quot;: 0,
-  &quot;memo&quot;: &quot;865314&quot;,
+  &quot;address&quot;: &quot;0x79D6660b2aB1d37AD5D11C2ca2B3EBba7Efd13F6&quot;,
+  &quot;create_time&quot;: &quot;2020-12-30T13:09:39Z&quot;,
+  &quot;effective_time&quot;: &quot;2020-12-30T13:09:39Z&quot;,
+  &quot;memo&quot;: &quot;&quot;,
   &quot;state&quot;: 1,
-  &quot;update_time&quot;: &quot;2020-12-30T06:02:25Z&quot;,
-  &quot;user_id&quot;: &quot;USER001&quot;,
-  &quot;wallet_id&quot;: 55743,
-  &quot;whitelist_check&quot;: true
+  &quot;update_time&quot;: &quot;2020-12-30T13:09:39Z&quot;,
+  &quot;user_id&quot;: &quot;USER001&quot;
 }</code></pre></div>
 
 <p>The response includes the following parameters:</p>
@@ -4590,14 +4587,9 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">The creation time in UTC</td>
 </tr>
 <tr>
-<td style="text-align: left">effective</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">Indicate whether the whitelist entry has took effect</td>
-</tr>
-<tr>
-<td style="text-align: left">effective_latency</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">The effective latency of the whitelist entry, 0 means the whitelist entry will take effect immediately</td>
+<td style="text-align: left">effective_time</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The effective time in UTC</td>
 </tr>
 <tr>
 <td style="text-align: left">memo</td>
@@ -4618,16 +4610,6 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">user_id</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">The custom user ID of the whitelist entry</td>
-</tr>
-<tr>
-<td style="text-align: left">wallet_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">The withdrawal wallet ID</td>
-</tr>
-<tr>
-<td style="text-align: left">whitelist_check</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">Indicate whether the withdrawal wallet has enabled whitelist checking</td>
 </tr>
 </tbody>
 </table>
@@ -4715,6 +4697,20 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">Operation failed</td>
 <td style="text-align: left">not found</td>
 <td style="text-align: left">Cannot find the inquiry whitelist entry</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">invalid address: {INVALID_ADDRESS}</td>
+<td style="text-align: left">The address format does not comply with the cryptocurrency specification</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">invalid user id: {INVALID<em>USER</em>ID}</td>
+<td style="text-align: left">The length of the user ID exceeds 255 characters</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
@@ -4814,16 +4810,15 @@ It is important to distinguish between unique callbacks to avoid improper handli
     {
       &quot;address&quot;: &quot;GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ&quot;,
       &quot;create_time&quot;: &quot;2020-12-30T06:02:25Z&quot;,
+      &quot;effective_time&quot;: &quot;2020-12-30T13:27:37Z&quot;,
       &quot;memo&quot;: &quot;&quot;,
       &quot;state&quot;: 1,
       &quot;update_time&quot;: &quot;2020-12-30T06:02:25Z&quot;,
-      &quot;user_id&quot;: &quot;USER001&quot;,
-      &quot;wallet_id&quot;: 55743,
+      &quot;user_id&quot;: &quot;USER001&quot;
     },
   ],
   &quot;total_count&quot;: 1
-}
-</code></pre></div>
+}</code></pre></div>
 
 <p>The response includes the following parameters:</p>
 
@@ -4853,6 +4848,11 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">The creation time in UTC</td>
 </tr>
 <tr>
+<td style="text-align: left">effective_time</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The effective time in UTC</td>
+</tr>
+<tr>
 <td style="text-align: left">memo</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">The memo of the whitelist entry</td>
@@ -4871,11 +4871,6 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <td style="text-align: left">user_id</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">The custom user ID of the whitelist entry</td>
-</tr>
-<tr>
-<td style="text-align: left">wallet_id</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">The withdrawal wallet ID</td>
 </tr>
 </tbody>
 </table>
