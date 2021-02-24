@@ -409,8 +409,13 @@ func (c *OuterController) ActivateAPIToken() {
 	defer c.ServeJSON()
 
 	walletID := c.getWalletID()
-	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/apisecret/activate", walletID),
-		nil, c.Ctx.Input.RequestBody)
+	var url string
+	if walletID == 0 {
+		url = "/v1/sofa/wallets/readonly/apisecret/activate"
+	} else {
+		url = fmt.Sprintf("/v1/sofa/wallets/%d/apisecret/activate", walletID)
+	}
+	resp, err := api.MakeRequest(walletID, "POST", url, nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("ActivateAPIToken failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -805,6 +810,59 @@ func (c *OuterController) CheckSenderWhitelist() {
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("CheckSenderWhitelist failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Update the label of the deposit address
+// @router /wallets/:wallet_id/addresses/label [post]
+func (c *OuterController) UpdateDepositWalletAddressLabel() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/addresses/label", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("UpdateDepositWalletAddressLabel failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query the deposit addresses' labels
+// @router /wallets/:wallet_id/addresses/get_labels [post]
+func (c *OuterController) GetDepositWalletAddressesLabel() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/addresses/get_labels", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetDepositWalletAddressesLabel failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Get the wallet list that the read-only API token can access
+// @router /wallets/readonly/walletlist [get]
+func (c *OuterController) GetReadOnlyWalletList() {
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest(0, "GET", "/v1/sofa/wallets/readonly/walletlist",
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetReadOnlyWalletList failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 

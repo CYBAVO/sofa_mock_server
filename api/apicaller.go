@@ -38,7 +38,7 @@ func buildChecksum(params []string, secret string, time int64, r string) string 
 }
 
 func MakeRequest(walletID int64, method string, api string, params []string, postBody []byte) ([]byte, error) {
-	if walletID <= 0 || method == "" || api == "" {
+	if walletID < 0 || method == "" || api == "" {
 		return nil, errors.New("invalid parameters")
 	}
 

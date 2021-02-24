@@ -63,5 +63,12 @@ func GetWalletAPICode(walletID int64) (apiCodeObj *APICode, err error) {
 	err = o.QueryTable(apiCodeObj.TableNameWithPrefix()).
 		Filter("wallet_id", walletID).
 		One(apiCodeObj)
+
+	if err != nil {
+		// try read-only API code
+		err = o.QueryTable(apiCodeObj.TableNameWithPrefix()).
+			Filter("wallet_id", 0).
+			One(apiCodeObj)
+	}
 	return
 }

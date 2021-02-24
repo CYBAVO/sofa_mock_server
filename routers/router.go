@@ -19,6 +19,8 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/apitoken", &controllers.OuterController{}, "POST:SetAPIToken")
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses", &controllers.OuterController{}, "POST:CreateDepositWalletAddresses")
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses", &controllers.OuterController{}, "GET:GetDepositWalletAddresses")
+	beego.Router("/v1/mock/wallets/:wallet_id/addresses/label", &controllers.OuterController{}, "POST:UpdateDepositWalletAddressLabel")
+	beego.Router("/v1/mock/wallets/:wallet_id/addresses/get_labels", &controllers.OuterController{}, "POST:GetDepositWalletAddressesLabel")
 	beego.Router("/v1/mock/wallets/:wallet_id/pooladdress", &controllers.OuterController{}, "GET:GetDepositWalletPoolAddress")
 	beego.Router("/v1/mock/wallets/:wallet_id/pooladdress/balance", &controllers.OuterController{}, "GET:GetDepositWalletPoolAddressBalance")
 	beego.Router("/v1/mock/wallets/:wallet_id/collection/notifications/manual", &controllers.OuterController{}, "POST:ResendDepositCollectionCallbacks")
@@ -50,6 +52,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist", &controllers.OuterController{}, "DELETE:RemoveSenderWhitelist")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/config", &controllers.OuterController{}, "GET:QuerySenderWhitelistConfig")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/check", &controllers.OuterController{}, "POST:CheckSenderWhitelist")
+	beego.Router("/v1/mock/wallets/readonly/walletlist", &controllers.OuterController{}, "GET:GetReadOnlyWalletList")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")
