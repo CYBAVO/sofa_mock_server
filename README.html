@@ -664,8 +664,8 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <div><pre><code class="language-javascript">{
   &quot;count&quot;: 2,
   &quot;memos&quot;: [
-    &quot;001&quot;,
-    &quot;002&quot;
+    &quot;10001&quot;,
+    &quot;10002&quot;
   ],
   &quot;labels&quot;: [
     &quot;note-for-001&quot;,
@@ -722,6 +722,8 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <blockquote>
 <p>NOTE: The length of <code>memos</code> must equal to <code>count</code> while creating addresses for BNB, XLM, XRP or EOS wallet.</p>
 
+<p>NOTE: The memos(or called destination tags) of XRP must be strings that can be converted to numbers.</p>
+
 <p>If use the <code>labels</code> to assign labels, the array length of the labels must equal to <code>count</code>.
 The label will be automatically synced to the child wallet.</p>
 </blockquote>
@@ -734,8 +736,8 @@ The label will be automatically synced to the child wallet.</p>
 
 <div><pre><code class="language-javascript">{
   &quot;addresses&quot;: [
-    &quot;002&quot;,
-    &quot;001&quot;
+    &quot;10001&quot;,
+    &quot;10002&quot;
   ]
 }</code></pre></div>
 
@@ -7852,7 +7854,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken</code></pre></div>
 
 <p>For BNB, XLM, XRP or EOS wallet:</p>
 
-<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;count&quot;:2,&quot;memos&quot;:[&quot;001&quot;,&quot;002&quot;]}&#39; \
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;count&quot;:2,&quot;memos&quot;:[&quot;10001&quot;,&quot;10002&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p>For wallet excepts BNB, XLM, XRP and EOS:</p>

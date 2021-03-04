@@ -214,8 +214,8 @@ For BNB, XLM, XRP or EOS wallet:
 {
   "count": 2,
   "memos": [
-    "001",
-    "002"
+    "10001",
+    "10002"
   ],
   "labels": [
   	"note-for-001",
@@ -248,6 +248,8 @@ The request includes the following parameters:
 
 > NOTE: The length of `memos` must equal to `count` while creating addresses for BNB, XLM, XRP or EOS wallet.
 > 
+> NOTE: The memos(or called destination tags) of XRP must be strings that can be converted to numbers.
+> 
 > If use the `labels` to assign labels, the array length of the labels must equal to `count`.
 > The label will be automatically synced to the child wallet.
 
@@ -260,8 +262,8 @@ For BNB, XLM, XRP or EOS wallet:
 ```json
 {
   "addresses": [
-    "002",
-    "001"
+    "10001",
+    "10002"
   ]
 }
 ```
@@ -3249,7 +3251,7 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 For BNB, XLM, XRP or EOS wallet:
 
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"count":2,"memos":["001","002"]}' \
+curl -X POST -H "Content-Type: application/json" -d '{"count":2,"memos":["10001","10002"]}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses
 ```
 
