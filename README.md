@@ -3722,6 +3722,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 	 	<table>
 	 	  <thead><tr><td>ID</td><td>Description</td></tr></thead>
 	 	  <tbody>
+		    <tr><td>-1</td><td>If the state is 5(failed), 8(cacelled) or 10(dropped)</td></tr>
 		    <tr><td>0</td><td>In fullnode mempool</td></tr>
 		    <tr><td>1</td><td>In chain (the transaction is already on the blockchain but the confirmations have not been met)</td></tr>
 		    <tr><td>2</td><td>Done (the transaction is already on the blockchain and satisfy confirmations)</td></tr>
