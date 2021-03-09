@@ -2904,6 +2904,22 @@ An example of the request:
 /v1/sofa/wallets/357818/refreshsecret
 ```
 
+###### Post body
+
+```json
+{
+  "refresh_code":"3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra"
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---     | :---        |
+| refresh_code | string | required | The corresponding refresh code of the API code specified in the X-API-CODE header |
+
 ##### Response Format
 
 An example of a successful response:
