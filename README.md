@@ -3793,6 +3793,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
   		    <tr><td>194</td><td>EOS</td><td>4</td></tr>
    		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
+   		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
@@ -3960,6 +3961,7 @@ Deposit callback with blocklist_tags sample:
 | 194  | EOS             | 4 |
 | 195  | TRX             | 6 |
 | 236  | BSV             | 8 |
+| 354  | DOT             | 10 |
 | 461  | FIL             | 18 |
 | 714  | BNB             | 8 |
 | 1815 | ADA             | 6 |
