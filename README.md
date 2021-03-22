@@ -32,13 +32,14 @@
 		- [Remove Withdrawal Whitelist Entry](#remove-withdrawal-whitelist-entry)
 		- [Check Withdrawal Whitelist](#check-withdrawal-whitelist)
 		- [Query Withdrawal Whitelist](#query-withdrawal-whitelist)
+		- [Query Withdrawal Wallet Transaction History](#query-withdrawal-wallet-transaction-history)
 	- Deposit / Withdraw Wallet Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
 		- [Query Wallet Synchronization Info](#query-wallet-synchronization-info)
 		- [Query Transaction Average Fee](#query-transaction-average-fee)
 	- Vault Wallet API
-		- [Query Vault Wallet Transaction History](#query-vault-wallet-transaction-history)
+		- [Query Vault / Withdrawal Wallet Transaction History](#query-vault-wallet-transaction-history)
 		- [Query Vault Wallet Balance](#query-vault-wallet-balance)
 	- Common API
 		- [Activate API Code](#activate-api-code)
@@ -2205,6 +2206,14 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-withdrawal-wallet-transaction-history"></a>
+### Query Withdrawal Wallet Transaction History
+
+Get the transactions records of the withdrawal wallets(operate on 'Withdraw' tab of the web control panel).
+
+Refer to [Query Vault / Withdrawal Wallet Transaction History](#query-vault-wallet-transaction-history) API.
+
+
 # Deposit / Withdraw Wallet Common API
 
 <a name="query-callback-history"></a>
@@ -2545,15 +2554,15 @@ The response includes the following parameters:
 # Vault Wallet API
 
 <a name="query-vault-wallet-transaction-history"></a>
-### Query Vault Wallet Transaction History
+### Query Vault / Withdrawal Wallet Transaction History
 
-Get transaction history of vault wallets.
+Get transaction history of vault/withdrawal wallets.
 
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
 
-> `WALLET_ID` must be a vault wallet ID
+> `WALLET_ID` can be a vault or withdrawal wallet ID
 
 - [Sample curl command](#curl-query-vault-wallet-transaction-history)
 
