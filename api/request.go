@@ -1,12 +1,12 @@
-// Copyright (c) 2018-2020 The Cybavo developers
+// Copyright (c) 2018-2021 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
-// the property of Cybavo and its suppliers,
+// the property of CYBAVO and its suppliers,
 // if any. The intellectual and technical concepts contained
-// herein are proprietary to Cybavo
+// herein are proprietary to CYBAVO
 // Dissemination of this information or reproduction of this materia
 // is strictly forbidden unless prior written permission is obtained
-// from Cybavo.
+// from CYBAVO.
 
 package api
 
@@ -75,6 +75,15 @@ const (
 	CallbackStatePaused          CallbackState = 12 // Paused (12)
 )
 
+const (
+	MerchantOrderStatePending      = -1
+	MerchantOrderStateSuccess      = 0
+	MerchantOrderStateExpired      = 1
+	MerchantOrderStateInsufficient = 2
+	MerchantOrderStateExcess       = 3
+	MerchantOrderStateCancel       = 4
+)
+
 type CallbackStruct struct {
 	Type            int                    `json:"type"`
 	Serial          int64                  `json:"serial"`
@@ -96,4 +105,38 @@ type CallbackStruct struct {
 	ConfirmBlocks   int64                  `json:"confirm_blocks"`
 	ProcessingState ProcessingState        `json:"processing_state"`
 	Addon           map[string]interface{} `json:"addon"`
+}
+
+type MerchantCallbackStruct struct {
+	MerchantID    int64                  `json:"merchant_id"`
+	OrderID       string                 `json:"order_id"`
+	Currency      string                 `json:"currency"`
+	TXID          string                 `json:"txid"`
+	RecvAmount    string                 `json:"recv_amount"`
+	BroadcastAt   int64                  `json:"broadcast_at"`
+	BlockHeight   int64                  `json:"block_height"`
+	FromAddress   string                 `json:"from_address"`
+	ToAddress     string                 `json:"to_address"`
+	State         int64                  `json:"state"`
+	Addon         map[string]interface{} `json:"addon"`
+	CurrencyBIP44 int64                  `json:"currency_bip44"`
+	TokenAddress  string                 `json:"token_address"`
+}
+
+type RequestPaymentOrderRequest struct {
+	Currency     int64  `json:"currency"`
+	TokenAddress string `json:"token_address"`
+	Amount       string `json:"amount"`
+	Duration     int64  `json:"duration"`
+	Description  string `json:"description"`
+	RedirectURL  string `json:"redirect_url"`
+	OrderID      string `json:"order_id"`
+}
+
+type QueryPaymentOrderResponse struct {
+	Address     string `json:"address"`
+	State       int8   `json:"state"`
+	TXID        string `json:"tx_id"`
+	ExpiredTime int64  `json:"expired_time"`
+	RedirectURL string `json:"redirect_url"`
 }

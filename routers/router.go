@@ -1,12 +1,12 @@
-// Copyright (c) 2018-2020 The Cybavo developers
+// Copyright (c) 2018-2021 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
-// the property of Cybavo and its suppliers,
+// the property of CYBAVO and its suppliers,
 // if any. The intellectual and technical concepts contained
-// herein are proprietary to Cybavo
+// herein are proprietary to CYBAVO
 // Dissemination of this information or reproduction of this materia
 // is strictly forbidden unless prior written permission is obtained
-// from Cybavo.
+// from CYBAVO.
 
 package routers
 
@@ -56,4 +56,16 @@ func init() {
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")
+
+	beego.Router("/v1/mock/merchant/:merchant_id/apitoken", &controllers.MerchantController{}, "POST:SetAPIToken")
+	beego.Router("/v1/mock/merchant/:merchant_id/order", &controllers.MerchantController{}, "POST:RequestPaymentOrder")
+	beego.Router("/v1/mock/merchant/:merchant_id/order", &controllers.MerchantController{}, "GET:QueryPaymentOrder")
+	beego.Router("/v1/mock/merchant/:merchant_id/order/duration", &controllers.MerchantController{}, "POST:UpdateOrderDuration")
+	beego.Router("/v1/mock/merchant/:merchant_id/order", &controllers.MerchantController{}, "DELETE:CancelPaymentOrder")
+	beego.Router("/v1/mock/merchant/:merchant_id/apisecret", &controllers.MerchantController{}, "GET:GetMerchantAPITokenStatus")
+	beego.Router("/v1/mock/merchant/:merchant_id/apisecret/activate", &controllers.MerchantController{}, "POST:ActivateMerchantAPIToken")
+	beego.Router("/v1/mock/merchant/:merchant_id/apisecret/refreshsecret", &controllers.MerchantController{}, "POST:RefreshMerchantSecret")
+	beego.Router("/v1/mock/merchant/:merchant_id/notifications/manual", &controllers.MerchantController{}, "POST:ResendFailedMerchantCallbacks")
+
+	beego.Router("/v1/mock/merchant/callback", &controllers.MerchantController{}, "POST:Callback")
 }

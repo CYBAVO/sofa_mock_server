@@ -1,12 +1,12 @@
-// Copyright (c) 2018-2020 The Cybavo developers
+// Copyright (c) 2018-2021 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
-// the property of Cybavo and its suppliers,
+// the property of CYBAVO and its suppliers,
 // if any. The intellectual and technical concepts contained
-// herein are proprietary to Cybavo
+// herein are proprietary to CYBAVO
 // Dissemination of this information or reproduction of this materia
 // is strictly forbidden unless prior written permission is obtained
-// from Cybavo.
+// from CYBAVO.
 
 package api
 
@@ -37,8 +37,8 @@ func buildChecksum(params []string, secret string, time int64, r string) string 
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(strings.Join(params, "&"))))
 }
 
-func MakeRequest(walletID int64, method string, api string, params []string, postBody []byte) ([]byte, error) {
-	if walletID < 0 || method == "" || api == "" {
+func MakeRequest(targetID int64, method string, api string, params []string, postBody []byte) ([]byte, error) {
+	if targetID < 0 || method == "" || api == "" {
 		return nil, errors.New("invalid parameters")
 	}
 
@@ -64,7 +64,7 @@ func MakeRequest(walletID int64, method string, api string, params []string, pos
 		return nil, err
 	}
 
-	apiCodeObj, err := models.GetWalletAPICode(walletID)
+	apiCodeObj, err := models.GetWalletAPICode(targetID)
 	if err != nil {
 		return nil, err
 	}
