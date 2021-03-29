@@ -722,6 +722,13 @@ kbd {
 <td style="text-align: left">-</td>
 <td style="text-align: left">The order contains invalid characters</td>
 </tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">20014</td>
+<td style="text-align: left">Wrong order amount</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The decimals of the amount does not conform to currency&#39;s decimals</td>
+</tr>
 </tbody>
 </table>
 
@@ -1620,7 +1627,7 @@ kbd {
 <p><strong>POST</strong> /v1/merchant/<code>MERCHANT_ID</code>/refreshsecret</p>
 
 <ul>
-<li><a href="#curl-refresh-api-code">Sample curl command</a></li>
+<li><a href="#curl-refresh-merchant-api-code">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_63">Request Format</h5>
@@ -1918,7 +1925,7 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/order/duration</code></pre>
 http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</code></pre></div>
 
 <ul>
-<li><a href="#query-merchant-api-code-status">API definition</a></li>
+<li><a href="#refresh-merchant-api-code-status">API definition</a></li>
 </ul>
 
 <h5 id="toc_85"><a href="#table-of-contents">Back to top</a></h5>
@@ -1978,7 +1985,7 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</co
     <td>Received amount denominated in the smallest cryptocurrency unit</td>
   </tr>
   <tr>
-    <td>fees</td>
+    <td>fee</td>
     <td>string</td>
     <td>Mining fee denominated in the smallest cryptocurrency unit</td>
   </tr>
@@ -2020,16 +2027,15 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</co
     <td>The decimal of cryptocurrency</td>
   </tr>
   <tr>
+    <td>fee_decimal</td>
+    <td>int</td>
+    <td>The decimal of cryptocurrency miner fee</td>
+  </tr>
+  <tr>
     <td>addon</td>
     <td>key-value pairs</td>
     <td>
     The extra information of this callback
-        <table>
-          <thead><tr><td>Key</td><td>Value (Description)</td></tr></thead>
-          <tbody>
-            <tr><td>fee_decimal</td><td>The decimal of cryptocurrency miner fee</td></tr>
-          </tbody>
-        </table>
     </td>
   </tr>
   <tr>

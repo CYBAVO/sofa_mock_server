@@ -105,6 +105,7 @@ type CallbackStruct struct {
 	ConfirmBlocks   int64                  `json:"confirm_blocks"`
 	ProcessingState ProcessingState        `json:"processing_state"`
 	Addon           map[string]interface{} `json:"addon"`
+	Decimals        int                    `json:"decimal"`
 }
 
 type MerchantCallbackStruct struct {
@@ -121,6 +122,9 @@ type MerchantCallbackStruct struct {
 	Addon         map[string]interface{} `json:"addon"`
 	CurrencyBIP44 int64                  `json:"currency_bip44"`
 	TokenAddress  string                 `json:"token_address"`
+	Fee           string                 `json:"fee"`
+	Decimals      int                    `json:"decimal"`
+	FeeDecimals   int                    `json:"fee_decimal"`
 }
 
 type RequestPaymentOrderRequest struct {
