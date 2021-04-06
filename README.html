@@ -593,6 +593,11 @@ It is important to distinguish between unique callbacks to avoid improper handli
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L385">Javascript</a></li>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L203">PHP</a></li>
 </ul></li>
+<li><p>Best practice:</p>
+
+<ul>
+<li>While processing a deposit callback, in addition to verifying the checksum of the callback, use <a href="#query-callback-detail">Query Callback Detail</a> API with the serial ID of the callback to perform an additional confirmation.</li>
+</ul></li>
 </ul>
 
 <p><a name="callback-state-change"></a></p>
@@ -808,7 +813,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -935,7 +940,7 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
-<td style="text-align: left">-</td>
+<td style="text-align: left">archived wallet or wrong wallet type</td>
 <td style="text-align: left">The wallet is not allowed to perform this request</td>
 </tr>
 </tbody>
@@ -1110,7 +1115,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -1290,7 +1295,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -1439,7 +1444,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -1600,7 +1605,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -1743,7 +1748,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -1903,7 +1908,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -2086,7 +2091,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -2254,7 +2259,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -2412,7 +2417,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -2609,7 +2614,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -2929,7 +2934,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -3144,6 +3149,20 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">The request IP not in the withdrawal ACL</td>
 </tr>
 <tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">invalid amount {AMOUNT}</td>
+<td style="text-align: left">The requested amount is not a valid number</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">Operation failed</td>
+<td style="text-align: left">invalid amount decimals {AMOUNT}</td>
+<td style="text-align: left">The decimals of the requested amount exceeds the valid range</td>
+</tr>
+<tr>
 <td style="text-align: left">404</td>
 <td style="text-align: left">304</td>
 <td style="text-align: left">Wallet ID invalid</td>
@@ -3154,7 +3173,7 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">404</td>
 <td style="text-align: left">312</td>
 <td style="text-align: left">Policy not found</td>
-<td style="text-align: left">-</td>
+<td style="text-align: left">no active withdrawal policy found</td>
 <td style="text-align: left">No active withdrawal policy found</td>
 </tr>
 </tbody>
@@ -3213,7 +3232,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -3407,7 +3426,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -3618,7 +3637,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -3806,7 +3825,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -3974,7 +3993,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -4148,7 +4167,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -4345,7 +4364,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -4501,7 +4520,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -4704,7 +4723,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -4972,7 +4991,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -5208,7 +5227,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -5482,7 +5501,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -5691,7 +5710,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -5902,7 +5921,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6040,7 +6059,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6202,7 +6221,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6496,7 +6515,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6686,7 +6705,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6833,7 +6852,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -6990,7 +7009,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -7164,7 +7183,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -7358,7 +7377,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -7547,7 +7566,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>
@@ -7757,7 +7776,7 @@ The label will be automatically synced to the child wallet.</p>
 <tr>
 <td style="text-align: left">403</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid wallet ID</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">No wallet ID found</td>
 </tr>

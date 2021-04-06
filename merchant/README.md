@@ -119,15 +119,39 @@ The request includes the following parameters:
 
 | Field | Type  | Note | Description |
 | :---  | :---  | :---     | :---        |
-| currency | int64 | required | The cryptocurrency used to pay the order |
-| token_address | string | required | The token contract address of cryptocurrency used to pay the order |
-| amount | string | required | The required amount of the payment order |
-| duration | int64 | required | The expiration duration (in minutes) of the payment order |
+| currency | int64 | required, refer to the [Currency Definition](#currency-definition) | The cryptocurrency used to pay the order |
+| token_address | string | optional | The token contract address of cryptocurrency used to pay the order |
+| amount | string | required, refer to [the definition](#doundary-definition) for the default maximum amount | The required amount of the payment order |
+| duration | int64 | optional, refer to [the definition](#doundary-definition) for the minimum duration | The expiration duration (in minutes) of the payment order |
 | description | string | optional, max `255` chars | The description of the payment order |
 | order_id | string | required | The user defined order ID (must be prefixed) |
 | redirect_url | string | optional | User defined redirect URL (must be encoded) |
 
 > The `redirect_url` must be encoded. Please refer to the code snippet on the github project to know how to encode the URL. [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/MerchantController.go#L92), [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MerchantController.java#L72), [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/merchant.js#L45), [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L370)
+
+<a name="doundary-definition"></a>
+Boundary definition
+
+| ID   | Currency Symbol | Minimum Duration | Default Duration | Default Maximum Amount |
+| :--- | :---            | :---     | :--- | :--- |
+| 0    | BTC             | 20 | 120 | 1 |
+| 2    | LTC             | 20 | 120 | 10 |
+| 5    | DASH            | 10 | 30 | 10 |
+| 60   | ETH             | 10 | 60 | 10 |
+| 144  | XRP             | 10 | 30 | 10 |
+| 145  | BCH             | 20 | 120 | 1 |
+| 148  | XLM             | 10 | 30 | 10 |
+| 194  | EOS             | 10 | 30 | 10 |
+| 195  | TRX             | 10 | 30 | 10 |
+| 236  | BSV             | 20 | 120 | 1 |
+| 354  | DOT             | 10 | 30 | 10 |
+| 461  | FIL             | 10 | 30 | 10 |
+| 714  | BNB             | 10 | 30 | 10 |
+| 1815 | ADA             | 10 | 30 | 10 |
+| 99999999997 | BSC      | 10 | 60 | 10 |
+| unlisted | - | 20 | 120 | 10000 |
+
+> The `Maximum Amount` boundary can be adjusted in the web control panel.
 
 ##### Response Format
 
@@ -164,13 +188,15 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
 | 403 | 113   | Permission denied | - | Merchant API not allowed |
-| 400 | 703 | Operation failed | Invalid redirect URL, {DETAILED_ERROR} | Fail to parse the redirect URL |
 | 400 | 20003 | Wallet address not available | - | There is no available deposit address |
-| 400 | 20007 | Wallet not found | - | No linked deposit wallet found |
+| 400 | 20007 | Wallet not found | - | No corresponding linked deposit wallet found (specified by the currency and token address in the request) |
 | 400 | 20009 | Duplicated Order ID| - | The order ID has been used |
 | 400 | 20010 | Wrong Order prefix | - | The order prefix is wrong |
 | 400 | 20011 | Wrong Order format | - | The order contains invalid characters |
 | 400 | 20014 | Wrong order amount | - | The decimals of the amount does not conform to currency's decimals |
+| 400 | 20015 | Invalid order duration, should not be less than minimum | - | The requested duration is less than the lower bound |
+| 400 | 20016 | Over amount limit| - | The requested amount exceeds upper bound |
+| 400 | 20017 | Invalid url host | - | The redirect URL is invalid |
 
 ##### [Back to top](#table-of-contents)
 
@@ -894,3 +920,29 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret
  
 ##### [Back to top](#table-of-contents)
 
+<a name="currency-definition"></a>
+### Currency Definition
+
+| ID   | Currency Symbol | Decimals |
+| :--- | :---            | :---     |
+| 0    | BTC             | 8 |
+| 2    | LTC             | 8 |
+| 5    | DASH            | 8 |
+| 60   | ETH             | 18 |
+| 144  | XRP             | 6 |
+| 145  | BCH             | 8 |
+| 148  | XLM             | 7 |
+| 194  | EOS             | 4 |
+| 195  | TRX             | 6 |
+| 236  | BSV             | 8 |
+| 354  | DOT             | 10 |
+| 461  | FIL             | 18 |
+| 714  | BNB             | 8 |
+| 1815 | ADA             | 6 |
+| 99999999997 | BSC      | 18 |
+  
+> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
+> 
+> BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system
+
+##### [Back to top](#table-of-contents)

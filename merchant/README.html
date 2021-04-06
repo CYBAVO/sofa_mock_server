@@ -511,25 +511,25 @@ kbd {
 <tr>
 <td style="text-align: left">currency</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">required</td>
+<td style="text-align: left">required, refer to the <a href="#currency-definition">Currency Definition</a></td>
 <td style="text-align: left">The cryptocurrency used to pay the order</td>
 </tr>
 <tr>
 <td style="text-align: left">token_address</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">required</td>
+<td style="text-align: left">optional</td>
 <td style="text-align: left">The token contract address of cryptocurrency used to pay the order</td>
 </tr>
 <tr>
 <td style="text-align: left">amount</td>
 <td style="text-align: left">string</td>
-<td style="text-align: left">required</td>
+<td style="text-align: left">required, refer to <a href="#doundary-definition">the definition</a> for the default maximum amount</td>
 <td style="text-align: left">The required amount of the payment order</td>
 </tr>
 <tr>
 <td style="text-align: left">duration</td>
 <td style="text-align: left">int64</td>
-<td style="text-align: left">required</td>
+<td style="text-align: left">optional, refer to <a href="#doundary-definition">the definition</a> for the minimum duration</td>
 <td style="text-align: left">The expiration duration (in minutes) of the payment order</td>
 </tr>
 <tr>
@@ -555,6 +555,140 @@ kbd {
 
 <blockquote>
 <p>The <code>redirect_url</code> must be encoded. Please refer to the code snippet on the github project to know how to encode the URL. <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/MerchantController.go#L92">Go</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MerchantController.java#L72">Java</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/merchant.js#L45">Javascript</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L370">PHP</a></p>
+</blockquote>
+
+<p><a name="doundary-definition"></a>
+Boundary definition</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">ID</th>
+<th style="text-align: left">Currency Symbol</th>
+<th style="text-align: left">Minimum Duration</th>
+<th style="text-align: left">Default Duration</th>
+<th style="text-align: left">Default Maximum Amount</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">0</td>
+<td style="text-align: left">BTC</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">1</td>
+</tr>
+<tr>
+<td style="text-align: left">2</td>
+<td style="text-align: left">LTC</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">5</td>
+<td style="text-align: left">DASH</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">60</td>
+<td style="text-align: left">ETH</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">60</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">144</td>
+<td style="text-align: left">XRP</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">145</td>
+<td style="text-align: left">BCH</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">1</td>
+</tr>
+<tr>
+<td style="text-align: left">148</td>
+<td style="text-align: left">XLM</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">194</td>
+<td style="text-align: left">EOS</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">195</td>
+<td style="text-align: left">TRX</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">236</td>
+<td style="text-align: left">BSV</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">1</td>
+</tr>
+<tr>
+<td style="text-align: left">354</td>
+<td style="text-align: left">DOT</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">461</td>
+<td style="text-align: left">FIL</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">714</td>
+<td style="text-align: left">BNB</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">1815</td>
+<td style="text-align: left">ADA</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">30</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">99999999997</td>
+<td style="text-align: left">BSC</td>
+<td style="text-align: left">10</td>
+<td style="text-align: left">60</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">unlisted</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">10000</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>The <code>Maximum Amount</code> boundary can be adjusted in the web control panel.</p>
 </blockquote>
 
 <h5 id="toc_15">Response Format</h5>
@@ -682,13 +816,6 @@ kbd {
 </tr>
 <tr>
 <td style="text-align: left">400</td>
-<td style="text-align: left">703</td>
-<td style="text-align: left">Operation failed</td>
-<td style="text-align: left">Invalid redirect URL, {DETAILED_ERROR}</td>
-<td style="text-align: left">Fail to parse the redirect URL</td>
-</tr>
-<tr>
-<td style="text-align: left">400</td>
 <td style="text-align: left">20003</td>
 <td style="text-align: left">Wallet address not available</td>
 <td style="text-align: left">-</td>
@@ -699,7 +826,7 @@ kbd {
 <td style="text-align: left">20007</td>
 <td style="text-align: left">Wallet not found</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">No linked deposit wallet found</td>
+<td style="text-align: left">No corresponding linked deposit wallet found (specified by the currency and token address in the request)</td>
 </tr>
 <tr>
 <td style="text-align: left">400</td>
@@ -728,6 +855,27 @@ kbd {
 <td style="text-align: left">Wrong order amount</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">The decimals of the amount does not conform to currency&#39;s decimals</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">20015</td>
+<td style="text-align: left">Invalid order duration, should not be less than minimum</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The requested duration is less than the lower bound</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">20016</td>
+<td style="text-align: left">Over amount limit</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The requested amount exceeds upper bound</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">20017</td>
+<td style="text-align: left">Invalid url host</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The redirect URL is invalid</td>
 </tr>
 </tbody>
 </table>
@@ -2114,6 +2262,106 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</co
 </table>
 
 <h5 id="toc_92"><a href="#table-of-contents">Back to top</a></h5>
+
+<p><a name="currency-definition"></a></p>
+
+<h3 id="toc_93">Currency Definition</h3>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">ID</th>
+<th style="text-align: left">Currency Symbol</th>
+<th style="text-align: left">Decimals</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">0</td>
+<td style="text-align: left">BTC</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">2</td>
+<td style="text-align: left">LTC</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">5</td>
+<td style="text-align: left">DASH</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">60</td>
+<td style="text-align: left">ETH</td>
+<td style="text-align: left">18</td>
+</tr>
+<tr>
+<td style="text-align: left">144</td>
+<td style="text-align: left">XRP</td>
+<td style="text-align: left">6</td>
+</tr>
+<tr>
+<td style="text-align: left">145</td>
+<td style="text-align: left">BCH</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">148</td>
+<td style="text-align: left">XLM</td>
+<td style="text-align: left">7</td>
+</tr>
+<tr>
+<td style="text-align: left">194</td>
+<td style="text-align: left">EOS</td>
+<td style="text-align: left">4</td>
+</tr>
+<tr>
+<td style="text-align: left">195</td>
+<td style="text-align: left">TRX</td>
+<td style="text-align: left">6</td>
+</tr>
+<tr>
+<td style="text-align: left">236</td>
+<td style="text-align: left">BSV</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">354</td>
+<td style="text-align: left">DOT</td>
+<td style="text-align: left">10</td>
+</tr>
+<tr>
+<td style="text-align: left">461</td>
+<td style="text-align: left">FIL</td>
+<td style="text-align: left">18</td>
+</tr>
+<tr>
+<td style="text-align: left">714</td>
+<td style="text-align: left">BNB</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
+<td style="text-align: left">1815</td>
+<td style="text-align: left">ADA</td>
+<td style="text-align: left">6</td>
+</tr>
+<tr>
+<td style="text-align: left">99999999997</td>
+<td style="text-align: left">BSC</td>
+<td style="text-align: left">18</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
+
+<p>BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system</p>
+</blockquote>
+
+<h5 id="toc_94"><a href="#table-of-contents">Back to top</a></h5>
 
 
 
