@@ -116,7 +116,8 @@
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L71)
 	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L58)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L26)
-
+	- [C#](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/c%23/checksum.cs#L20)
+	- [Python](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/python/checksum.py#L14)
 
 <a name="readonly-api-code"></a>
 # Read-only API Code
