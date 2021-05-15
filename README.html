@@ -591,9 +591,9 @@ It is important to distinguish between unique callbacks to avoid improper handli
 
 <ul>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L197">Go</a></li>
-<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L82">Java</a></li>
-<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L385">Javascript</a></li>
-<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L203">PHP</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L93">Java</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L399">Javascript</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L207">PHP</a></li>
 </ul></li>
 <li><p>Best practice:</p>
 
@@ -2703,7 +2703,9 @@ The label will be automatically synced to the child wallet.</p>
 
 <p>To withdraw assets from an withdrawal wallet, the caller must to provide an unique <strong>order_id</strong> for each request, the CYBAVO SOFA system will send the callback with the unique <strong>order_id</strong> when the withdrawal is success (from <code>in pool</code> state to <code>in chain</code> state). </p>
 
-<p>By default, the withdraw API will perform the address check to verify that the outgoing address is good or not. If the address in the request is marked as a problematic address, the request will be aborted. The error message will identify the problematic addresses. Set the <code>ignore_black_list</code> to true to skip the address check. </p>
+<p>By default, the withdraw API will perform the address check to verify that the outgoing address is good or not. If the address in the request is marked as a problematic address, the request will be aborted. The error message will identify the problematic addresses. Set the <code>ignore_black_list</code> to true to skip the address check.</p>
+
+<p>The withdrawal API can also interact with the contracts (ERC/BEP 721/1155) deployed in the SOFA system.</p>
 
 <h5 id="toc_106">Request</h5>
 
@@ -2762,6 +2764,15 @@ The label will be automatically synced to the child wallet.</p>
       &quot;memo&quot;: &quot;memo-003&quot;,
       &quot;user_id&quot;: &quot;USER03&quot;,
       &quot;message&quot;: &quot;message-003&quot;
+    },
+    {
+      &quot;order_id&quot;: &quot;888888_4&quot;,
+      &quot;address&quot;: &quot;0x2386b18e76184367b844a402332703dd2eec2a90&quot;,
+      &quot;amount&quot;: &quot;0&quot;,
+      &quot;contract_abi&quot;:&quot;create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000&quot;
+      &quot;memo&quot;: &quot;memo-004&quot;,
+      &quot;user_id&quot;: &quot;USER04&quot;,
+      &quot;message&quot;: &quot;message-004&quot;
     }
   ],
   &quot;ignore_black_list&quot;: false
@@ -2792,13 +2803,19 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">address</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">required</td>
-<td style="text-align: left">Outgoing address</td>
+<td style="text-align: left">Outgoing address (<code>address</code> must be a contract address, if the contract_abi is not empty)</td>
 </tr>
 <tr>
 <td style="text-align: left">amount</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">required</td>
 <td style="text-align: left">Withdrawal amount</td>
+</tr>
+<tr>
+<td style="text-align: left">contract_abi</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">required, if calls contract ABI</td>
+<td style="text-align: left"></td>
 </tr>
 <tr>
 <td style="text-align: left">memo</td>
@@ -2843,6 +2860,8 @@ The label will be automatically synced to the child wallet.</p>
 <p>The order_id must be prefixed. Find prefix from corresponding wallet detail on web control panel</p>
 
 <p>block_average_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.</p>
+
+<p>The format of the <code>contract_abi</code> is <code>ABI_method:hex_parameters</code>, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by <a href="https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters">web3.eth.abi.encodeParameters() of web3.js</a>.</p>
 </blockquote>
 
 <h5 id="toc_111">Response Format</h5>

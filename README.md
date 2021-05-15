@@ -150,9 +150,9 @@ It is important to distinguish between unique callbacks to avoid improper handli
 - Refer to [Callback Definition](#callback-definition), [Callback Type Definition](#callback-type-definition) for detailed definition.
 - Please refer to the code snippet on the github project to know how to validate the callback payload.
 	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L197)
-	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L82)
-	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L385)
-	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L203)
+	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L93)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L399)
+	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L207)
 
 - Best practice:
 	- While processing a deposit callback, in addition to verifying the checksum of the callback, use [Query Callback Detail](#query-callback-detail) API with the serial ID of the callback to perform an additional confirmation.
@@ -1094,7 +1094,9 @@ The response includes the following parameters:
 
 To withdraw assets from an withdrawal wallet, the caller must to provide an unique **order_id** for each request, the CYBAVO SOFA system will send the callback with the unique **order_id** when the withdrawal is success (from `in pool` state to `in chain` state). 
 
-By default, the withdraw API will perform the address check to verify that the outgoing address is good or not. If the address in the request is marked as a problematic address, the request will be aborted. The error message will identify the problematic addresses. Set the `ignore_black_list` to true to skip the address check. 
+By default, the withdraw API will perform the address check to verify that the outgoing address is good or not. If the address in the request is marked as a problematic address, the request will be aborted. The error message will identify the problematic addresses. Set the `ignore_black_list` to true to skip the address check.
+
+The withdrawal API can also interact with the contracts (ERC/BEP 721/1155) deployed in the SOFA system.
 
 ##### Request
 
@@ -1150,6 +1152,15 @@ An example of the request:
       "memo": "memo-003",
       "user_id": "USER03",
       "message": "message-003"
+    },
+    {
+      "order_id": "888888_4",
+      "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
+      "amount": "0",
+      "contract_abi":"create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
+      "memo": "memo-004",
+      "user_id": "USER04",
+      "message": "message-004"
     }
   ],
   "ignore_black_list": false
@@ -1163,8 +1174,9 @@ The request includes the following parameters:
 | Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
 | order_id | string | required, max `255` chars | Specify an unique ID, order ID must be prefixed |
-| address | string | required | Outgoing address |
+| address | string | required | Outgoing address (`address` must be a contract address, if the contract_abi is not empty) |
 | amount | string | required | Withdrawal amount |
+| contract_abi | string | required, if calls contract ABI |
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
@@ -1175,6 +1187,8 @@ The request includes the following parameters:
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
 >
 > block\_average\_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.
+> 
+> The format of the `contract_abi` is `ABI_method:hex_parameters`, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by [web3.eth.abi.encodeParameters() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters).
 
 ##### Response Format
 
