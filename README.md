@@ -3788,6 +3788,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 		    <tr><td>fee_decimal</td><td>The decimal of cryptocurrency miner fee</td></tr>
 		    <tr><td>blocklist_tags</td><td>The tags of CYBAVO AML detection</td></tr>
 		    <tr><td>address_label</td><td>The label of the deposit address</td></tr>
+		    <tr><td>contract_abi</td><td>The contract ABI of the withdrawal request</td></tr>
 	 	  </tbody>
 		</table>
     </td>
