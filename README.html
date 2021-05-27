@@ -2815,7 +2815,7 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">contract_abi</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">required, if calls contract ABI</td>
-<td style="text-align: left"></td>
+<td style="text-align: left">Specify the ABI method and the parameters, in the format <code>ABI_method:parameters</code></td>
 </tr>
 <tr>
 <td style="text-align: left">memo</td>
@@ -8488,6 +8488,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
           <tbody>
             <tr><td>0</td><td>BTC</td><td>8</td></tr>
             <tr><td>2</td><td>LTC</td><td>8</td></tr>
+            <tr><td>3</td><td>DOGE</td><td>8</td></tr>
             <tr><td>5</td><td>DASH</td><td>8</td></tr>
             <tr><td>60</td><td>ETH</td><td>18</td></tr>
             <tr><td>144</td><td>XRP</td><td>6</td></tr>
@@ -8498,9 +8499,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
             <tr><td>236</td><td>BSV</td><td>8</td></tr>
             <tr><td>354</td><td>DOT</td><td>10</td></tr>
             <tr><td>461</td><td>FIL</td><td>18</td></tr>
+            <tr><td>539</td><td>FLOW</td><td>8</td></tr>
             <tr><td>714</td><td>BNB</td><td>8</td></tr>
             <tr><td>1815</td><td>ADA</td><td>6</td></tr>
-            <tr><td>99999999997</td><td>BSC</td><td>18</td></tr>
+            <tr><td>99999999996</td><td>WND*</td><td>12</td></tr>
+            <tr><td>99999999997</td><td>BSC*</td><td>18</td></tr>
           </tbody>
         </table>
     </td>
@@ -8785,6 +8788,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <td style="text-align: left">8</td>
 </tr>
 <tr>
+<td style="text-align: left">3</td>
+<td style="text-align: left">DOGE</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
 <td style="text-align: left">5</td>
 <td style="text-align: left">DASH</td>
 <td style="text-align: left">8</td>
@@ -8801,7 +8809,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 </tr>
 <tr>
 <td style="text-align: left">145</td>
-<td style="text-align: left">BCH</td>
+<td style="text-align: left">BCH (BCHN)</td>
 <td style="text-align: left">8</td>
 </tr>
 <tr>
@@ -8835,6 +8843,11 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <td style="text-align: left">18</td>
 </tr>
 <tr>
+<td style="text-align: left">539</td>
+<td style="text-align: left">FLOW</td>
+<td style="text-align: left">8</td>
+</tr>
+<tr>
 <td style="text-align: left">714</td>
 <td style="text-align: left">BNB</td>
 <td style="text-align: left">8</td>
@@ -8845,8 +8858,13 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <td style="text-align: left">6</td>
 </tr>
 <tr>
+<td style="text-align: left">99999999996</td>
+<td style="text-align: left">WND*</td>
+<td style="text-align: left">12</td>
+</tr>
+<tr>
 <td style="text-align: left">99999999997</td>
-<td style="text-align: left">BSC</td>
+<td style="text-align: left">BSC*</td>
 <td style="text-align: left">18</td>
 </tr>
 </tbody>
@@ -8855,7 +8873,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 <blockquote>
 <p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
 
-<p>BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system</p>
+<p>BSC and WND is a pseudo cryptocurrency definition in the CYBAVO SOFA system</p>
 </blockquote>
 
 <h5 id="toc_361"><a href="#table-of-contents">Back to top</a></h5>

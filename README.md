@@ -1176,7 +1176,7 @@ The request includes the following parameters:
 | order_id | string | required, max `255` chars | Specify an unique ID, order ID must be prefixed |
 | address | string | required | Outgoing address (`address` must be a contract address, if the contract_abi is not empty) |
 | amount | string | required | Withdrawal amount |
-| contract_abi | string | required, if calls contract ABI |
+| contract_abi | string | required, if calls contract ABI | Specify the ABI method and the parameters, in the format `ABI_method:parameters` |
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
@@ -3807,6 +3807,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
    	 	  <tbody>
 		    <tr><td>0</td><td>BTC</td><td>8</td></tr>
   		    <tr><td>2</td><td>LTC</td><td>8</td></tr>
+  		    <tr><td>3</td><td>DOGE</td><td>8</td></tr>
   		    <tr><td>5</td><td>DASH</td><td>8</td></tr>
   		    <tr><td>60</td><td>ETH</td><td>18</td></tr>
   		    <tr><td>144</td><td>XRP</td><td>6</td></tr>
@@ -3817,9 +3818,11 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
    		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
+   		    <tr><td>539</td><td>FLOW</td><td>8</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
-   		    <tr><td>99999999997</td><td>BSC</td><td>18</td></tr>
+   		    <tr><td>99999999996</td><td>WND*</td><td>12</td></tr>
+   		    <tr><td>99999999997</td><td>BSC*</td><td>18</td></tr>
    	 	  </tbody>
 		</table>
     </td>
@@ -3975,23 +3978,26 @@ Deposit callback with blocklist_tags sample:
 | :--- | :---            | :---     |
 | 0    | BTC             | 8 |
 | 2    | LTC             | 8 |
+| 3    | DOGE            | 8 |
 | 5    | DASH            | 8 |
 | 60   | ETH             | 18 |
 | 144  | XRP             | 6 |
-| 145  | BCH             | 8 |
+| 145  | BCH (BCHN)      | 8 |
 | 148  | XLM             | 7 |
 | 194  | EOS             | 4 |
 | 195  | TRX             | 6 |
 | 236  | BSV             | 8 |
 | 354  | DOT             | 10 |
 | 461  | FIL             | 18 |
+| 539  | FLOW            | 8 |
 | 714  | BNB             | 8 |
 | 1815 | ADA             | 6 |
-| 99999999997 | BSC      | 18 |
+| 99999999996 | WND*     | 12 |
+| 99999999997 | BSC*     | 18 |
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
-> BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system
+> BSC and WND is a pseudo cryptocurrency definition in the CYBAVO SOFA system
  
 ##### [Back to top](#table-of-contents)
 
