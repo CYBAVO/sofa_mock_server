@@ -33,6 +33,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/apisecret/activate", &controllers.OuterController{}, "POST:ActivateAPIToken")
 	beego.Router("/v1/mock/wallets/:wallet_id/notifications", &controllers.OuterController{}, "GET:GetNotifications")
 	beego.Router("/v1/mock/wallets/:wallet_id/notifications/get_by_id", &controllers.OuterController{}, "POST:GetCallbackBySerial")
+	beego.Router("/v1/mock/wallets/:wallet_id/notifications/inspect", &controllers.OuterController{}, "POST:NotificationsInspect")
 	beego.Router("/v1/mock/wallets/:wallet_id/receiver/notifications/txid/:txid/:vout_index", &controllers.OuterController{}, "GET:GetDepositCallback")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/notifications/order_id/:order_id", &controllers.OuterController{}, "GET:GetWithdrawalCallback")
 	beego.Router("/v1/mock/wallets/:wallet_id/transactions", &controllers.OuterController{}, "GET:GetTransactionHistory")
