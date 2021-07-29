@@ -3783,7 +3783,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
   <tr>
     <td>currency</td>
     <td>string</td>
-    <td>Cryptocurrency of the callback</td>
+    <td>Cryptocurrency of the callback<br>This field is for human reading only and may change in the future. Do not use this string as currency definition, use the fields <b>currency_bip44</b> and <b>token_address</b> as currency definition.</td>
   </tr>
   <tr>
     <td>txid</td>
