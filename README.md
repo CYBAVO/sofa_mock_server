@@ -3913,20 +3913,28 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
   		    <tr><td>5</td><td>DASH</td><td>8</td></tr>
   		    <tr><td>60</td><td>ETH</td><td>18</td></tr>
   		    <tr><td>144</td><td>XRP</td><td>6</td></tr>
-  		    <tr><td>145</td><td>BCH</td><td>8</td></tr>
+  		    <tr><td>145</td><td>BCH (BCHN)</td><td>8</td></tr>
   		    <tr><td>148</td><td>XLM</td><td>7</td></tr>
   		    <tr><td>194</td><td>EOS</td><td>4</td></tr>
    		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
    		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
+   		    <tr><td>501</td><td>SOL</td><td>18</td></tr>
    		    <tr><td>539</td><td>FLOW</td><td>8</td></tr>
+   		    <tr><td>700</td><td>XDAI</td><td>8</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
+   		    <tr><td>966</td><td>MATIC</td><td>8</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
+   		    <tr><td>99999999991</td><td>OKT*</td><td>12</td></tr>
+   		    <tr><td>99999999992</td><td>OPTIMISM*</td><td>12</td></tr>
+   		    <tr><td>99999999993</td><td>ARBITRUM*</td><td>12</td></tr>
+   		    <tr><td>99999999994</td><td>HECO*</td><td>12</td></tr>
    		    <tr><td>99999999996</td><td>WND*</td><td>12</td></tr>
    		    <tr><td>99999999997</td><td>BSC*</td><td>18</td></tr>
-   	 	  </tbody>
+  	 	  </tbody>
 		</table>
+		*pseudo cryptocurrency definition in the CYBAVO SOFA system
     </td>
   </tr>
   <tr>
@@ -4091,15 +4099,22 @@ Deposit callback with blocklist_tags sample:
 | 236  | BSV             | 8 |
 | 354  | DOT             | 10 |
 | 461  | FIL             | 18 |
+| 501  | SOL             | 9 |
 | 539  | FLOW            | 8 |
+| 700  | XDAI            | 18 |
 | 714  | BNB             | 8 |
+| 966  | MATIC           | 18 |
 | 1815 | ADA             | 6 |
+| 99999999991 | OKT*     | 18 |
+| 99999999992 | OPTIMISM* | 18 |
+| 99999999993 | ARBITRUM* | 18 |
+| 99999999994 | HECO*    | 18 |
 | 99999999996 | WND*     | 12 |
 | 99999999997 | BSC*     | 18 |
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
-> BSC and WND is a pseudo cryptocurrency definition in the CYBAVO SOFA system
+> BSC, WND, OKT, OPTIMISM, ARBITRUM and HECO is a pseudo cryptocurrency definition in the CYBAVO SOFA system
  
 ##### [Back to top](#table-of-contents)
 
