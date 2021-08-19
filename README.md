@@ -38,8 +38,9 @@
 		- [Query Callback Detail](#query-callback-detail)
 		- [Query Wallet Synchronization Info](#query-wallet-synchronization-info)
 		- [Query Transaction Average Fee](#query-transaction-average-fee)
+		- [Batch Query Transaction Average Fees](#batch-query-transaction-average-fees)
 	- Vault Wallet API
-		- [Query Vault / Withdrawal Wallet Transaction History](#query-vault-wallet-transaction-history)
+		- [Query Vault Wallet Transaction History](#query-vault-wallet-transaction-history)
 		- [Query Vault Wallet Balance](#query-vault-wallet-balance)
 	- Common API
 		- [Activate API Code](#activate-api-code)
@@ -113,12 +114,12 @@
 - Calculate the checksum with the corresponding API secret and put the checksum in the X-CHECKSUM header.
   - The checksum calculation will use all the query parameters, the current timestamp, user-defined random string and the post body (if any).
 - Please refer to the code snippet on the github project to know how to calculate the checksum.
-	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/api/apicaller.go#L40)
-	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L71)
-	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L58)
-	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L26)
-	- [C#](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/c%23/checksum.cs#L20)
-	- [Python](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/python/checksum.py#L14)
+	- [Go](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/go/checksum.go#L40)
+	- [Java](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/java/checksum.java#L49)
+	- [Javascript](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/javascript/checksum.js#L27)
+	- [PHP](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/php/checksum.php#L27)
+	- [C#](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/c%23/checksum.cs#L55)
+	- [Python](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/python/checksum.py#L29)
 
 <a name="readonly-api-code"></a>
 # Read-only API Code
@@ -154,6 +155,8 @@ It is important to distinguish between unique callbacks to avoid improper handli
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L93)
 	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L399)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L207)
+	- [C#](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/c%23/checksum.cs#L89)
+	- [Python](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/python/checksum.py#L64)
 
 - Best practice:
 	- While processing a deposit callback, in addition to verifying the checksum of the callback, use [Query Callback Detail](#query-callback-detail) API with the serial ID of the callback to perform an additional confirmation.
@@ -326,6 +329,7 @@ The response includes the following parameters:
 | 403 | 112 | Invalid parameter | - | The count and the count of memos mismatched |
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
 | 403 | 706 | Exceed max allow wallet limitation, Upgrade your SKU to get more wallets | - | Reached the limit of the total number of deposit addresses |
+| 400 | 421 | Mapped(Token) wallet not allow to create deposit addresses, please create the deposit wallet in parent wallet, the address will be synced to mapped wallet automatically | - | Only the parent wallet can create deposit addresses |
 | 400 | 500 | insufficient fund | - | Insufficient balance to deploy collection contract |
 | 400 | 703 | Operation failed | Error message returned by JSON parser | Malformatted post body |
 | 400 | 818 | Destination Tag must be integer | - | Wrong XRP destination tag format |
@@ -358,11 +362,11 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/17/addresses?start_index=0&request_number=3
+/v1/sofa/wallets/179654/addresses?start_index=0&request_number=3
 
 --- THEN ---
 
-/v1/sofa/wallets/17/addresses?start_index=3&request_number=3
+/v1/sofa/wallets/179654/addresses?start_index=3&request_number=3
 ```
 
 The request includes the following parameters:
@@ -378,7 +382,7 @@ An example of a successful response:
 
 ```json
 {
-  "wallet_id": 17,
+  "wallet_id": 179654,
   "wallet_count": 6,
   "wallet_address": [
     {
@@ -405,7 +409,7 @@ An example of a successful response:
 --- THEN ---
 
 {
-  "wallet_id": 17,
+  "wallet_id": 179654,
   "wallet_count": 6,
   "wallet_address": [
     {
@@ -482,7 +486,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/17/addresses/contract_txid?txids=0xe6dfe0d283690f636df5ea4b9df25552e6b576b88887bfb5837016cdd696e754,0xdb18fd33c9a6809bfc341a1c0b2c092be5a360f394c85367f9cf316579281ab4
+/v1/sofa/wallets/179654/addresses/contract_txid?txids=0xe6dfe0d283690f636df5ea4b9df25552e6b576b88887bfb5837016cdd696e754,0xdb18fd33c9a6809bfc341a1c0b2c092be5a360f394c85367f9cf316579281ab4
 ```
 
 The request includes the following parameters:
@@ -562,7 +566,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/17/pooladdress
+/v1/sofa/wallets/179654/pooladdress
 ```
 
 ##### Response Format
@@ -619,7 +623,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/17/pooladdress/balance
+/v1/sofa/wallets/179654/pooladdress/balance
 ```
 
 ##### Response Format
@@ -683,7 +687,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/addresses/invalid-deposit
+/v1/sofa/wallets/179654/addresses/invalid-deposit
 ```
 
 ##### Response Format
@@ -738,7 +742,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/5/receiver/notifications/txid/0xb72a81976f780445decd13a35c24974c4e32665cb57d79b3f7a601c775f6a7d8/0
+/v1/sofa/wallets/179654/receiver/notifications/txid/0xb72a81976f780445decd13a35c24974c4e32665cb57d79b3f7a601c775f6a7d8/0
 ```
 
 ##### Response Format
@@ -767,7 +771,7 @@ An example of a successful response:
     "txid": "0xb72a81976f780445decd13a35c24974c4e32665cb57d79b3f7a601c775f6a7d8",
     "type": 1,
     "vout_index": 0,
-    "wallet_id": 5
+    "wallet_id": 179654
   }
 }
 ```
@@ -820,7 +824,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/collection/notifications/manual
+/v1/sofa/wallets/179654/collection/notifications/manual
 ```
 
 ###### Post body
@@ -1509,7 +1513,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/sender/balance
+/v1/sofa/wallets/632543/sender/balance
 ```
 
 ##### Response Format
@@ -1661,7 +1665,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/120/sender/transactions/acl
+/v1/sofa/wallets/632543/sender/transactions/acl
 ```
 
 ###### Post body
@@ -2065,7 +2069,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/55743/sender/whitelist/check
+/v1/sofa/wallets/557432/sender/whitelist/check
 ```
 
 ###### Post body
@@ -2159,7 +2163,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/55743/sender/whitelist
+/v1/sofa/wallets/557432/sender/whitelist
 ```
 
 The request includes the following parameters:
@@ -2231,9 +2235,121 @@ The response includes the following parameters:
 <a name="query-withdrawal-wallet-transaction-history"></a>
 ### Query Withdrawal Wallet Transaction History
 
-Get the transactions records of the withdrawal wallets(operate on 'Withdraw' tab of the web control panel).
+Get transaction history of withdrawal wallets.
 
-Refer to [Query Vault / Withdrawal Wallet Transaction History](#query-vault-wallet-transaction-history) API.
+##### Request
+
+`VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`
+
+> `WALLET_ID` should be a withdrawal wallet ID
+
+- [Sample curl command](#curl-query-withdrawal-wallet-transaction-history)
+
+##### Request Format
+
+An example of the request:
+
+###### API with parameters
+
+```
+/v1/sofa/wallets/345312/sender/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=10
+```
+
+The request includes the following parameters:
+
+###### Query Parameters
+
+| Field | Type | Note | Description |
+| :---  | :--- | :--- | :---        |
+| from_time | int64 | optional, default `0` | Start date (unix time in UTC) |
+| to_time | int64 | optional, default `current time` | End date (unix time in UTC) |
+| start_index | int | optional, default `0` | Index of starting transaction record |
+| request_number | int | optional, default `10`, max `500` | Count of returning transaction record |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "total_count": 169,
+  "transactions": [
+    {
+      "amount": "0.1",
+      "block_height": 10813730,
+      "block_time": "2021-08-11T06:13:01Z",
+      "blocklist_tags": [],
+      "fee": "0.000693",
+      "from_address": "0xaa0cA2f9bA3A33a915a27e289C9719adB2ad7d73",
+      "memo": "",
+      "out": true,
+      "source": "",
+      "state": 1,
+      "to_address": "0x79D6660b2aB1d37AD5D11C2ca2B3EBba7Efd13F6",
+      "txid": "0xe3607325e3b7c0190089d1fb41ce9fa059858c6b2e5dd220e55ba46707fc38f0"
+    },
+    {
+      "amount": "1",
+      "block_height": 10811102,
+      "block_time": "2021-08-10T17:24:21Z",
+      "blocklist_tags": [],
+      "fee": "0.000021",
+      "from_address": "0xaa0cA2f9bA3A33a915a27e289C9719adB2ad7d73",
+      "memo": "",
+      "out": true,
+      "source": "withdraw-api",
+      "state": 1,
+      "to_address": "0x8382Cc1B05649AfBe179e341179fa869C2A9862b",
+      "txid": "0x19657382aa16520c32eef0dacc0f16d78e9105e83d37d126b4f6687c0d651859"
+    },
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| total_count | int | Total transactions in specified date duration |
+| transactions | array | Array of transaction record |
+| txid | string | Transaction ID |
+| from_address | string | Sender address of the transaction |
+| to_address | string | Recipient address of the transaction |
+| out | boolean | True means outgoing transaction |
+| amount | string | Transaction amount |
+| blocklist_tags | array | The tags of CYBAVO AML detection. If `out` is true, the `to_address` is tagged. Otherwise, the `from_address` is tagged |
+| block_height | int64 | The block height |
+| block_time | time | When was the transaction packed into block (in chain) in UTC time |
+| fee | string | Transaction blockchain fee |
+| memo | string | Memo of the transaction |
+| source | string | `withdraw-api` means that the transaction was triggered by the withdrawal API, otherwise it was triggered from the web withdrawal UI |
+| state | int | Refer to [Transaction State Definition](#api-transaction-state-filter) bellow |
+
+<a name="api-transaction-state-filter"></a>
+###### Transaction State Definition
+
+| ID   | Description |
+| :--- | :---        |
+| 1 | Success, the transaction status is successful |
+| 2 | Failed, the transaction status is failed |
+| 3 | Invalid, the transaction status is successful but is identified as invalid by the SOFA system |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | `from_time` or `to_time` is invalid |
+
+##### [Back to top](#table-of-contents)
 
 
 # Deposit / Withdrawal Wallet Common API
@@ -2256,7 +2372,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/67/notifications?from_time=1561651200&to_time=1562255999&type=2
+/v1/sofa/wallets/677414/notifications?from_time=1561651200&to_time=1562255999&type=2
 ```
 
 The request includes the following parameters:
@@ -2292,7 +2408,7 @@ An example of a successful response:
       "chain_at": 1562234190,
       "from_address": "tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0",
       "to_address": "tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk",
-      "wallet_id": 67,
+      "wallet_id": 677414,
       "state": 3,
       "confirm_blocks": 1,
       "processing_state": 1,
@@ -2344,7 +2460,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/120/notifications/get_by_id
+/v1/sofa/wallets/677414/notifications/get_by_id
 ```
 
 ###### Post body
@@ -2390,7 +2506,7 @@ An example of a successful response:
       "chain_at": 1584088556,
       "from_address": "",
       "to_address": "37btjrVyb4KG8gKeZjJguinwdsbcRV65ngHhBUaJWf36QxiakTV3UHiNUP9arReXMZQnpRBVVdkcBB4GyiWzPRSTmg41mTzMpxgfhtfRHtaBCKJNbX",
-      "wallet_id": 120,
+      "wallet_id": 677414,
       "state": 3,
       "confirm_blocks": 2,
       "processing_state": 1,
@@ -2412,7 +2528,7 @@ An example of a successful response:
       "chain_at": 1584088576,
       "from_address": "",
       "to_address": "37btjrVyb4KDKCyAPRUPxpGiUPWunpBAkGRX8U3h7LYzS2UrHUnEQozcCyqR2GfBVnM3frTaUNEb8DoNGo9JakrskAtaWt6vED6R6ohkmaJ2qr4oCg",
-      "wallet_id": 120,
+      "wallet_id": 677414,
       "state": 3,
       "confirm_blocks": 1,
       "processing_state": 1,
@@ -2464,7 +2580,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/blocks
+/v1/sofa/wallets/677414/blocks
 ```
 
 ##### Response Format
@@ -2520,7 +2636,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/autofee
+/v1/sofa/wallets/635718/autofee
 ```
 
 ###### Post body
@@ -2537,7 +2653,7 @@ The request includes the following parameters:
 
 | Field | Type  | Note | Description |
 | :---  | :---  | :---     | :---        |
-| block_num | int | optional, default `1`, range `1~30` | Get average blockchain fee within latest N blocks |
+| block_num | int | optional, default `1`, range `1~30` | Query the average blockchain fee in the last N blocks |
 
 ##### Response Format
 
@@ -2573,18 +2689,108 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="batch-query-transaction-average-fees"></a>
+### Batch Query Transaction Average Fees
+
+Batch Query average blockchain fee within latest N blocks.
+
+##### Request
+
+`VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/autofees
+
+- [Sample curl command](#curl-batch-query-transaction-average-fees)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/854714/autofees
+```
+
+###### Post body
+
+```json
+{
+  "block_nums": [
+    1,
+    5,
+    10
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---     | :---        |
+| block_nums | array | required, max 5 entries, each entry is range `1~30` | Batch query the average blockchain fee in the last N blocks |
+
+##### Response Format
+
+An example of a successful response:
+	
+```json
+{
+  "auto_fees": [
+    {
+      "auto_fee": "49000000000",
+      "block_num": 1
+    },
+    {
+      "auto_fee": "49000000000",
+      "block_num": 5
+    },
+    {
+      "auto_fee": "38000000000",
+      "block_num": 10
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| auto_fees | array | Result of the inquiry |
+| block_num | int | Inquiry block number |
+| auto_fee | string | Mining fee denominated in the smallest cryptocurrency unit |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Exceeds 5 entries or each entry not in range |
+
+##### [Back to top](#table-of-contents)
+
+
 # Vault Wallet API
 
 <a name="query-vault-wallet-transaction-history"></a>
-### Query Vault / Withdrawal Wallet Transaction History
+### Query Vault Wallet Transaction History
 
-Get transaction history of vault/withdrawal wallets.
+Get transaction history of vault wallets.
 
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
 
-> `WALLET_ID` can be a vault or withdrawal wallet ID
+> `WALLET_ID` should be a vault wallet ID
 
 - [Sample curl command](#curl-query-vault-wallet-transaction-history)
 
@@ -2595,7 +2801,7 @@ An example of the request:
 ###### API with parameters
 
 ```
-/v1/sofa/wallets/48/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=1
+/v1/sofa/wallets/488471/transactions?from_time=1559664000&to_time=1562255999&start_index=0&request_number=1
 ```
 
 The request includes the following parameters:
@@ -2604,8 +2810,8 @@ The request includes the following parameters:
 
 | Field | Type | Note | Description |
 | :---  | :--- | :--- | :---        |
-| from_item | int64 | optional, default `0` | Start date (unix time in UTC) |
-| to_item | int64 | optional, default `current time` | End date (unix time in UTC) |
+| from_time | int64 | optional, default `0` | Start date (unix time in UTC) |
+| to_time | int64 | optional, default `current time` | End date (unix time in UTC) |
 | start_index | int | optional, default `0` | Index of starting transaction record |
 | request_number | int | optional, default `1000`, max `5000` | Count of returning transaction record |
 | state | int | optional, default `-1` | Refer to [Transaction State Filter Definition](#transaction-state-filter) bellow |
@@ -2636,7 +2842,7 @@ An example of a successful response:
       "issue_user_id": 3,
       "issue_user_name": "wallet owner (user@gmail.com)",
       "description": "TO SND",
-      "wallet_id": 48,
+      "wallet_id": 488471,
       "wallet_name": "BNB I",
       "wallet_address": "tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk",
       "token_address": "",
@@ -2724,7 +2930,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/7/vault/balance
+/v1/sofa/wallets/488471/vault/balance
 ```
 
 ##### Response Format
@@ -2811,7 +3017,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/apisecret/activate
+/v1/sofa/wallets/488471/apisecret/activate
 ```
 
 ##### Response Format
@@ -2867,7 +3073,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/apisecret
+/v1/sofa/wallets/488471/apisecret
 ```
 
 ##### Response Format
@@ -3008,7 +3214,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/info
+/v1/sofa/wallets/488471/info
 ```
 
 ##### Response Format
@@ -3085,7 +3291,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/1/addresses/verify
+/v1/sofa/wallets/488471/addresses/verify
 ```
 
 ###### Post body
@@ -3565,6 +3771,15 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/config
 - [API definition](#query-withdrawal-whitelist-configuration)
 
 
+<a name="curl-query-withdrawal-wallet-transaction-history"></a>
+### Query Withdrawal Wallet Transaction History
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions
+```
+- [API definition](#query-withdrawal-wallet-transaction-history)
+
+
 <a name="curl-add-withdrawal-whitelist-entry"></a>
 ### Add Withdrawal Whitelist Entry
 
@@ -3650,6 +3865,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"block_num":1}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee
 ```
 - [API definition](#query-transaction-average-fee)
+
+
+<a name="curl-batch-query-transaction-average-fees"></a>
+### Batch Query Transaction Average Fees
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"block_nums":[1,5,10]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees
+```
+- [API definition](#batch-query-transaction-average-fees)
 
 
 <a name="curl-query-vault-wallet-transaction-history"></a>
@@ -3870,7 +4095,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 	 	<table>
 	 	  <thead><tr><td>ID</td><td>Description</td></tr></thead>
 	 	  <tbody>
-		    <tr><td>-1</td><td>If the state is 5(failed), 8(cacelled) or 10(dropped)</td></tr>
+		    <tr><td>-1</td><td>If the state is 5(failed), 8(cacelled), 10(dropped) or 11(transaction failed)</td></tr>
 		    <tr><td>0</td><td>In fullnode mempool</td></tr>
 		    <tr><td>1</td><td>In chain (the transaction is already on the blockchain but the confirmations have not been met)</td></tr>
 		    <tr><td>2</td><td>Done (the transaction is already on the blockchain and satisfy confirmations)</td></tr>
@@ -3960,7 +4185,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 | 8    | Cancelled | The withdrawal request is cancelled via web console | O | Withdrawal(2) |
 | 9    | UTXO temporarily not available | The withdrawal request has been set as pending due to no available UTXO | - | - |
 | 10   | Dropped | A long-awaited withdrawal transaction that does not appear in the memory pool of the fullnode will be regarded as dropped  | O | Withdrawal(2) |
-| 11   | Transaction Failed | The withdrawal transaction is regarded as a failed transaction by the fullnode | - | - |
+| 11   | Transaction Failed | The withdrawal transaction is regarded as a failed transaction by the fullnode | O | Withdrawal(2) |
 | 12   | Paused | The withdrawal request has been paused | - | - |
 
 Callback sample:
