@@ -60,19 +60,13 @@ const (
 type CallbackState int64
 
 const (
-	CallbackStateInit            CallbackState = 0  // enqueue (0)
-	CallbackStateHolding         CallbackState = 1  // Processing batch in KMS (1)
-	CallbackStateInPool          CallbackState = 2  // KMS process done, TXID created (2)
-	CallbackStateInChain         CallbackState = 3  // TXID in chain (3)
-	CallbackStateDone            CallbackState = 4  // TXID confirmed in N blocks (4)
-	CallbackStateFailed          CallbackState = 5  // Failed (5)
-	CallbackStateResended        CallbackState = 6  // Resended (6)
-	CallbackStateRiskControl     CallbackState = 7  // blocked due to risk controlled (7)
-	CallbackStateCancelled       CallbackState = 8  // cancelled
-	CallbackStateUTXOUnavailable CallbackState = 9  // Retry for UTXO Temporarily Not Available
-	CallbackStateDropped         CallbackState = 10 // Dropped
-	CallbackStateInChainFailed   CallbackState = 11 // Transaction Failed (11)
-	CallbackStatePaused          CallbackState = 12 // Paused (12)
+	CallbackStateHolding       CallbackState = 1  // Processing batch in KMS (1)
+	CallbackStateInPool        CallbackState = 2  // KMS process done, TXID created (2)
+	CallbackStateInChain       CallbackState = 3  // TXID in chain (3)
+	CallbackStateFailed        CallbackState = 5  // Failed (5)
+	CallbackStateCancelled     CallbackState = 8  // cancelled
+	CallbackStateDropped       CallbackState = 10 // Dropped
+	CallbackStateInChainFailed CallbackState = 11 // Transaction Failed (11)
 )
 
 const (

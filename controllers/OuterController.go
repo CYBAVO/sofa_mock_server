@@ -888,3 +888,39 @@ func (c *OuterController) NotificationsInspect() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Query the withdrawal wallet's transaction history
+// @router /wallets/:wallet_id/sender/transactions [get]
+func (c *OuterController) GetSenderTransactionHistory() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions", walletID),
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetSenderTransactionHistory failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Query wallet transaction avarage blockchain fees
+// @router /wallets/:wallet_id/autofees [post]
+func (c *OuterController) GetAutoFees() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/autofees", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetAutoFees failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
