@@ -4167,6 +4167,11 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
     <td>string</td>
     <td>The contract address of cryptocurrency</td>
   </tr>
+  <tr>
+    <td>memo</td>
+    <td>string</td>
+    <td>The memo/destination tag of the transaction</td>
+  </tr>
 </table>
 
 <a name="transaction-state-definition"></a>
