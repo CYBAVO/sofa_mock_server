@@ -2763,17 +2763,12 @@ The label will be automatically synced to the child wallet.</p>
       &quot;order_id&quot;: &quot;888888_2&quot;,
       &quot;address&quot;: &quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,
       &quot;amount&quot;: &quot;0.0002&quot;,
-      &quot;memo&quot;: &quot;memo-002&quot;,
-      &quot;user_id&quot;: &quot;USER02&quot;,
-      &quot;message&quot;: &quot;message-002&quot;,
       &quot;manual_fee&quot;: 50
     },
     {
       &quot;order_id&quot;: &quot;888888_3&quot;,
       &quot;address&quot;: &quot;0x9638fa816ccd35389a9a98a997ee08b5321f3eb9&quot;,
       &quot;amount&quot;: &quot;0.0002&quot;,
-      &quot;memo&quot;: &quot;memo-003&quot;,
-      &quot;user_id&quot;: &quot;USER03&quot;,
       &quot;message&quot;: &quot;message-003&quot;
     },
     {
@@ -2781,9 +2776,13 @@ The label will be automatically synced to the child wallet.</p>
       &quot;address&quot;: &quot;0x2386b18e76184367b844a402332703dd2eec2a90&quot;,
       &quot;amount&quot;: &quot;0&quot;,
       &quot;contract_abi&quot;:&quot;create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000&quot;
-      &quot;memo&quot;: &quot;memo-004&quot;,
-      &quot;user_id&quot;: &quot;USER04&quot;,
-      &quot;message&quot;: &quot;message-004&quot;
+      &quot;user_id&quot;: &quot;USER04&quot;
+    },
+    {
+      &quot;order_id&quot;: &quot;888888_5&quot;,
+      &quot;address&quot;: &quot;0x2386b18e76184367b844a402332703dd2eec2a90&quot;,
+      &quot;amount&quot;: &quot;1&quot;,
+      &quot;token_id&quot;: &quot;985552421&quot;
     }
   ],
   &quot;ignore_black_list&quot;: false
@@ -2859,6 +2858,12 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency</td>
 </tr>
 <tr>
+<td style="text-align: left">token_id</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">optional</td>
+<td style="text-align: left">Specify the token ID to be transferred</td>
+</tr>
+<tr>
 <td style="text-align: left">ignore_black_list</td>
 <td style="text-align: left">boolean</td>
 <td style="text-align: left">optional, default <code>false</code></td>
@@ -2873,6 +2878,8 @@ The label will be automatically synced to the child wallet.</p>
 <p>block_average_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.</p>
 
 <p>The format of the <code>contract_abi</code> is <code>ABI_method:hex_parameters</code>, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by <a href="https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters">web3.eth.abi.encodeParameters() of web3.js</a>.</p>
+
+<p>Only ERC721/1155 wallet can use <code>token_id</code> to transfer token. For ERC721 wallets, if <code>token_id</code> is specified, the amount will be ignored.</p>
 </blockquote>
 
 <h5 id="toc_111">Response Format</h5>
@@ -9224,6 +9231,9 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
             <tr><td>blocklist_tags</td><td>The tags of CYBAVO AML detection</td></tr>
             <tr><td>address_label</td><td>The label of the deposit address</td></tr>
             <tr><td>contract_abi</td><td>The contract ABI of the withdrawal request</td></tr>
+            <tr><td>token_id</td><td>Transferred token ID</td></tr>
+            <tr><td>aml_tags</td><td>Detailed CYBAVO AML detection information includes score, tags and blocked flag</td></tr>
+            <tr><td>aml_screen_pass</td><td>Pass or fail CYBAVO AML screening</td></tr>
           </tbody>
         </table>
     </td>
@@ -9253,12 +9263,17 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
             <tr><td>236</td><td>BSV</td><td>8</td></tr>
             <tr><td>354</td><td>DOT</td><td>10</td></tr>
             <tr><td>461</td><td>FIL</td><td>18</td></tr>
+            <tr><td>472</td><td>AR</td><td>12</td></tr>
             <tr><td>501</td><td>SOL</td><td>18</td></tr>
             <tr><td>539</td><td>FLOW</td><td>8</td></tr>
             <tr><td>700</td><td>XDAI</td><td>8</td></tr>
             <tr><td>714</td><td>BNB</td><td>8</td></tr>
             <tr><td>966</td><td>MATIC</td><td>8</td></tr>
             <tr><td>1815</td><td>ADA</td><td>6</td></tr>
+            <tr><td>5353</td><td>HNS</td><td>6</td></tr>
+            <tr><td>52752</td><td>CELO</td><td>18</td></tr>
+            <tr><td>99999999989</td><td>PALM*</td><td>18</td></tr>
+            <tr><td>99999999990</td><td>FTM*</td><td>18</td></tr>
             <tr><td>99999999991</td><td>OKT*</td><td>12</td></tr>
             <tr><td>99999999992</td><td>OPTIMISM*</td><td>12</td></tr>
             <tr><td>99999999993</td><td>ARBITRUM*</td><td>12</td></tr>
@@ -9459,29 +9474,37 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
 <p>Deposit callback with blocklist_tags sample:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;type&quot;: 4,
-  &quot;serial&quot;: 90000009949,
+  &quot;type&quot;: 1,
+  &quot;serial&quot;: 90000002797,
   &quot;order_id&quot;: &quot;&quot;,
   &quot;currency&quot;: &quot;ETH&quot;,
-  &quot;txid&quot;: &quot;0xb74bb5cccf7c024b1b86ded449a7f40e01a2a81dc2298af1eee452de64a7bd15&quot;,
-  &quot;block_height&quot;: 8771833,
-  &quot;tindex&quot;: 1,
+  &quot;txid&quot;: &quot;0xbb38e22c33cbc33ad5a58a88bfee0905968062fe34e33eb6e28861771686cf45&quot;,
+  &quot;block_height&quot;: 11075566,
+  &quot;tindex&quot;: 7,
   &quot;vout_index&quot;: 0,
-  &quot;amount&quot;: &quot;88800000000000&quot;,
-  &quot;fees&quot;: &quot;2142000000000000&quot;,
+  &quot;amount&quot;: &quot;10000000000000000&quot;,
+  &quot;fees&quot;: &quot;31500000315000&quot;,
   &quot;memo&quot;: &quot;&quot;,
-  &quot;broadcast_at&quot;: 1601287122,
-  &quot;chain_at&quot;: 1601287122,
-  &quot;from_address&quot;: &quot;0xf6DabB290FCE73f5617ED381ca90dBb7af0E8295&quot;,
-  &quot;to_address&quot;: &quot;0x42214E5c0eb0960f14AEd3623c172986d5c24A0D&quot;,
-  &quot;wallet_id&quot;: 2,
-  &quot;state&quot;: 3,
-  &quot;confirm_blocks&quot;: 2,
+  &quot;broadcast_at&quot;: 1632195931,
+  &quot;chain_at&quot;: 1632195931,
+  &quot;from_address&quot;: &quot;0xD5909BacFc1faD78e4e45E9e2feF8b4e61c8Fd0d&quot;,
+  &quot;to_address&quot;: &quot;0x319b269ef02AB7e6660f7e6cb181D0CD06E2E4a0&quot;,
+  &quot;wallet_id&quot;: 854512,
   &quot;processing_state&quot;: 2,
   &quot;addon&quot;: {
+    &quot;address_label&quot;: &quot;&quot;,
+    &quot;aml_screen_pass&quot;: false,
+    &quot;aml_tags&quot;: {
+      &quot;cybavo&quot;: {
+        &quot;score&quot;: 100,
+        &quot;tags&quot;: [
+          &quot;TEST&quot;
+        ],
+        &quot;blocked&quot;: true
+      }
+    },
     &quot;blocklist_tags&quot;: [
-      &quot;Involve phishing activity&quot;,
-      &quot;Involve cybercrime related&quot;
+      &quot;cybavo(100): TEST&quot;
     ],
     &quot;fee_decimal&quot;: 18
   },
@@ -9610,6 +9633,11 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
 <td style="text-align: left">18</td>
 </tr>
 <tr>
+<td style="text-align: left">472</td>
+<td style="text-align: left">AR</td>
+<td style="text-align: left">12</td>
+</tr>
+<tr>
 <td style="text-align: left">501</td>
 <td style="text-align: left">SOL</td>
 <td style="text-align: left">9</td>
@@ -9638,6 +9666,26 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
 <td style="text-align: left">1815</td>
 <td style="text-align: left">ADA</td>
 <td style="text-align: left">6</td>
+</tr>
+<tr>
+<td style="text-align: left">5353</td>
+<td style="text-align: left">HNS</td>
+<td style="text-align: left">6</td>
+</tr>
+<tr>
+<td style="text-align: left">52752</td>
+<td style="text-align: left">CELO</td>
+<td style="text-align: left">18</td>
+</tr>
+<tr>
+<td style="text-align: left">99999999989</td>
+<td style="text-align: left">PALM*</td>
+<td style="text-align: left">18</td>
+</tr>
+<tr>
+<td style="text-align: left">99999999990</td>
+<td style="text-align: left">FTM*</td>
+<td style="text-align: left">18</td>
 </tr>
 <tr>
 <td style="text-align: left">99999999991</td>
@@ -9675,7 +9723,7 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
 <blockquote>
 <p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
 
-<p>BSC, WND, OKT, OPTIMISM, ARBITRUM and HECO is a pseudo cryptocurrency definition in the CYBAVO SOFA system</p>
+<p>The * mark represents the definition of pseudo-cryptocurrency in the CYBAVO SOFA system</p>
 </blockquote>
 
 <h5 id="toc_391"><a href="#table-of-contents">Back to top</a></h5>
@@ -9695,11 +9743,11 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
 <tbody>
 <tr>
 <td style="text-align: left">XRP</td>
-<td style="text-align: left">Up to 20 digits</td>
+<td style="text-align: left">Up to 32-bit unsigned integer (max 4294967295)</td>
 </tr>
 <tr>
 <td style="text-align: left">XLM</td>
-<td style="text-align: left">Up to 28 bytes of ASCII/UTF-8</td>
+<td style="text-align: left">Up to 20 chars</td>
 </tr>
 <tr>
 <td style="text-align: left">EOS</td>

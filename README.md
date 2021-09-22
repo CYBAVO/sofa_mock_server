@@ -1145,17 +1145,12 @@ An example of the request:
       "order_id": "888888_2",
       "address": "0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015",
       "amount": "0.0002",
-      "memo": "memo-002",
-      "user_id": "USER02",
-      "message": "message-002",
       "manual_fee": 50
     },
     {
       "order_id": "888888_3",
       "address": "0x9638fa816ccd35389a9a98a997ee08b5321f3eb9",
       "amount": "0.0002",
-      "memo": "memo-003",
-      "user_id": "USER03",
       "message": "message-003"
     },
     {
@@ -1163,9 +1158,13 @@ An example of the request:
       "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
       "amount": "0",
       "contract_abi":"create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
-      "memo": "memo-004",
-      "user_id": "USER04",
-      "message": "message-004"
+      "user_id": "USER04"
+    },
+    {
+      "order_id": "888888_5",
+      "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
+      "amount": "1",
+      "token_id": "985552421"
     }
   ],
   "ignore_black_list": false
@@ -1187,6 +1186,7 @@ The request includes the following parameters:
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
 | block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks |
 | manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency |
+| token_id | string | optional | Specify the token ID to be transferred |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
@@ -1194,6 +1194,8 @@ The request includes the following parameters:
 > block\_average\_fee and manual_fee are mutually exclusive configurations. If neither of these fields is set, the fee will refer to corresponding withdrawal policy of the withdrawal wallet.
 > 
 > The format of the `contract_abi` is `ABI_method:hex_parameters`, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by [web3.eth.abi.encodeParameters() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters).
+> 
+> Only ERC721/1155 wallet can use `token_id` to transfer token. For ERC721 wallets, if `token_id` is specified, the amount will be ignored.
 
 ##### Response Format
 
@@ -4116,6 +4118,9 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 		    <tr><td>blocklist_tags</td><td>The tags of CYBAVO AML detection</td></tr>
 		    <tr><td>address_label</td><td>The label of the deposit address</td></tr>
 		    <tr><td>contract_abi</td><td>The contract ABI of the withdrawal request</td></tr>
+		    <tr><td>token_id</td><td>Transferred token ID</td></tr>
+		    <tr><td>aml_tags</td><td>Detailed CYBAVO AML detection information includes score, tags and blocked flag</td></tr>
+		    <tr><td>aml_screen_pass</td><td>Pass or fail CYBAVO AML screening</td></tr>
 	 	  </tbody>
 		</table>
     </td>
@@ -4145,12 +4150,17 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
    		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
+   		    <tr><td>472</td><td>AR</td><td>12</td></tr>
    		    <tr><td>501</td><td>SOL</td><td>18</td></tr>
    		    <tr><td>539</td><td>FLOW</td><td>8</td></tr>
    		    <tr><td>700</td><td>XDAI</td><td>8</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
    		    <tr><td>966</td><td>MATIC</td><td>8</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
+   		    <tr><td>5353</td><td>HNS</td><td>6</td></tr>
+   		    <tr><td>52752</td><td>CELO</td><td>18</td></tr>
+   		    <tr><td>99999999989</td><td>PALM*</td><td>18</td></tr>
+   		    <tr><td>99999999990</td><td>FTM*</td><td>18</td></tr>
    		    <tr><td>99999999991</td><td>OKT*</td><td>12</td></tr>
    		    <tr><td>99999999992</td><td>OPTIMISM*</td><td>12</td></tr>
    		    <tr><td>99999999993</td><td>ARBITRUM*</td><td>12</td></tr>
@@ -4263,29 +4273,37 @@ Deposit callback with blocklist_tags sample:
 
 ```json
 {
-  "type": 4,
-  "serial": 90000009949,
+  "type": 1,
+  "serial": 90000002797,
   "order_id": "",
   "currency": "ETH",
-  "txid": "0xb74bb5cccf7c024b1b86ded449a7f40e01a2a81dc2298af1eee452de64a7bd15",
-  "block_height": 8771833,
-  "tindex": 1,
+  "txid": "0xbb38e22c33cbc33ad5a58a88bfee0905968062fe34e33eb6e28861771686cf45",
+  "block_height": 11075566,
+  "tindex": 7,
   "vout_index": 0,
-  "amount": "88800000000000",
-  "fees": "2142000000000000",
+  "amount": "10000000000000000",
+  "fees": "31500000315000",
   "memo": "",
-  "broadcast_at": 1601287122,
-  "chain_at": 1601287122,
-  "from_address": "0xf6DabB290FCE73f5617ED381ca90dBb7af0E8295",
-  "to_address": "0x42214E5c0eb0960f14AEd3623c172986d5c24A0D",
-  "wallet_id": 2,
-  "state": 3,
-  "confirm_blocks": 2,
+  "broadcast_at": 1632195931,
+  "chain_at": 1632195931,
+  "from_address": "0xD5909BacFc1faD78e4e45E9e2feF8b4e61c8Fd0d",
+  "to_address": "0x319b269ef02AB7e6660f7e6cb181D0CD06E2E4a0",
+  "wallet_id": 854512,
   "processing_state": 2,
   "addon": {
+    "address_label": "",
+    "aml_screen_pass": false,
+    "aml_tags": {
+      "cybavo": {
+        "score": 100,
+        "tags": [
+          "TEST"
+        ],
+        "blocked": true
+      }
+    },
     "blocklist_tags": [
-      "Involve phishing activity",
-      "Involve cybercrime related"
+      "cybavo(100): TEST"
     ],
     "fee_decimal": 18
   },
@@ -4329,12 +4347,17 @@ Deposit callback with blocklist_tags sample:
 | 236  | BSV             | 8 |
 | 354  | DOT             | 10 |
 | 461  | FIL             | 18 |
+| 472  | AR              | 12 |
 | 501  | SOL             | 9 |
 | 539  | FLOW            | 8 |
 | 700  | XDAI            | 18 |
 | 714  | BNB             | 8 |
 | 966  | MATIC           | 18 |
 | 1815 | ADA             | 6 |
+| 5353 | HNS             | 6 |
+| 52752 | CELO           | 18 |
+| 99999999989 | PALM*    | 18 |      
+| 99999999990 | FTM*     | 18 |
 | 99999999991 | OKT*     | 18 |
 | 99999999992 | OPTIMISM* | 18 |
 | 99999999993 | ARBITRUM* | 18 |
@@ -4344,7 +4367,7 @@ Deposit callback with blocklist_tags sample:
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
-> BSC, WND, OKT, OPTIMISM, ARBITRUM and HECO is a pseudo cryptocurrency definition in the CYBAVO SOFA system
+> The * mark represents the definition of pseudo-cryptocurrency in the CYBAVO SOFA system
  
 ##### [Back to top](#table-of-contents)
 
@@ -4353,8 +4376,8 @@ Deposit callback with blocklist_tags sample:
 
 | Currency | Description |
 | :--- | :---        |
-| XRP | Up to 20 digits |
-| XLM | Up to 28 bytes of ASCII/UTF-8 |
+| XRP | Up to 32-bit unsigned integer (max 4294967295) |
+| XLM | Up to 20 chars |
 | EOS | Up to 256 chars |
 | BNB | Up to 128 chars |
 
