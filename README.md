@@ -1185,7 +1185,7 @@ The request includes the following parameters:
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
 | block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks |
-| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency |
+| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**|
 | token_id | string | optional | Specify the token ID to be transferred |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
@@ -2325,10 +2325,10 @@ The response includes the following parameters:
 | fee | string | Transaction blockchain fee |
 | memo | string | Memo of the transaction |
 | source | string | `withdraw-api` means that the transaction was triggered by the withdrawal API, otherwise it was triggered from the web withdrawal UI |
-| state | int | Refer to [Transaction State Definition](#api-transaction-state-filter) bellow |
+| state | int | Refer to [State Definition](#state-definition) bellow |
 
-<a name="api-transaction-state-filter"></a>
-###### Transaction State Definition
+<a name="state-definition"></a>
+###### State Definition
 
 | ID   | Description |
 | :--- | :---        |
