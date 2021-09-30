@@ -2849,13 +2849,13 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">block_average_fee</td>
 <td style="text-align: left">int</td>
 <td style="text-align: left">optional, range <code>1~30</code></td>
-<td style="text-align: left">Use average blockchain fee within latest N blocks</td>
+<td style="text-align: left">Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.</td>
 </tr>
 <tr>
 <td style="text-align: left">manual_fee</td>
 <td style="text-align: left">int</td>
 <td style="text-align: left">optional, range <code>1~1000</code></td>
-<td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency <strong><code>(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)</code></strong></td>
+<td style="text-align: left">Specify blockchain fee in smallest unit of wallet currency <strong><code>(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)</code></strong>. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.</td>
 </tr>
 <tr>
 <td style="text-align: left">token_id</td>
@@ -2880,6 +2880,8 @@ The label will be automatically synced to the child wallet.</p>
 <p>The format of the <code>contract_abi</code> is <code>ABI_method:hex_parameters</code>, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by <a href="https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters">web3.eth.abi.encodeParameters() of web3.js</a>.</p>
 
 <p>Only ERC721/1155 wallet can use <code>token_id</code> to transfer token. For ERC721 wallets, if <code>token_id</code> is specified, the amount will be ignored.</p>
+
+<p>The <code>block\_average_fee</code> and <code>manual_fee</code> do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.</p>
 </blockquote>
 
 <h5 id="toc_111">Response Format</h5>

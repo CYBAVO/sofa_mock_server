@@ -1184,8 +1184,8 @@ The request includes the following parameters:
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
-| block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks |
-| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**|
+| block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
+| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
@@ -1196,6 +1196,8 @@ The request includes the following parameters:
 > The format of the `contract_abi` is `ABI_method:hex_parameters`, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by [web3.eth.abi.encodeParameters() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters).
 > 
 > Only ERC721/1155 wallet can use `token_id` to transfer token. For ERC721 wallets, if `token_id` is specified, the amount will be ignored.
+> 
+> The `block\_average_fee` and `manual_fee ` do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.
 
 ##### Response Format
 
