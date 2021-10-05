@@ -1387,9 +1387,13 @@ The label will be automatically synced to the child wallet.</p>
 <p>Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrencies.</p>
 
 <blockquote>
-<p>In BTC, ETH, BCH or LTC, the cryptocurrency in the pool address will be used to pay for token transfer(ex. ERC20, USDT-Omni).</p>
+<p>In BTC or ETH, the cryptocurrency in the pool address will be used to pay for token transfer(ex. USDT-Omni, ERC20).</p>
+
+<p>BCH/BSV need at least 0.01 BCH/BSV in the pool address for polluting the non-fork coin and make the collection successfully.</p>
 
 <p>In EOS, XRP, XLM or BNB, the pool address is the user&#39;s deposit address. All user deposits will be distinguished by memo / tag field.</p>
+
+<p>LTC, DOGE, DASH, DOT(WND), FIL. SOL and ADA does not support pool address.</p>
 </blockquote>
 
 <h5 id="toc_43">Request</h5>
@@ -1516,6 +1520,13 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">API Secret not valid</td>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code permission</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">703</td>
+<td style="text-align: left">this wallet does not support pool address</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">-</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
@@ -9196,6 +9207,7 @@ http://localhost:8889/v1/mock/wallets/896541/notifications/inspect</code></pre><
             <tr><td>5</td><td>Failed (the err_reason of addon field will contain detailed error reason)</td></tr>
             <tr><td>8</td><td>Cancelled</td></tr>
             <tr><td>10</td><td>Dropped</td></tr>
+            <tr><td>11</td><td>Transaction Failed</td></tr>
           </tbody>
         </table>
     </td>

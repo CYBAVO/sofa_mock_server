@@ -547,9 +547,13 @@ The response includes the following parameters:
 
 Get the pool address of a deposit wallet. The pool address has different functionality in different cryptocurrencies.
 
-> In BTC, ETH, BCH or LTC, the cryptocurrency in the pool address will be used to pay for token transfer(ex. ERC20, USDT-Omni).
+> In BTC or ETH, the cryptocurrency in the pool address will be used to pay for token transfer(ex. USDT-Omni, ERC20).
+> 
+> BCH/BSV need at least 0.01 BCH/BSV in the pool address for polluting the non-fork coin and make the collection successfully.
 > 
 > In EOS, XRP, XLM or BNB, the pool address is the user's deposit address. All user deposits will be distinguished by memo / tag field.
+> 
+> LTC, DOGE, DASH, DOT(WND), FIL. SOL and ADA does not support pool address.
 
 ##### Request
 
@@ -598,6 +602,7 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 703 | this wallet does not support pool address | - | - |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
@@ -4083,6 +4088,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 		    <tr><td>5</td><td>Failed (the err_reason of addon field will contain detailed error reason)</td></tr>
 		    <tr><td>8</td><td>Cancelled</td></tr>
 		    <tr><td>10</td><td>Dropped</td></tr>
+		    <tr><td>11</td><td>Transaction Failed</td></tr>
 	 	  </tbody>
 		</table>
     </td>
