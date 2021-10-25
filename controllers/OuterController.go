@@ -924,3 +924,57 @@ func (c *OuterController) GetAutoFees() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Sign Message
+// @router /wallets/:wallet_id/signmessage [post]
+func (c *OuterController) SignMessage() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/signmessage", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("SignMessage failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Call contract read ABI
+// @router /wallets/:wallet_id/contract/read [get]
+func (c *OuterController) CallContractRead() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/contract/read", walletID),
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("CallContractRead failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Get transaction event logs
+// @router /wallets/:wallet_id/sender/transactions/eventlog [get]
+func (c *OuterController) GetTransactionEventLog() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "GET", fmt.Sprintf("/v1/sofa/wallets/%d/sender/transactions/eventlog",
+		walletID), getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetTransactionEventLog failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

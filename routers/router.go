@@ -28,6 +28,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/:order_id/cancel", &controllers.OuterController{}, "POST:CancelWithdrawTransactions")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/:order_id", &controllers.OuterController{}, "GET:GetWithdrawTransactionState")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/:order_id/all", &controllers.OuterController{}, "GET:GetWithdrawTransactionStateAll")
+	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions/eventlog", &controllers.OuterController{}, "GET:GetTransactionEventLog")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/transactions", &controllers.OuterController{}, "GET:GetSenderTransactionHistory")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/balance", &controllers.OuterController{}, "GET:GetWithdrawalWalletBalance")
 	beego.Router("/v1/mock/wallets/:wallet_id/apisecret", &controllers.OuterController{}, "GET:GetTxAPITokenStatus")
@@ -56,6 +57,8 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/config", &controllers.OuterController{}, "GET:QuerySenderWhitelistConfig")
 	beego.Router("/v1/mock/wallets/:wallet_id/sender/whitelist/check", &controllers.OuterController{}, "POST:CheckSenderWhitelist")
 	beego.Router("/v1/mock/wallets/readonly/walletlist", &controllers.OuterController{}, "GET:GetReadOnlyWalletList")
+	beego.Router("/v1/mock/wallets/:wallet_id/signmessage", &controllers.OuterController{}, "POST:SignMessage")
+	beego.Router("/v1/mock/wallets/:wallet_id/contract/read", &controllers.OuterController{}, "GET:CallContractRead")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")

@@ -23,6 +23,7 @@
 		- [Cancel Withdrawal Request](#cancel-withdrawal-request)
 		- [Query Latest Withdrawal Transaction State](#query-latest-withdrawal-transaction-state)
 		- [Query All Withdrawal Transaction States](#query-all-withdrawal-transaction-states)
+		- [Query Withdrawal Transaction Event Logs](#query-withdrawal-transaction-event-logs)
 		- [Query Withdrawal Wallet Balance](#query-withdrawal-wallet-balance)
 		- [Query Withdrawal Callback Detail](#query-withdrawal-callback-detail)
 		- [Set Withdrawal Request ACL](#set-withdrawal-request-acl)
@@ -33,6 +34,8 @@
 		- [Check Withdrawal Whitelist](#check-withdrawal-whitelist)
 		- [Query Withdrawal Whitelist](#query-withdrawal-whitelist)
 		- [Query Withdrawal Wallet Transaction History](#query-withdrawal-wallet-transaction-history)
+		- [Sign Message](#sign-message)
+		- [Call Contract Read ABI](#call-contract-read-abi)
 	- Deposit / Withdraw Wallet Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
@@ -153,7 +156,7 @@ It is important to distinguish between unique callbacks to avoid improper handli
 - Please refer to the code snippet on the github project to know how to validate the callback payload.
 	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L197)
 	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MockController.java#L93)
-	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L399)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/wallets.js#L352)
 	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L207)
 	- [C#](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/c%23/checksum.cs#L89)
 	- [Python](https://github.com/CYBAVO/API_CHECKSUM_CALC/blob/main/python/checksum.py#L64)
@@ -1189,8 +1192,8 @@ The request includes the following parameters:
 | memo | string | optional | Memo on blockchain (This memo will be sent to blockchain). Refer to [Memo Requirement](#memo-requirement) |
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
-| block\_average_fee | int | optional, range `1~30` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
-| manual_fee | int | optional, range `1~1000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
+| block\_average_fee | int | optional, range `1~100` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
+| manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
 
@@ -1498,6 +1501,100 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
 | 404 | 304 | Wallet ID invalid | - | The {ORDER\_ID} not found |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-withdrawal-transaction-event-logs"></a>
+### Query Withdrawal Transaction Event Logs
+
+Query event logs of a withdrawal transaction by transaction hash.
+
+##### Request
+
+`VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/eventlog?txid=`TXID`
+
+> `WALLET_ID` should be a withdrawal wallet ID
+
+- [Sample curl command](#curl-query-withdrawal-transaction-event-logs)
+
+##### Request Format
+
+An example of the request:
+
+###### API with parameters
+
+```
+/v1/sofa/wallets/345312/sender/transactions/eventlog?txid=0xe82f0be9b30d840eca64e28e6f7562b7352b3b54519a7e63fb8f6d4609194bb9
+```
+
+The request includes the following parameters:
+
+###### Query Parameters
+
+| Field | Type | Note | Description |
+| :---  | :--- | :--- | :---        |
+| txid | string | required | Representing the transaction hash to query the event log |
+
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "logs": [
+    {
+      "address": "0xeCb258697e1A4B1fE11A43fC93bD4907f1EC8c04",
+      "block_hash": "0x37b6b94b8fac1eb810ddda89ceedabd37f1017f671fe41a245dc6558a25cb4bf",
+      "block_number": 11173598,
+      "data": "000000000000000000000000000000000000000000000000000000003b9aca00",
+      "index": 0,
+      "removed": false,
+      "topics": [
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "0x000000000000000000000000a952d7fc7965bec3cb03c79084236534ee2ab3cd",
+        "0x000000000000000000000000d5909bacfc1fad78e4e45e9e2fef8b4e61c8fd0d"
+      ],
+      "tx_hash": "0xe82f0be9b30d840eca64e28e6f7562b7352b3b54519a7e63fb8f6d4609194bb9",
+      "tx_index": 0
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| logs | array | The event logs |
+| address | string | From which this event originated from |
+| block_hash | string | Hash of the block where this transaction was in |
+| block_number | uint64 | Block number where this transaction was in |
+| data | string | The data containing non-indexed log parameter |
+| index | uint | Integer of the event index position in the block |
+| removed | boolean | Indicate the log is removed (due to chain reorg)  |
+| topics | array | An array of values which must each appear in the log entries |
+| tx_hash | string | Hash of the transaction |
+| tx_index | uint | Integer of the transactions index position in the block |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Missing necessary parameters |
+| 400 | 112 | Invalid parameter | {TXID} not found | No relevant withdrawal request to TXID |
+| 400 | 112 | Invalid parameter | {TXID} not in blockchain | Only in-chain withdrawal transactions allowed to query event log |
+| 400 | 303 | Invalid currency | - | Not supported cryptocurrency to query event log |
 
 ##### [Back to top](#table-of-contents)
 
@@ -2361,6 +2458,158 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="sign-message"></a>
+### Sign Message
+
+Sign message, equivalent to `eth_sign`.
+
+##### Request
+
+`VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/signmessage
+
+> `WALLET_ID` must be a withdrawal wallet ID
+
+- [Sample curl command](#curl-sign-message)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/557432/signmessage
+```
+
+###### Post body
+
+```json
+{
+  "message": "This is proof that I, user A, have access to this address."
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| message | string | required | Message to be signed |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "signed_message": "0xf296a678ce1d577acbee25119b7be821db70e960d6e65ef73fb1e50fa832759d27d35df2dd309be07cb5a9b9f6c87f5eeae11ff56b995e0b32d6288b1039555b2a"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| signed_message | string | Signed message |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 303 | Invalid currency | - | The wallet is not allowed to perform this request |
+| 404 | 304 | Wallet ID invalid | mapped wallet not supported | - |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="call-contract-read-abi"></a>
+### Call Contract Read ABI
+
+Executes a contract read ABI call.
+
+##### Request
+
+`VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/contract/read?contract=`contract_address`&data=`data`
+
+> `WALLET_ID` should be a withdrawal wallet ID
+
+- [Sample curl command](#curl-call-contract-read-abi)
+
+##### Request Format
+
+An example of the request:
+
+###### API with parameters
+
+```
+/v1/sofa/wallets/345312/contract/read?contract=0xad6d458402f60fd3bd25163575031acdce07538d&data=0xdd62ed3e000000000000000000000000d11bd6e308b8dc1c5243d54cf41a427ca0f46943000000000000000000000000e592427a0aece92de3edee1f18e0157c05861564
+```
+
+The request includes the following parameters:
+
+###### Query Parameters
+
+| Field | Type | Note | Description |
+| :---  | :--- | :--- | :---        |
+| contract | string | required | Representing the contract to interact with |
+| data | string | requried | The hash of the method signature and encoded parameters |
+
+> The `data` must be encoded by [web3.eth.abi.encodeFunctionCall() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeFunctionCall).
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "output": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| output | string | The output of read ABI call |
+
+> The `output` can be decoded by [web3.eth.abi.decodeparameters() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#decodeparameters).
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 404 | 304 | Wallet ID invalid | wrong wallet type | - |
+| 404 | 304 | Wallet ID invalid | archived wallet | - |
+| 404 | 304 | Wallet ID invalid | mapped wallet not supported | - |
+| 400 | 112 | Invalid parameter | - | Missing necessary parameters |
+| 400 | 112 | Operation failed | invalid address: {contract_address} | The contract address does not conform to the cryptocurrency format |
+| 400 | 112 | Invalid parameter | no contract policy | There is no contract policy of the given wallet |
+| 400 | 112 | Invalid parameter | unsupported contract | There is no contract policy of the given contract address |
+| 400 | 303 | Invalid currency | - | Not supported cryptocurrency to call contract read ABI |
+
+##### [Back to top](#table-of-contents)
+
+
 # Deposit / Withdrawal Wallet Common API
 
 <a name="query-callback-history"></a>
@@ -2662,7 +2911,7 @@ The request includes the following parameters:
 
 | Field | Type  | Note | Description |
 | :---  | :---  | :---     | :---        |
-| block_num | int | optional, default `1`, range `1~30` | Query the average blockchain fee in the last N blocks |
+| block_num | int | optional, default `1`, range `1~100` | Query the average blockchain fee in the last N blocks |
 
 ##### Response Format
 
@@ -2737,7 +2986,7 @@ The request includes the following parameters:
 
 | Field | Type  | Note | Description |
 | :---  | :---  | :---     | :---        |
-| block_nums | array | required, max 5 entries, each entry is range `1~30` | Batch query the average blockchain fee in the last N blocks |
+| block_nums | array | required, max 5 entries, each entry is range `1~100` | Batch query the average blockchain fee in the last N blocks |
 
 ##### Response Format
 
@@ -3743,6 +3992,15 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDE
 - [API definition](#query-all-withdrawal-transaction-states)
 
 
+<a name="curl-query-withdrawal-transaction-event-logs"></a>
+### Query Withdrawal Transaction Event Logs
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/eventlog?txid={TXID}
+```
+- [API definition](#query-withdrawal-transaction-event-logs)
+
+
 <a name="curl-query-withdrawal-wallet-balance"></a>
 ### Query Withdrawal Wallet Balance
 
@@ -3787,6 +4045,25 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/config
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions
 ```
 - [API definition](#query-withdrawal-wallet-transaction-history)
+
+
+<a name="curl-sign-message"></a>
+### Sign Message
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"message":"This is proof that I, user A, have access to this address."}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signmessage
+```
+- [API definition](#sign-message)
+
+
+<a name="curl-call-contract-read-abi"></a>
+### Call Contract Read ABI
+
+```
+curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/contract/read?contract=0xad6d458402f60fd3bd25163575031acdce07538d&data=0xdd62ed3e000000000000000000000000d11bd6e308b8dc1c5243d54cf41a427ca0f46943000000000000000000000000e592427a0aece92de3edee1f18e0157c05861564
+```
+- [API definition](#call-contract-read-abi)
 
 
 <a name="curl-add-withdrawal-whitelist-entry"></a>
