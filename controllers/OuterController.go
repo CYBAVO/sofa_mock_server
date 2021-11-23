@@ -978,3 +978,20 @@ func (c *OuterController) GetTransactionEventLog() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Get balances of the wallet list that the read-only API token can access
+// @router /wallets/readonly/walletlist/balances [get]
+func (c *OuterController) GetReadOnlyWalletListBalances() {
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest(0, "GET", "/v1/sofa/wallets/readonly/walletlist/balances",
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetReadOnlyWalletListBalances failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

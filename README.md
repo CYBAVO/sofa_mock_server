@@ -54,6 +54,7 @@
 		- [Inspect Callback Endpoint](#inspect-callback-endpoint)
 	- Read-only API code API
 		- [List Wallets](#list-wallets)
+		- [Query Wallets Balance](#query-wallets-balance)
 - Testing
 	- [Mock Server](#mock-server)
 	- [cURL Testing Commands](#curl-testing-commands)
@@ -63,6 +64,7 @@
 	- [Transaction State Definition](#transaction-state-definition)
 	- [Callback Type Definition](#callback-type-definition)
 	- [Currency Definition](#currency-definition)
+	- [Support Unconfirmed Balance Currency](#support-unconfirmed-balance-currency)
 	- [Memo Requirement](#memo-requirement)
 
 <a name="get-started"></a>
@@ -1196,6 +1198,7 @@ The request includes the following parameters:
 | manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
+| ignore\_gas\_estimate_fail | boolean | optional, default `false` | **FOR DEBUG PURPOSE ONLY**. After setting, the ABI EVM gas estimation will not be performed. |
 
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
 >
@@ -3794,6 +3797,134 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-wallets-balance"></a>
+### Query Wallets Balance
+
+Query balance of all wallets can be accessed by the inquiry read-only API code.
+
+##### Request
+
+`VIEW` **GET** /v1/sofa/wallets/readonly/walletlist/balances?type=`type`&start_index=`start_index`&request\_number=`request_number`
+
+> The API code must be a read-only API code.
+
+- [Sample curl command](#curl-query-wallets-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/readonly/walletlist/balances
+```
+
+The request includes the following parameters:
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| type | int | optional, default `-1` | Specify the wallet type want to query. Supports Vault, Deposit and Withdrawal wallet type. Refer to [Wallet Type Definition](#wallet-type-definition)| |
+| start_index | int | optional, default `0` | Specify start index |
+| request_number | int | optional, default `50`, max `100` | Request count |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "total": 104,
+  "wallet_balances": [
+    {
+      "balance": "1",
+      "type": 0,
+      "wallet_id": 417702
+    },
+    {
+      "balance": "0.35673727953125",
+      "token_balance": "0.00000099",
+      "type": 0,
+      "wallet_id": 426493
+    },
+    {
+      "balance": "4.661838507219943297",
+      "token_id_balances": [
+        {
+          "balance": "4",
+          "token_id": "2001"
+        },
+        {
+          "balance": "50000",
+          "token_id": "2004"
+        },
+        {
+          "balance": "0",
+          "token_id": "2005"
+        }
+      ],
+      "type": 0,
+      "wallet_id": 661159
+    },
+    {
+      "balance": "0.010000000000000000",
+      "pool_balance": "0.414979",
+      "type": 2,
+      "wallet_id": 520474
+    },
+    {
+      "balance": "27.46735753510800289",
+      "token_balance": "0",
+      "type": 3,
+      "wallet_id": 100587
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| wallet_id | int64 | Wallet ID |
+| wallet_name | string | Wallet Name |
+| address | string | Wallet address |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| currency_name | string | Name of currency |
+| decimals | string | Decimals of currency |
+| type | int | Wallet Type. Refer to [Wallet Type Definition](#wallet-type-definition)|
+| token_name | string | Token name |
+| token_symbol | string | Token symbol |
+| token\_contract_address | string | Token contract address |
+| token_decimals | string | Token decimals |
+| error | boolean | Set to true if the balance query fails |
+| balance | string | Wallet balance. For token wallet this is mapping wallet's balance. |
+| unconfirm\_balance | string | Unconfirmed wallet balance. For token wallet this is mapping wallet's unconfirmed balance. |
+| token_balance | string | Wallet token balance |
+| unconfirm\_token_balance | string | Unconfirmed wallet token balance |
+| pool_balance | string | Wallet pool address balance (Deposit Wallet only) |
+| pool_unconfirm\_token_balance | string | Wallet Pool address unconfirmed balance (Deposit Wallet only) |
+| token_id_balances | array | For ERC1155 token wallet |
+
+> Refer to [Support Unconfirmed Balance Currency](#support-unconfirmed-balance-currency) for the currencies that support the unconfirmed balance.
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -4245,6 +4376,16 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
 ```
 - [API definition](#list-wallets)
 
+
+<a name="curl-query-wallets-balance"></a>
+### Query Wallets Balance
+
+```
+curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
+```
+- [API definition](#query-wallets-balance)
+
+
 ##### [Back to top](#table-of-contents)
 
 <a name="other-language-versions"></a>
@@ -4434,6 +4575,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
    		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
    		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
+   		    <tr><td>434</td><td>KSM</td><td>12</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
    		    <tr><td>472</td><td>AR</td><td>12</td></tr>
    		    <tr><td>501</td><td>SOL</td><td>18</td></tr>
@@ -4441,9 +4583,11 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist
    		    <tr><td>700</td><td>XDAI</td><td>8</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
    		    <tr><td>966</td><td>MATIC</td><td>8</td></tr>
+   		    <tr><td>1023</td><td>ONE</td><td>6</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
    		    <tr><td>5353</td><td>HNS</td><td>6</td></tr>
    		    <tr><td>52752</td><td>CELO</td><td>18</td></tr>
+   		    <tr><td>99999999988</td><td>AVAX-C*</td><td>18</td></tr>
    		    <tr><td>99999999989</td><td>PALM*</td><td>18</td></tr>
    		    <tr><td>99999999990</td><td>FTM*</td><td>18</td></tr>
    		    <tr><td>99999999991</td><td>OKT*</td><td>12</td></tr>
@@ -4598,7 +4742,6 @@ Deposit callback with blocklist_tags sample:
 }
 ```
 
-
 ##### [Back to top](#table-of-contents)
 
 <a name="callback-type-definition"></a>
@@ -4631,6 +4774,7 @@ Deposit callback with blocklist_tags sample:
 | 195  | TRX             | 6 |
 | 236  | BSV             | 8 |
 | 354  | DOT             | 10 |
+| 434  | KSM             | 12 |
 | 461  | FIL             | 18 |
 | 472  | AR              | 12 |
 | 501  | SOL             | 9 |
@@ -4638,9 +4782,11 @@ Deposit callback with blocklist_tags sample:
 | 700  | XDAI            | 18 |
 | 714  | BNB             | 8 |
 | 966  | MATIC           | 18 |
+| 1023 | ONE             | 18 |
 | 1815 | ADA             | 6 |
 | 5353 | HNS             | 6 |
 | 52752 | CELO           | 18 |
+| 99999999988 | AVAX-C*  | 18 |
 | 99999999989 | PALM*    | 18 |      
 | 99999999990 | FTM*     | 18 |
 | 99999999991 | OKT*     | 18 |
@@ -4653,8 +4799,37 @@ Deposit callback with blocklist_tags sample:
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
 > The * mark represents the definition of pseudo-cryptocurrency in the CYBAVO SOFA system
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="support-unconfirmed-balance-currency"></a>
+### Support Unconfirmed Balance Currency
+
+| ID   | Currency Symbol |
+| :--- | :---            |
+| 0    | BTC             |
+| 2    | LTC             |
+| 3    | DOGE            |
+| 5    | DASH            |
+| 60   | ETH             |
+| 145  | BCH (BCHN)      |
+| 236  | BSV             |
+| 700  | XDAI            |
+| 966  | MATIC           |
+| 1023 | ONE             |
+| 52752 | CELO           |
+| 99999999988 | AVAX-C*  |
+| 99999999989 | PALM*    |
+| 99999999990 | FTM*     |
+| 99999999991 | OKT*     |
+| 99999999992 | OPTIMISM* |
+| 99999999993 | ARBITRUM* |
+| 99999999994 | HECO*    |
+| 99999999997 | BSC*     |
  
 ##### [Back to top](#table-of-contents)
+
 
 <a name="memo-requirement"></a>
 ### Memo Requirement
