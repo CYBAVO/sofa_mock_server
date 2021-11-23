@@ -577,7 +577,7 @@ Use paired refresh code to acquire the new inactive API code/secret of the merch
 
 ##### Request
 
-**POST** /v1/merchant/`MERCHANT_ID`/refreshsecret
+**POST** /v1/merchant/`MERCHANT_ID`/apisecret/refreshsecret
 
 - [Sample curl command](#curl-refresh-merchant-api-code)
 
@@ -588,7 +588,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/merchant/520335069/refreshsecret
+/v1/merchant/520335069/apisecret/refreshsecret
 ```
 
 ###### Post body
@@ -762,7 +762,7 @@ curl http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret
 curl -X POST -H "Content-Type: application/json" -d '{"refresh_code":"3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra"}' \
 http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret
 ```
-- [API definition](#refresh-merchant-api-code-status)
+- [API definition](#refresh-merchant-api-code)
 
 
 ##### [Back to top](#table-of-contents)
