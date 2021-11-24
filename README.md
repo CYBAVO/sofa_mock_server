@@ -1040,7 +1040,7 @@ An example of the request:
 ###### API
 
 ```
-/v1/sofa/wallets/98675/addresses/label
+/v1/sofa/wallets/98675/addresses/get_labels
 ```
 
 ###### Post body
