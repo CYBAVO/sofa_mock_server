@@ -21,6 +21,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses", &controllers.OuterController{}, "GET:GetDepositWalletAddresses")
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses/label", &controllers.OuterController{}, "POST:UpdateDepositWalletAddressLabel")
 	beego.Router("/v1/mock/wallets/:wallet_id/addresses/get_labels", &controllers.OuterController{}, "POST:GetDepositWalletAddressesLabel")
+	beego.Router("/v1/mock/wallets/:wallet_id/receiver/addresses/verify", &controllers.OuterController{}, "POST:VerifyDepositAddresses")
 	beego.Router("/v1/mock/wallets/:wallet_id/pooladdress", &controllers.OuterController{}, "GET:GetDepositWalletPoolAddress")
 	beego.Router("/v1/mock/wallets/:wallet_id/pooladdress/balance", &controllers.OuterController{}, "GET:GetDepositWalletPoolAddressBalance")
 	beego.Router("/v1/mock/wallets/:wallet_id/collection/notifications/manual", &controllers.OuterController{}, "POST:ResendDepositCollectionCallbacks")

@@ -995,3 +995,21 @@ func (c *OuterController) GetReadOnlyWalletListBalances() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Verify Deposit Addresses
+// @router /wallets/:wallet_id/receiver/addresses/verify [post]
+func (c *OuterController) VerifyDepositAddresses() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/receiver/addresses/verify", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("VerifyDepositAddresses failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

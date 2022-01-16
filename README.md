@@ -8,6 +8,7 @@
 - REST API
 	- Deposit Wallet API
 		- [Create Deposit Addresses](#create-deposit-addresses)
+		- [Verify Deposit Addresses](#verify-deposit-addresses)
 		- [Query Deposit Addresses](#query-deposit-addresses)
 		- [Query Deployed Contract Deposit Addresses](#query-deployed-contract-deposit-addresses)
 		- [Query Pool Address](#query-pool-address)
@@ -203,6 +204,8 @@ transaction in chain state(3) -> repeats state 3 until the confirmation count is
 
 Create deposit addresses on certain wallet. Once addresses are created, the CYBAVO SOFA system will callback when transactions are detected on these addresses.
 
+> TIP: Use the [Verification API](#verify-deposit-addresses) to verify the address before depositing assets.
+
 ##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
@@ -343,6 +346,96 @@ The response includes the following parameters:
 | 400 | 947 | The max length of XRP destination tag is 20 chars | - | Reached the limit of the length of XRP destination tag |
 | 400 | 948 | The max length of XLM memo is 20 chars | - | Reached the limit of the length of XLM memo |
 | 404 | 304 | Wallet ID invalid | archived wallet or wrong wallet type | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="verify-deposit-addresses"></a>
+### Verify Deposit Addresses
+
+Verify that these addresses belong to a deposit wallet.
+
+##### Request
+
+`VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/receiver/addresses/verify
+
+> `WALLET_ID` must be a deposit wallet ID
+
+- [Sample curl command](#curl-verify-deposit-addresses)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/98675/receiver/addresses/verify
+```
+
+###### Post body
+
+```json
+{
+  "addresses": [
+    "0x46d4AD967F68253f61D45a044dC7dC7B13E5A4B3",
+    "0x107FF19Ea5fB7de78392e7AcC2A2C7eace891bDc"
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---  | :---        |
+| addresses | array | required | Specify the addresses to be verified |
+
+> If the address can not be found or invalid, it will not be listed in the response.
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "addresses": {
+    "0x107FF19Ea5fB7de78392e7AcC2A2C7eace891bDc": {
+      "create_time": "2021-12-05T16:23:20Z",
+      "label": "987444413"
+    },
+    "0x46d4AD967F68253f61D45a044dC7dC7B13E5A4B3": {
+      "create_time": "2021-12-05T16:23:20Z",
+      "label": ""
+    }
+  }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| addresses | key-value pairs | The address-info pairs |
+| label | string | Associated label |
+| create_time | string | Address creation time (UTC) |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 
 ##### [Back to top](#table-of-contents)
 
@@ -1168,7 +1261,8 @@ An example of the request:
       "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
       "amount": "0",
       "contract_abi":"create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
-      "user_id": "USER04"
+      "user_id": "USER04",
+      "ignore_gas_estimate_fail": true
     },
     {
       "order_id": "888888_5",
@@ -1195,10 +1289,10 @@ The request includes the following parameters:
 | user_id | string | optional | Specify certain user |
 | message | string | optional | Message (This message only saved on CYBAVO, not sent to blockchain) |
 | block\_average_fee | int | optional, range `1~100` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
-| manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei)`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
+| manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei. The unit returned by the Query Average Fee API is wei, divided by 1000000000 to get the correct unit.`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
-| ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. |
-| ignore\_gas\_estimate_fail | boolean | optional, default `false` | **FOR DEBUG PURPOSE ONLY**. After setting, the ABI EVM gas estimation will not be performed. |
+| ignore\_gas\_estimate_fail | boolean | optional, default `false` | **FOR DEBUG PURPOSE ONLY**. After setting, the ABI EVM gas estimation will not be performed(**Apply to individual order**). |
+| ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. **Apply to all orders**. |
 
 > The order\_id must be prefixed. Find prefix from corresponding wallet detail on web control panel
 >
@@ -1267,6 +1361,7 @@ The response includes the following parameters:
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
 | 403 | 827 | Outgoing address in black list, abort transaction | - | Some outgoing addresses are blacklisted, examine the response 'blacklist' field for detailed information |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 400 | 112 | Invalid parameter | the maximum request limit is exceeded | - |
 | 400 | 955 | There is no content in your withdrawal request, please check your input | - | The post body of request doesn't conform the API request specification |
 | 400 | 703 | Operation failed | order_id must start with {ORDERID\_PREFIX} | The prefix of order_id is incorrect |
 | 400 | 703 | Operation failed | order_id: {ORDER\_ID} - the character \\ or / is prohibited | {ORDER\_ID} is invalid |
@@ -4086,6 +4181,16 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/get_labels
 - [API definition](#query-deposit-address-label)
 
 
+<a name="curl-verify-deposit-addresses"></a>
+### Verify Deposit Addresses
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x46d4AD967F68253f61D45a044dC7dC7B13E5A4B3","0x107FF19Ea5fB7de78392e7AcC2A2C7eace891bDc"]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/addresses/verify
+```
+- [API definition](#verify-deposit-addresses)
+
+
 <a name="curl-withdraw-assets"></a>
 ### Withdraw Assets
 
@@ -4336,7 +4441,7 @@ curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret
 curl -X POST -H "Content-Type: application/json" -d '{"refresh_code":"3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra"}' \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/refreshsecret
 ```
-- [API definition](#query-api-code-status)
+- [API definition](#refresh-api-code)
 
 
 <a name="curl-query-wallet-info"></a>
@@ -4574,6 +4679,7 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
   		    <tr><td>194</td><td>EOS</td><td>4</td></tr>
    		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
    		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
+   		    <tr><td>283</td><td>ALGO</td><td>6</td></tr>
    		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
    		    <tr><td>434</td><td>KSM</td><td>12</td></tr>
    		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
@@ -4583,10 +4689,13 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
    		    <tr><td>700</td><td>XDAI</td><td>8</td></tr>
    		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
    		    <tr><td>966</td><td>MATIC</td><td>8</td></tr>
+   		    <tr><td>1001</td><td>TT</td><td>18</td></tr>  
    		    <tr><td>1023</td><td>ONE</td><td>6</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
    		    <tr><td>5353</td><td>HNS</td><td>6</td></tr>
    		    <tr><td>52752</td><td>CELO</td><td>18</td></tr>
+   		    <tr><td>99999999986</td><td>KUB*</td><td>18</td></tr>
+   		    <tr><td>99999999987</td><td>KOVAN*</td><td>18</td></tr>
    		    <tr><td>99999999988</td><td>AVAX-C*</td><td>18</td></tr>
    		    <tr><td>99999999989</td><td>PALM*</td><td>18</td></tr>
    		    <tr><td>99999999990</td><td>FTM*</td><td>18</td></tr>
@@ -4773,6 +4882,7 @@ Deposit callback with blocklist_tags sample:
 | 194  | EOS             | 4 |
 | 195  | TRX             | 6 |
 | 236  | BSV             | 8 |
+| 283  | ALGO            | 6 |
 | 354  | DOT             | 10 |
 | 434  | KSM             | 12 |
 | 461  | FIL             | 18 |
@@ -4782,10 +4892,13 @@ Deposit callback with blocklist_tags sample:
 | 700  | XDAI            | 18 |
 | 714  | BNB             | 8 |
 | 966  | MATIC           | 18 |
+| 1001 | TT              | 18 |
 | 1023 | ONE             | 18 |
 | 1815 | ADA             | 6 |
 | 5353 | HNS             | 6 |
 | 52752 | CELO           | 18 |
+| 99999999986 | KUB*     | 18 |
+| 99999999987 | KOVAN*   | 18 |
 | 99999999988 | AVAX-C*  | 18 |
 | 99999999989 | PALM*    | 18 |      
 | 99999999990 | FTM*     | 18 |
@@ -4799,6 +4912,8 @@ Deposit callback with blocklist_tags sample:
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
 > The * mark represents the definition of pseudo-cryptocurrency in the CYBAVO SOFA system
+> 
+> KOVAN is PoA testnet for Ethereum.
 
 ##### [Back to top](#table-of-contents)
 
