@@ -1302,7 +1302,7 @@ The request includes the following parameters:
 > 
 > Only ERC721/1155 wallet can use `token_id` to transfer token. For ERC721 wallets, if `token_id` is specified, the amount will be ignored.
 > 
-> The `block\_average_fee` and `manual_fee ` do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.
+> The `block_average_fee` and `manual_fee ` do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.
 
 ##### Response Format
 
@@ -1384,6 +1384,7 @@ The response includes the following parameters:
 | 400 | 703 | Operation failed | request IP ({IPv4}) not in ACL | The request IP not in the withdrawal ACL |
 | 400 | 703 | Operation failed | invalid amount {AMOUNT} | The requested amount is not a valid number |
 | 400 | 703 | Operation failed | invalid amount decimals {AMOUNT} | The decimals of the requested amount exceeds the valid range |
+| 400 | 955 | There is no content in your withdrawal request, please check your input | - | No orders found in the request that may be caused by an incorrectly formatted post body |
 | 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
 | 404 | 312 | Policy not found | no active withdrawal policy found | No active withdrawal policy found |
 

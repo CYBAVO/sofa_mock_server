@@ -3115,7 +3115,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <p>Only ERC721/1155 wallet can use <code>token_id</code> to transfer token. For ERC721 wallets, if <code>token_id</code> is specified, the amount will be ignored.</p>
 
-<p>The <code>block\_average_fee</code> and <code>manual_fee</code> do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.</p>
+<p>The <code>block_average_fee</code> and <code>manual_fee</code> do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.</p>
 </blockquote>
 
 <h5 id="toc_120">Response Format</h5>
@@ -3443,6 +3443,13 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">Operation failed</td>
 <td style="text-align: left">invalid amount decimals {AMOUNT}</td>
 <td style="text-align: left">The decimals of the requested amount exceeds the valid range</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">955</td>
+<td style="text-align: left">There is no content in your withdrawal request, please check your input</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">No orders found in the request that may be caused by an incorrectly formatted post body</td>
 </tr>
 <tr>
 <td style="text-align: left">404</td>
