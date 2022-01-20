@@ -4692,20 +4692,21 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
    		    <tr><td>966</td><td>MATIC</td><td>8</td></tr>
    		    <tr><td>1001</td><td>TT</td><td>18</td></tr>  
    		    <tr><td>1023</td><td>ONE</td><td>6</td></tr>
+   		    <tr><td>1776</td><td>L-BTC</td><td>8</td></tr>
    		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
    		    <tr><td>5353</td><td>HNS</td><td>6</td></tr>
    		    <tr><td>52752</td><td>CELO</td><td>18</td></tr>
-   		    <tr><td>99999999986</td><td>KUB*</td><td>18</td></tr>
-   		    <tr><td>99999999987</td><td>KOVAN*</td><td>18</td></tr>
-   		    <tr><td>99999999988</td><td>AVAX-C*</td><td>18</td></tr>
-   		    <tr><td>99999999989</td><td>PALM*</td><td>18</td></tr>
-   		    <tr><td>99999999990</td><td>FTM*</td><td>18</td></tr>
-   		    <tr><td>99999999991</td><td>OKT*</td><td>12</td></tr>
-   		    <tr><td>99999999992</td><td>OPTIMISM*</td><td>12</td></tr>
-   		    <tr><td>99999999993</td><td>ARBITRUM*</td><td>12</td></tr>
-   		    <tr><td>99999999994</td><td>HECO*</td><td>12</td></tr>
-   		    <tr><td>99999999996</td><td>WND*</td><td>12</td></tr>
-   		    <tr><td>99999999997</td><td>BSC*</td><td>18</td></tr>
+   		    <tr><td>99999999986*</td><td>KUB</td><td>18</td></tr>
+   		    <tr><td>99999999987*</td><td>KOVAN</td><td>18</td></tr>
+   		    <tr><td>99999999988*</td><td>AVAX-C</td><td>18</td></tr>
+   		    <tr><td>99999999989*</td><td>PALM</td><td>18</td></tr>
+   		    <tr><td>99999999990*</td><td>FTM</td><td>18</td></tr>
+   		    <tr><td>99999999991*</td><td>OKT</td><td>12</td></tr>
+   		    <tr><td>99999999992*</td><td>OPTIMISM</td><td>12</td></tr>
+   		    <tr><td>99999999993*</td><td>ARBITRUM</td><td>12</td></tr>
+   		    <tr><td>99999999994*</td><td>HECO</td><td>12</td></tr>
+   		    <tr><td>99999999996*</td><td>WND</td><td>12</td></tr>
+   		    <tr><td>99999999997*</td><td>BSC</td><td>18</td></tr>
   	 	  </tbody>
 		</table>
 		*pseudo cryptocurrency definition in the CYBAVO SOFA system
@@ -4895,20 +4896,21 @@ Deposit callback with blocklist_tags sample:
 | 966  | MATIC           | 18 |
 | 1001 | TT              | 18 |
 | 1023 | ONE             | 18 |
+| 1776 | L-BTC           | 8 |
 | 1815 | ADA             | 6 |
 | 5353 | HNS             | 6 |
 | 52752 | CELO           | 18 |
-| 99999999986 | KUB*     | 18 |
-| 99999999987 | KOVAN*   | 18 |
-| 99999999988 | AVAX-C*  | 18 |
-| 99999999989 | PALM*    | 18 |      
-| 99999999990 | FTM*     | 18 |
-| 99999999991 | OKT*     | 18 |
-| 99999999992 | OPTIMISM* | 18 |
-| 99999999993 | ARBITRUM* | 18 |
-| 99999999994 | HECO*    | 18 |
-| 99999999996 | WND*     | 12 |
-| 99999999997 | BSC*     | 18 |
+| 99999999986* | KUB     | 18 |
+| 99999999987* | KOVAN   | 18 |
+| 99999999988* | AVAX-C  | 18 |
+| 99999999989* | PALM    | 18 |      
+| 99999999990* | FTM     | 18 |
+| 99999999991* | OKT     | 18 |
+| 99999999992* | OPTIMISM | 18 |
+| 99999999993* | ARBITRUM | 18 |
+| 99999999994* | HECO    | 18 |
+| 99999999996* | WND     | 12 |
+| 99999999997* | BSC     | 18 |
   
 > Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 > 
@@ -4934,15 +4936,18 @@ Deposit callback with blocklist_tags sample:
 | 700  | XDAI            |
 | 966  | MATIC           |
 | 1023 | ONE             |
+| 1776 | L-BTC           |
 | 52752 | CELO           |
-| 99999999988 | AVAX-C*  |
-| 99999999989 | PALM*    |
-| 99999999990 | FTM*     |
-| 99999999991 | OKT*     |
-| 99999999992 | OPTIMISM* |
-| 99999999993 | ARBITRUM* |
-| 99999999994 | HECO*    |
-| 99999999997 | BSC*     |
+| 99999999988 | AVAX-C  |
+| 99999999989 | PALM    |
+| 99999999990 | FTM     |
+| 99999999991 | OKT     |
+| 99999999992 | OPTIMISM |
+| 99999999993 | ARBITRUM |
+| 99999999994 | HECO    |
+| 99999999997 | BSC     |
+
+> L-BTC only shows the unconfirmed incoming balance, no outgoing balance.
  
 ##### [Back to top](#table-of-contents)
 
