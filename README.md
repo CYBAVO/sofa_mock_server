@@ -4701,10 +4701,10 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
    		    <tr><td>99999999988*</td><td>AVAX-C</td><td>18</td></tr>
    		    <tr><td>99999999989*</td><td>PALM</td><td>18</td></tr>
    		    <tr><td>99999999990*</td><td>FTM</td><td>18</td></tr>
-   		    <tr><td>99999999991*</td><td>OKT</td><td>12</td></tr>
-   		    <tr><td>99999999992*</td><td>OPTIMISM</td><td>12</td></tr>
-   		    <tr><td>99999999993*</td><td>ARBITRUM</td><td>12</td></tr>
-   		    <tr><td>99999999994*</td><td>HECO</td><td>12</td></tr>
+   		    <tr><td>99999999991*</td><td>OKT</td><td>18</td></tr>
+   		    <tr><td>99999999992*</td><td>OPTIMISM</td><td>18</td></tr>
+   		    <tr><td>99999999993*</td><td>ARBITRUM</td><td>18</td></tr>
+   		    <tr><td>99999999994*</td><td>HECO</td><td>18</td></tr>
    		    <tr><td>99999999996*</td><td>WND</td><td>12</td></tr>
    		    <tr><td>99999999997*</td><td>BSC</td><td>18</td></tr>
   	 	  </tbody>
@@ -4938,6 +4938,8 @@ Deposit callback with blocklist_tags sample:
 | 1023 | ONE             |
 | 1776 | L-BTC           |
 | 52752 | CELO           |
+| 99999999986 | KUB     |
+| 99999999987 | KOVAN   |
 | 99999999988 | AVAX-C  |
 | 99999999989 | PALM    |
 | 99999999990 | FTM     |
