@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The CYBAVO developers
+// Copyright (c) 2018-2022 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -11,7 +11,6 @@
 package controllers
 
 import (
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -182,16 +181,6 @@ func (c *OuterController) GetDepositWalletPoolAddressBalance() {
 	c.Data["json"] = m
 }
 
-func calcSHA256(data []byte) (calculatedHash []byte, err error) {
-	sha := sha256.New()
-	_, err = sha.Write(data)
-	if err != nil {
-		return
-	}
-	calculatedHash = sha.Sum(nil)
-	return
-}
-
 // @Title Callback
 // @router /wallets/callback [post]
 func (c *OuterController) Callback() {
@@ -208,7 +197,7 @@ func (c *OuterController) Callback() {
 
 	checksum := c.Ctx.Input.Header("X-CHECKSUM")
 	payload := string(c.Ctx.Input.RequestBody) + apiCodeObj.ApiSecret
-	sha, _ := calcSHA256([]byte(payload))
+	sha, _ := api.CalcSHA256([]byte(payload))
 	checksumVerf := base64.URLEncoding.EncodeToString(sha)
 
 	if checksum != checksumVerf {
@@ -261,7 +250,7 @@ func (c *OuterController) WithdrawalCallback() {
 
 	// sample code to calculate checksum and verify
 	// payload := string(c.Ctx.Input.RequestBody) + APISECRET
-	// sha, _ := calcSHA256([]byte(payload))
+	// sha, _ := api.CalcSHA256([]byte(payload))
 	// checksumVerf := base64.URLEncoding.EncodeToString(sha)
 	// checksum := c.Ctx.Input.Header("X-CHECKSUM")
 	// if checksum != checksumVerf {
@@ -1006,6 +995,23 @@ func (c *OuterController) VerifyDepositAddresses() {
 		nil, c.Ctx.Input.RequestBody)
 	if err != nil {
 		logs.Error("VerifyDepositAddresses failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
+
+// @Title Get currency prices
+// @router /currency/prices [get]
+func (c *OuterController) GetCurrencyPrices() {
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest(0, "GET", "/v1/sofa/currency/prices",
+		getQueryString(c.Ctx), nil)
+	if err != nil {
+		logs.Error("GetCurrencyPrices failed", err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
 

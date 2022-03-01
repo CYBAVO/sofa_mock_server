@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The CYBAVO developers
+// Copyright (c) 2018-2022 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -259,7 +259,7 @@ func (c *MerchantController) Callback() {
 
 	checksum := c.Ctx.Input.Header("X-CHECKSUM")
 	payload := string(c.Ctx.Input.RequestBody) + apiCodeObj.ApiSecret
-	sha, _ := calcSHA256([]byte(payload))
+	sha, _ := api.CalcSHA256([]byte(payload))
 	checksumVerf := base64.URLEncoding.EncodeToString(sha)
 
 	if checksum != checksumVerf {

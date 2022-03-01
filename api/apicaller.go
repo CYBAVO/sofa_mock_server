@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The CYBAVO developers
+// Copyright (c) 2018-2022 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -13,6 +13,7 @@ package api
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -94,5 +95,26 @@ func MakeRequest(targetID int64, method string, api string, params []string, pos
 		msg := fmt.Sprintf("%s, Error: %s", res.Status, result.String())
 		return body, errors.New(msg)
 	}
+
+	//
+	// verify checksum of a successful response
+	//
+	checksum := res.Header.Get("X-CHECKSUM")
+	payload := string(body) + apiCodeObj.ApiSecret
+	sha, _ := CalcSHA256([]byte(payload))
+	checksumVerf := base64.URLEncoding.EncodeToString(sha)
+	if checksum != checksumVerf {
+		return nil, errors.New("mismatched response checksum")
+	}
 	return body, nil
+}
+
+func CalcSHA256(data []byte) (calculatedHash []byte, err error) {
+	sha := sha256.New()
+	_, err = sha.Write(data)
+	if err != nil {
+		return
+	}
+	calculatedHash = sha.Sum(nil)
+	return
 }

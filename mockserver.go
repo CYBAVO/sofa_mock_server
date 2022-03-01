@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The CYBAVO developers
+// Copyright (c) 2018-2022 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,

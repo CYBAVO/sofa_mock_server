@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 The CYBAVO developers
+// Copyright (c) 2018-2022 The CYBAVO developers
 // All Rights Reserved.
 // NOTICE: All information contained herein is, and remains
 // the property of CYBAVO and its suppliers,
@@ -61,6 +61,7 @@ func init() {
 	beego.Router("/v1/mock/wallets/:wallet_id/contract/read", &controllers.OuterController{}, "GET:CallContractRead")
 	beego.Router("/v1/mock/wallets/readonly/walletlist", &controllers.OuterController{}, "GET:GetReadOnlyWalletList")
 	beego.Router("/v1/mock/wallets/readonly/walletlist/balances", &controllers.OuterController{}, "GET:GetReadOnlyWalletListBalances")
+	beego.Router("/v1/mock/currency/prices", &controllers.OuterController{}, "GET:GetCurrencyPrices")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")

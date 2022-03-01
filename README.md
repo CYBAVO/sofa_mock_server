@@ -5,6 +5,7 @@
 - [API Authentication](#api-authentication)
 - [Callback Integration](#callback-integration)
 - [Cryptocurrency Unit Conversion](#cryptocurrency-unit-conversion)
+- [API Response Validation](#api-response-validation)
 - REST API
 	- Deposit Wallet API
 		- [Create Deposit Addresses](#create-deposit-addresses)
@@ -19,7 +20,7 @@
 		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 		- [Update Deposit Address Label](#update-deposit-address-label)
 		- [Query Deposit Address Label](#query-deposit-address-label)
-	- Withdraw Wallet API
+	- Withdrawal Wallet API
 		- [Withdraw Assets](#withdraw-assets)
 		- [Cancel Withdrawal Request](#cancel-withdrawal-request)
 		- [Query Latest Withdrawal Transaction State](#query-latest-withdrawal-transaction-state)
@@ -56,6 +57,7 @@
 	- Read-only API code API
 		- [List Wallets](#list-wallets)
 		- [Query Wallets Balance](#query-wallets-balance)
+		- [Query Currency Prices](#query-currency-prices)
 - Testing
 	- [Mock Server](#mock-server)
 	- [cURL Testing Commands](#curl-testing-commands)
@@ -67,6 +69,8 @@
 	- [Currency Definition](#currency-definition)
 	- [Support Unconfirmed Balance Currency](#support-unconfirmed-balance-currency)
 	- [Memo Requirement](#memo-requirement)
+	- [Wallet Type Definition](#wallet-type-definition)
+	- [Delegated Wallet Supported Currency](#delegated-wallet-supported-currency)
 
 <a name="get-started"></a>
 # Get Started
@@ -195,6 +199,19 @@ transaction in chain state(3) -> repeats state 3 until the confirmation count is
 - For the cryptocurrency token, use the token_decimals field of the [Wallet Info](#query-wallet-info) API to convert cryptocurrency token unit.
 
 
+<a name="api-response-validation"></a>
+# API Response Validation
+
+- A succuessful API response (status code 200) will contain an `X-CHECKSUM` header for integrity and security checks.
+	- Calculate the checksum with the corresponding wallet's API secret to double confirm the integrity of the response and the validity of the source.
+
+- Please refer to the code snippet on the github project to know how to validate the API response.
+	- [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/api/apicaller.go#L100)
+	- [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/Api.java#L177)
+	- [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/helper/apicaller.js#L108)
+	- [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/helper/apicaller.php#L73)
+
+
 # REST API
 
 # Deposit Wallet API
@@ -210,7 +227,7 @@ Create deposit addresses on certain wallet. Once addresses are created, the CYBA
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-create-deposit-addresses)
 
@@ -312,6 +329,25 @@ For the ETH wallet that uses contract collection:
 }
 ```
 
+For the delegated wallet:
+
+```json
+  "address_indexes": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "addresses": [
+    "0xB02B189b423f58E1c035f02786eA5BC6E7762718",
+    "0xace596bfd34E86d15F28b1743B99B26FAFcCC9F5",
+    "0x22505d4E113aE8b7A7ACdAECABfD9601E0c41ca8",
+    "0x219028837aB831077D2F12EC134cE3C59266EDfd",
+    "0x4C2216980B2883234C0C71ef272a195344f206BE"
+  ]
+```
+
 Use [Query Deployed Contract Deposit Addresses](#query-deployed-contract-deposit-addresses) API to query deployed contract addresses.
 
 
@@ -321,6 +357,14 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | addresses | array | Array of just created deposit addresses |
 | txids | array | Array of transaction IDs used to deploy collection contract |
+| address_indexes | array | Array of address index*  |
+
+> \* The address indexes are mapping to the array of address. For example, the index of 0xB02B189b423f58E1c035f02786eA5BC6E7762718 is 1, and so on.
+> 
+> The index and address must be specified when calling [Withdraw Assets](#withdraw-assets) API on the delegated wallet.
+> 
+> Use the [Query Deposit Addresses](#query-deposit-addresses) API to retrieve the index of the delegated address.
+
 
 ##### Error Code
 
@@ -359,7 +403,7 @@ Verify that these addresses belong to a deposit wallet.
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/receiver/addresses/verify
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-verify-deposit-addresses)
 
@@ -449,7 +493,7 @@ Query the deposit addresses created by the [Create Deposit Addresses](#create-de
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/addresses?start\_index=`from`&request\_number=`count`
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-deposit-addresses)
 
@@ -461,10 +505,6 @@ An example of the request:
 
 ```
 /v1/sofa/wallets/179654/addresses?start_index=0&request_number=3
-
---- THEN ---
-
-/v1/sofa/wallets/179654/addresses?start_index=3&request_number=3
 ```
 
 The request includes the following parameters:
@@ -503,30 +543,35 @@ An example of a successful response:
     }
   ]
 }
+```
 
---- THEN ---
+An example of a successful response of the delegated wallet:
 
+```json
 {
-  "wallet_id": 179654,
-  "wallet_count": 6,
+  "wallet_id": 132342,
+  "wallet_count": 7,
   "wallet_address": [
     {
-      "currency": 60,
-      "token_address": "",
-      "address": "0x6d68443D6564cF257A48c1b16aa6d0EF13c5A719",
-      "memo": ""
+      "address": "0xB02B189b423f58E1c035f02786eA5BC6E7762718",
+      "address_index": 1,
+      "currency": 99999999997,
+      "memo": "",
+      "token_address": ""
     },
     {
-      "currency": 60,
-      "token_address": "",
-      "address": "0x26F103322B6f0ed2D35B85F1611589c92F023986",
-      "memo": ""
+      "address": "0xace596bfd34E86d15F28b1743B99B26FAFcCC9F5",
+      "address_index": 2,
+      "currency": 99999999997,
+      "memo": "",
+      "token_address": ""
     },
     {
-      "currency": 60,
-      "token_address": "",
-      "address": "0x2b91918Bee4411DaD6293EA5d6D38251E72723Ca",
-      "memo": ""
+      "address": "0x22505d4E113aE8b7A7ACdAECABfD9601E0c41ca8",
+      "address_index": 3,
+      "currency": 99999999997,
+      "memo": "",
+      "token_address": ""
     }
   ]
 }
@@ -539,6 +584,8 @@ The response includes the following parameters:
 | wallet_id | int64 | ID of request wallet |
 | wallet_address | array | Array of wallet addresses |
 | wallet_count | int64 | Total count of deposit addresses |
+| address_index | int64 | The corresponding index of the address |
+
 
 > Refer to [Currency Definition](#currency-definition) or [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
 
@@ -571,9 +618,7 @@ Query deployed contract deposit addresses created by the [Create Deposit Address
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/addresses/contract_txid?txids=`txid1,txid2`
 
-> `WALLET_ID` must be an ETH contract collection deposit wallet ID
-> 
-> Only deployed addresses will be returned
+> For the ETH contract collection deposit walle. Only deployed addresses will be returned.
 
 - [Sample curl command](#curl-query-deployed-contract-deposit-addresses)
 
@@ -657,7 +702,7 @@ Get the pool address of a deposit wallet. The pool address has different functio
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/pooladdress
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-get-pool-address)
 
@@ -715,7 +760,7 @@ Get the pool address balance of a deposit wallet.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/pooladdress/balance
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-pool-address-balance)
 
@@ -779,7 +824,7 @@ When an abnormal deposit is detected, the CYBAVO SOFA system will set the deposi
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/addresses/invalid-deposit
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-invalid-deposit-addresses)
 
@@ -835,6 +880,8 @@ Query the detailed information of the deposit callback by the tx ID and the vout
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/receiver/notifications/txid/`TX_ID`/`VOUT_INDEX`
+
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-deposit-callback-detail)
 
@@ -916,7 +963,7 @@ Refer to [Callback Integration](#callback-integration) for callback rules.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/collection/notifications/manual
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-resend-deposit-callbacks)
 
@@ -992,7 +1039,7 @@ Get the deposit wallet balance.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/receiver/balance
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-deposit-wallet-balance)
 
@@ -1055,7 +1102,7 @@ Update the label of the deposit address.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/addresses/label
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 > 
 > The label will be automatically synced between the parent and child wallet.
 
@@ -1122,7 +1169,7 @@ Query the labels of the deposit addresses.
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/addresses/get_labels
 
-> `WALLET_ID` must be a deposit wallet ID
+> `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-deposit-address-label)
 
@@ -1195,7 +1242,7 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
-# Withdraw Wallet API
+# Withdrawal Wallet API
 
 <a name="withdraw-assets"></a>
 ### Withdraw Assets
@@ -1210,7 +1257,7 @@ The withdrawal API can also interact with the contracts (ERC/BEP 721/1155) deplo
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 > 
 > The order\_id must be prefixed. **Find prefix from corresponding wallet detail on web control panel.**
 >
@@ -1275,6 +1322,20 @@ An example of the request:
 }
 ```
 
+```json
+{
+  "requests": [
+    {
+      "order_id": "132342_1001",
+      "address": "0x480A8507C63A27f05cd29BfB3Bb4F7bA1B6ba102",
+      "from_address": "0xEb0e93980Cd0C5D3868B7da32A5604085f9F813C",
+      "from_address_index": 7,
+      "amount": "0.1"
+    }
+  ]
+}
+```
+
 The request includes the following parameters:
 
 ###### Post body
@@ -1291,6 +1352,8 @@ The request includes the following parameters:
 | block\_average_fee | int | optional, range `1~100` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei. The unit returned by the Query Average Fee API is wei, divided by 1000000000 to get the correct unit.`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
+| from_address | string | required, for delegated wallet | Specify the delegated address for the request |
+| from_address_index | int64 | required, for delegated wallet | Specify the corresponding index of the `from_address` |
 | ignore\_gas\_estimate_fail | boolean | optional, default `false` | **FOR DEBUG PURPOSE ONLY**. After setting, the ABI EVM gas estimation will not be performed(**Apply to individual order**). |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. **Apply to all orders**. |
 
@@ -1370,6 +1433,11 @@ The response includes the following parameters:
 | 400 | 703 | Operation failed | order_id: {ORDER\_ID} - destination tag is required | The outgoing address of {ORDER\_ID} needs destination tag specified |
 | 400 | 703 | Operation failed | order_id: {ORDER\_ID} - invalid block\_average\_fee | The block\_average\_fee is out of range |
 | 400 | 703 | Operation failed | order_id: {ORDER\_ID} - invalid manual\_fee | The manual\_fee is out of range |
+| 400 | 703 | Operation failed | order_id: {ORDER\_ID} - from\_address is required | `from_address` is a required parameter |
+| 400 | 703 | Operation failed | order_id: {ORDER\_ID} - from\_address\_index is required | `from_address_index` is a required parameter |
+| 400 | 703 | Operation failed | order_id: {ORDER\_ID} - from\_address\_index not match | `from_address_index` is not consistent with the index of the `from_address` |
+| 400 | 703 | Operation failed | order_id: {ORDER\_ID} - invalid from\_address | `from_address` does not exist |
+| 400 | 703 | Operation failed | order_id: {ORDER\_ID} - from\_address not support | `from_address` cannot be used in non-delegated wallets |
 | 400 | 399 | Duplicated entry: {ORDER\_ID} | - | The {ORDER\_ID} is duplicated |
 | 400 | 945 | The max length of BNB memo is 256 chars | - | Reached the limit of the length of BNB memo |
 | 400 | 946 | The max length of EOS memo is 128 chars | - | Reached the limit of the length of EOS memo |
@@ -1401,7 +1469,7 @@ To cancel the withdrawal request which state is `Init` or `Failed`. The request 
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`/cancel
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-cancel-withdrawal-request)
 
@@ -1451,7 +1519,7 @@ Check the latest withdrawal transaction state of certain order ID.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-latest-withdrawal-transaction-state)
 
@@ -1524,7 +1592,7 @@ Check the all withdrawal transaction states of certain order ID.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/`ORDER_ID`/all
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-all-withdrawal-transaction-states)
 
@@ -1613,7 +1681,7 @@ Query event logs of a withdrawal transaction by transaction hash.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/eventlog?txid=`TXID`
 
-> `WALLET_ID` should be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-withdrawal-transaction-event-logs)
 
@@ -1707,7 +1775,7 @@ Get the withdrawal wallet balance. Facilitate to establish a real-time balance m
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/balance
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-withdrawal-wallet-balance)
 
@@ -1780,6 +1848,8 @@ Query the detailed information of the withdrawal callback by the order ID.
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/notifications/order_id/`ORDER_ID`
+
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-withdrawal-callback-detail)
 
@@ -1861,6 +1931,8 @@ Set an authorized IP to the withdrawal request ACL dynamically.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/transactions/acl
 
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
+
 - [Sample curl command](#curl-set-withdrawal-request-acl)
 
 ##### Request Format
@@ -1940,7 +2012,7 @@ Refer to [Callback Integration](#callback-integration) for callback rules.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/notifications/manual
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-resend-withdrawal-callbacks)
 
@@ -2016,7 +2088,7 @@ Query the whitelist configuration of the withdrawal wallet.
 
 **GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/config
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-withdrawal-whitelist-configuration)
 
@@ -2075,7 +2147,7 @@ Add an outgoing address to the withdrawal wallet's whitelist.
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-add-withdrawal-whitelist-entry)
 
@@ -2263,7 +2335,7 @@ Check the withdrawal whitelist entry status in the withdrawal whitelist.
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/check
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-check-withdrawal-whitelist)
 
@@ -2359,6 +2431,8 @@ Used to query some kind of callbacks within a time interval.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist?from\_time=`from`&to\_time=`to`&start\_index=`offset`&request_number=`count`&state=`state`
 
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
+
 - [Sample curl command](#curl-query-withdrawal-whitelist)
 
 ##### Request Format
@@ -2446,7 +2520,7 @@ Get transaction history of withdrawal wallets.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`
 
-> `WALLET_ID` should be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-withdrawal-wallet-transaction-history)
 
@@ -2566,7 +2640,7 @@ Sign message, equivalent to `eth_sign`.
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/signmessage
 
-> `WALLET_ID` must be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-sign-message)
 
@@ -2595,6 +2669,8 @@ The request includes the following parameters:
 | Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
 | message | string | required | Message to be signed |
+| wallet_address | string | required, for delegated wallet | Specify the delegated address for the request |
+| index | int64 | required, for delegated wallet | Specify the corresponding index of the `wallet_address` |
 
 ##### Response Format
 
@@ -2626,6 +2702,8 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
 | 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 400 | 112 | Invalid parameter | wallet_address is required | `wallet_address` is a required parameter |
+| 400 | 703 | Operation failed | index not match | `index` is not consistent with the index of the `wallet_address` |
 | 404 | 303 | Invalid currency | - | The wallet is not allowed to perform this request |
 | 404 | 304 | Wallet ID invalid | mapped wallet not supported | - |
 
@@ -2641,7 +2719,7 @@ Executes a contract read ABI call.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/contract/read?contract=`contract_address`&data=`data`
 
-> `WALLET_ID` should be a withdrawal wallet ID
+> `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-call-contract-read-abi)
 
@@ -2719,6 +2797,8 @@ Used to query some kind of callbacks within a time interval.
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/notifications?from\_time=`from`&to\_time=`to`&type=`type`
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-callback-history)
 
@@ -2807,6 +2887,8 @@ Query the detailed information of the callback by its serial ID. It can be used 
 ##### Request
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/notifications/get\_by_id
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-callback-detail)
 
@@ -2928,6 +3010,8 @@ Get the blockchain synchronization status of a wallet.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/blocks
 
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
+
 - [Sample curl command](#curl-query-wallet-synchronization-info)
 
 ##### Request Format
@@ -2983,6 +3067,8 @@ Query average blockchain fee within latest N blocks.
 ##### Request
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/autofee
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-transaction-average-fee)
 
@@ -3054,6 +3140,8 @@ Batch Query average blockchain fee within latest N blocks.
 ##### Request
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/autofees
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-batch-query-transaction-average-fees)
 
@@ -3147,7 +3235,7 @@ Get transaction history of vault wallets.
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/transactions?from\_time=`from`&to\_time=`to`&start\_index=`start`&request_number=`count`&state=`state`
 
-> `WALLET_ID` should be a vault wallet ID
+> `Vault Wallet`
 
 - [Sample curl command](#curl-query-vault-wallet-transaction-history)
 
@@ -3276,7 +3364,7 @@ Get the vault wallet balance. Facilitate to establish a real-time balance monito
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/vault/balance
 
-> `WALLET_ID` must be a vault wallet ID
+> `Vault Wallet`
 
 - [Sample curl command](#curl-query-vault-wallet-balance)
 
@@ -3365,6 +3453,8 @@ Activate the API code of a certain wallet. Once activated, the currently activat
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/apisecret/activate
 
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
+
 - [Sample curl command](#curl-activate-api-code)
 
 ##### Request Format
@@ -3420,6 +3510,8 @@ Query the API code info of a certain wallet. Use the `inactivated` API code in a
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/apisecret
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-api-code-status)
 
@@ -3485,6 +3577,8 @@ Use paired refresh code to acquire the new inactive API code/secret of the walle
 ##### Request
 
 **POST** /v1/sofa/wallets/`WALLET_ID`/refreshsecret
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-refresh-api-code)
 
@@ -3561,6 +3655,8 @@ Get wallet basic information.
 ##### Request
 
 `VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/info
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-query-wallet-info)
 
@@ -3724,6 +3820,8 @@ Use to inspect the notification and withdrawal authentication endpoint.
 ##### Request
 
 `VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/notifications/inspect
+
+> `Withdrawal Wallet` `Deposit Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
 - [Sample curl command](#curl-inspect-callback-endpoint)
 
@@ -4021,13 +4119,110 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-currency-prices"></a>
+### Query Currency Prices
+
+Query the prices of all currencies available in the SOFA system.
+
+> The prices provided by the API are averages for some exchanges and may not be real-time and accurate, so please be aware of the risk of possible price fluctuations when using the API.
+
+##### Request
+
+`VIEW` **GET** /v1/sofa/currency/prices?convert=`currency`
+
+> The API code must be a read-only API code.
+
+- [Sample curl command](#curl-query-currency-prices)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/currency/prices?convert=USD,GBP
+```
+
+The request includes the following parameters:
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| convert | string | optional, default `USD` | The legal tender to be converted, concats with "," |
+
+> All legal tender currencies supported are AUD, BRL, CAD, EUR, GBP, INR, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD, USD, ZAR.
+ 
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "currency_prices": [
+    {
+      "currency": 145,
+      "currency_symbol": "BCH",
+      "prices": {
+        "GBP": 238.67160135,
+        "USD": 323.05
+      }
+    },
+    {
+      "currency": 0,
+      "currency_symbol": "BTC",
+      "prices": {
+        "GBP": 30967.87854042,
+        "USD": 41916.06
+      }
+    },
+    {
+      "currency": 60,
+      "currency_symbol": "ETH",
+      "prices": {
+        "GBP": 2116.74115956,
+        "USD": 2865.08
+      }
+    }
+  ],
+  "last_refresh_attempt_time": 1644811648,
+  "last_refresh_success_time": 1644811650
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| currency | int64 | Registered coin types. Refer to [Currency Definition](#currency-definition) |
+| token_address | string | Token contract address |
+| prices | key-value | Currency-Price pair |
+| last_refresh_attempt_time | int64 | Last attempt to update prices (unix time in UTC) |
+| last_refresh_success_time | int64 | Last successful price update time (unix time in UTC) |
+
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="mock-server"></a>
 # Mock Server
 
 ### How to compile
 - Put sample code to {YOUR\_GO\_PATH}/github.com/cybavo/SOFA\_MOCK\_SERVER
 - Execute
-	- glide install
+	- go mod vendor
 	- go build ./mockserver.go
 	- ./mockserver
 
@@ -4492,6 +4687,15 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
 - [API definition](#query-wallets-balance)
 
 
+<a name="curl-query-currency-prices"></a>
+### Query Currency Prices
+
+```
+curl http://localhost:8889/v1/mock/currency/prices
+```
+- [API definition](#query-currency-prices)
+
+
 ##### [Back to top](#table-of-contents)
 
 <a name="other-language-versions"></a>
@@ -4923,6 +5127,7 @@ Deposit callback with blocklist_tags sample:
 
 ##### [Back to top](#table-of-contents)
 
+
 <a name="wallet-type-definition"></a>
 ### Wallet Type Definition
 
@@ -4932,7 +5137,33 @@ Deposit callback with blocklist_tags sample:
 | 1 | Batch wallet |
 | 2 | Deposit wallet |
 | 3 | Withdrawal wallet |
-| 5 | Deposit-withdrawal hybrid wallet |
+| 5 | Deposit-withdrawal wallet |
+| 6 | Delegated wallet |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="delegated-wallet-supported-currency"></a>
+### Delegated Wallet Supported Currency
+
+| ID   | Currency Symbol |
+| :--- | :---            |
+| 60   | ETH             |
+| 700  | XDAI            |
+| 966  | MATIC           |
+| 1001 | TT              |
+| 1023 | ONE             |
+| 52752 | CELO           |
+| 99999999986* | KUB     |
+| 99999999987* | KOVAN   |
+| 99999999988* | AVAX-C  |
+| 99999999989* | PALM    |
+| 99999999990* | FTM     |
+| 99999999991* | OKT     |
+| 99999999992* | OPTIMISM |
+| 99999999993* | ARBITRUM |
+| 99999999994* | HECO    |
+| 99999999997* | BSC     |
 
 ##### [Back to top](#table-of-contents)
 
