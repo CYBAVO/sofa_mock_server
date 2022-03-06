@@ -1019,3 +1019,21 @@ func (c *OuterController) GetCurrencyPrices() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Get Delegated Addresses Balances
+// @router /wallets/:wallet_id/receiver/get-balances [post]
+func (c *OuterController) GetDelegatedBalances() {
+	defer c.ServeJSON()
+
+	walletID := c.getWalletID()
+	resp, err := api.MakeRequest(walletID, "POST", fmt.Sprintf("/v1/sofa/wallets/%d/receiver/get-balances", walletID),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetDelegatedBalances failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

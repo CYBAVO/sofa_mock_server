@@ -7,7 +7,7 @@
 - [Cryptocurrency Unit Conversion](#cryptocurrency-unit-conversion)
 - [API Response Validation](#api-response-validation)
 - REST API
-	- Deposit Wallet API
+	- Deposit API
 		- [Create Deposit Addresses](#create-deposit-addresses)
 		- [Verify Deposit Addresses](#verify-deposit-addresses)
 		- [Query Deposit Addresses](#query-deposit-addresses)
@@ -20,7 +20,8 @@
 		- [Query Deposit Wallet Balance](#query-deposit-wallet-balance)
 		- [Update Deposit Address Label](#update-deposit-address-label)
 		- [Query Deposit Address Label](#query-deposit-address-label)
-	- Withdrawal Wallet API
+		- [Query Delegated Address Balance](#query-delegated-address-balance)
+	- Withdrawal API
 		- [Withdraw Assets](#withdraw-assets)
 		- [Cancel Withdrawal Request](#cancel-withdrawal-request)
 		- [Query Latest Withdrawal Transaction State](#query-latest-withdrawal-transaction-state)
@@ -38,13 +39,13 @@
 		- [Query Withdrawal Wallet Transaction History](#query-withdrawal-wallet-transaction-history)
 		- [Sign Message](#sign-message)
 		- [Call Contract Read ABI](#call-contract-read-abi)
-	- Deposit / Withdraw Wallet Common API
+	- Deposit / Withdraw Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
 		- [Query Wallet Synchronization Info](#query-wallet-synchronization-info)
 		- [Query Transaction Average Fee](#query-transaction-average-fee)
 		- [Batch Query Transaction Average Fees](#batch-query-transaction-average-fees)
-	- Vault Wallet API
+	- Vault API
 		- [Query Vault Wallet Transaction History](#query-vault-wallet-transaction-history)
 		- [Query Vault Wallet Balance](#query-vault-wallet-balance)
 	- Common API
@@ -1242,6 +1243,115 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-delegated-address-balance"></a>
+### Query Delegated Address Balance
+
+Query the balace of delegated addresses.
+
+##### Request
+
+`VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/receiver/get-balances
+
+> `Delegated Wallet`
+
+- [Sample curl command](#curl-query-delegated-address-balance)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/708453/receiver/get-balances
+```
+
+###### Post body
+
+```json
+{
+  "addresses": [
+    "0x6A2969E4496d5b27967a68b411D7e0218943c1B6",
+    "0x1EA22Ed0347E6C9f852cfcBEFE752A026450164b",
+    "0x2baB9B3af6041960322a248d5315850fc79a3881"
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :---  | :---        |
+| addresses | array | required | Specify the addresses to query balance |
+
+> Maximum 10 addresses per inquiry, more than 10 addresses will be discarded automatically. If the address can not be found, it will not be listed in the response.
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "balances": {
+    "0x1EA22Ed0347E6C9f852cfcBEFE752A026450164b": {
+      "balance": "0.009979649723530324",
+      "token_balance": "1",
+      "token_id_balances": [
+        {
+          "token_id": "9901"
+        }
+      ]
+    },
+    "0x2baB9B3af6041960322a248d5315850fc79a3881": {
+      "balance": "0",
+      "token_balance": "0"
+    },
+    "0x6A2969E4496d5b27967a68b411D7e0218943c1B6": {
+      "balance": "0.019979076967554852",
+      "token_balance": "2",
+      "token_id_balances": [
+        {
+          "token_id": "9903"
+        },
+        {
+          "token_id": "9902"
+        }
+      ]
+    }
+  }
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| balances | key-value pairs | Listed addresses' balance  |
+| balance | string | Address balance. For token wallet this is the mapped wallet's balance. |
+| token_balance | string | Wallet token balance |
+| token_id_balances | array | For ERC1155, ERC721 token wallet |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 404 | 304 | Wallet ID invalid | - | The wallet is not allowed to perform this request |
+
+##### [Back to top](#table-of-contents)
+
+
 # Withdrawal Wallet API
 
 <a name="withdraw-assets"></a>
@@ -1307,13 +1417,13 @@ An example of the request:
       "order_id": "888888_4",
       "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
       "amount": "0",
-      "contract_abi":"create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
+      "contract_abi":"create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
       "user_id": "USER04",
       "ignore_gas_estimate_fail": true
     },
     {
       "order_id": "888888_5",
-      "address": "0x2386b18e76184367b844a402332703dd2eec2a90",
+      "address": "0x6A2969E4496d5b27967a68b411D7e0218943c1B6",
       "amount": "1",
       "token_id": "985552421"
     }
@@ -1321,6 +1431,8 @@ An example of the request:
   "ignore_black_list": false
 }
 ```
+
+For delegated wallet
 
 ```json
 {
@@ -1331,7 +1443,15 @@ An example of the request:
       "from_address": "0xEb0e93980Cd0C5D3868B7da32A5604085f9F813C",
       "from_address_index": 7,
       "amount": "0.1"
-    }
+    },
+	{
+	  "order_id": "132342_1002",
+	  "address": "0xfe67e5b57ecccaa3f95bb90466651391024f25fc",
+	  "amount": "0",
+	  "contract_abi": "transferFrom:0x0000000000000000000000006a2969e4496d5b27967a68b411d7e0218943c1b60000000000000000000000001ea22ed0347e6c9f852cfcbefe752a026450164b00000000000000000000000000000000000000000000000000000000000026ac",
+	  "from_address": "0x1EA22Ed0347E6C9f852cfcBEFE752A026450164b",
+	  "from_address_index": 20
+	}
   ]
 }
 ```
@@ -1352,8 +1472,8 @@ The request includes the following parameters:
 | block\_average_fee | int | optional, range `1~100` | Use average blockchain fee within latest N blocks. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | manual_fee | int | optional, range `1~2000` | Specify blockchain fee in smallest unit of wallet currency **`(For ETH/BSC/HECO/OKT/OP/ARB/CELO/FTM/PALM, the unit is gwei. The unit returned by the Query Average Fee API is wei, divided by 1000000000 to get the correct unit.`**. This option does not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies. |
 | token_id | string | optional | Specify the token ID to be transferred |
-| from_address | string | required, for delegated wallet | Specify the delegated address for the request |
-| from_address_index | int64 | required, for delegated wallet | Specify the corresponding index of the `from_address` |
+| from\_address | string | required, for delegated wallet | Specify the delegated address for the request |
+| from\_address\_index | int64 | required, for delegated wallet | Specify the corresponding index of the `from_address` |
 | ignore\_gas\_estimate_fail | boolean | optional, default `false` | **FOR DEBUG PURPOSE ONLY**. After setting, the ABI EVM gas estimation will not be performed(**Apply to individual order**). |
 | ignore\_black_list| boolean | optional, default `false` | After setting, the address check will not be performed. **Apply to all orders**. |
 
@@ -1363,7 +1483,9 @@ The request includes the following parameters:
 > 
 > The format of the `contract_abi` is `ABI_method:hex_parameters`, for example: create:0x000000000000000000000000000000000000000000000000000000000000138800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000. The parameters must be encoded by [web3.eth.abi.encodeParameters() of web3.js](https://web3js.readthedocs.io/en/v1.3.4/web3-eth-abi.html#encodeparameters).
 > 
-> Only ERC721/1155 wallet can use `token_id` to transfer token. For ERC721 wallets, if `token_id` is specified, the amount will be ignored.
+> Only mapped wallets can use `contract_abi` to call ABI on smart contracts.
+> 
+> Only ERC721/1155 token wallet can use `token_id` to transfer token. For ERC721 wallets, if `token_id` is specified, the amount will be treated as 1.
 > 
 > The `block_average_fee` and `manual_fee ` do not work for XRP, XLM, BNB, DOGE, EOS, TRX, ADA, DOT and SOL cryptocurrencies.
 
@@ -3913,7 +4035,7 @@ List all wallets can be accessed by the inquiry read-only API code.
 
 `VIEW` **GET** /v1/sofa/wallets/readonly/walletlist
 
-> The API code must be a read-only API code.
+> The API code must be a read-only API code. Use wallet ID 0 to register API code with the mock server.
 
 - [Sample curl command](#curl-list-wallets)
 
@@ -4000,7 +4122,7 @@ Query balance of all wallets can be accessed by the inquiry read-only API code.
 
 `VIEW` **GET** /v1/sofa/wallets/readonly/walletlist/balances?type=`type`&start_index=`start_index`&request\_number=`request_number`
 
-> The API code must be a read-only API code.
+> The API code must be a read-only API code. Use wallet ID 0 to register API code with the mock server.
 
 - [Sample curl command](#curl-query-wallets-balance)
 
@@ -4092,15 +4214,17 @@ The response includes the following parameters:
 | token\_contract_address | string | Token contract address |
 | token_decimals | string | Token decimals |
 | error | boolean | Set to true if the balance query fails |
-| balance | string | Wallet balance. For token wallet this is mapping wallet's balance. |
-| unconfirm\_balance | string | Unconfirmed wallet balance. For token wallet this is mapping wallet's unconfirmed balance. |
+| balance | string | Wallet balance. For token wallet this is the mapped wallet's balance. |
+| unconfirm\_balance | string | Unconfirmed wallet balance. For token wallet this is the mapped wallet's unconfirmed balance. |
 | token_balance | string | Wallet token balance |
 | unconfirm\_token_balance | string | Unconfirmed wallet token balance |
-| pool_balance | string | Wallet pool address balance (Deposit Wallet only) |
-| pool_unconfirm\_token_balance | string | Wallet Pool address unconfirmed balance (Deposit Wallet only) |
-| token_id_balances | array | For ERC1155 token wallet |
+| pool\_balance | string | Wallet pool address balance |
+| pool\_unconfirm\_token_balance | string | Wallet Pool address unconfirmed balance |
+| token\_id\_balances | array | For ERC1155, ERC721 token wallet |
 
 > Refer to [Support Unconfirmed Balance Currency](#support-unconfirmed-balance-currency) for the currencies that support the unconfirmed balance.
+> 
+> For delegated ERC721 and ERC1155 token wallets, use the [Query Delegated Address Balance](#query-delegated-address-balance) API to query detailed `token_id_balances` information.
 
 ##### Error Code
 
@@ -4130,7 +4254,7 @@ Query the prices of all currencies available in the SOFA system.
 
 `VIEW` **GET** /v1/sofa/currency/prices?convert=`currency`
 
-> The API code must be a read-only API code.
+> The API code must be a read-only API code. Use wallet ID 0 to register API code with the mock server.
 
 - [Sample curl command](#curl-query-currency-prices)
 
@@ -4237,7 +4361,8 @@ api_server_url="BACKEND_SERVER_URL"
 ### Put wallet API code/secret into mock server
 -	Get API code/secret on web control panel
 	-	API_CODE, API\_SECRET, WALLET\_ID
-- 	Put API code/secret to mock server's databaså
+- 	Put API code/secret to mock server's database
+-  For the read-only API code/secret, use wallet ID `0` to register.
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"api_code":"API_CODE","api_secret":"API_SECRET"}' \
@@ -4375,6 +4500,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x2B974a3De0
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/get_labels
 ```
 - [API definition](#query-deposit-address-label)
+
+
+<a name="curl-query-delegated-address-balance"></a>
+### Query Delegated Address Balance
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"addresses":["0x6A2969E4496d5b27967a68b411D7e0218943c1B6","0x1EA22Ed0347E6C9f852cfcBEFE752A026450164b","0x2baB9B3af6041960322a248d5315850fc79a3881"]}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/get-balances
+```
+- [API definition](#query-delegated-address-balance)
 
 
 <a name="curl-verify-deposit-addresses"></a>
