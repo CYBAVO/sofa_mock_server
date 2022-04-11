@@ -18,7 +18,7 @@
 	- [Other Language Versions](#other-language-versions)
 - Appendix
 	- [Callback Definition](#callback-definition)
-	- [Currency Definition](#currency-definition)
+	- [Currency Definition](https://github.com/CYBAVO/SOFA_MOCK_SERVER#currency-definition)
 
 <a name="get-started"></a>
 # Get Started
@@ -128,28 +128,25 @@ The request includes the following parameters:
 | redirect_url | string | optional | User defined redirect URL (must be encoded) |
 
 > The `redirect_url` must be encoded. Please refer to the code snippet on the github project to know how to encode the URL. [Go](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/MerchantController.go#L92), [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MerchantController.java#L72), [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/merchant.js#L45), [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L370)
+> 
+> If using BNB or XLM payment order, the payment transaction must specify an accurate memo to complete the order.
 
 <a name="doundary-definition"></a>
 Boundary definition
 
-| ID   | Currency Symbol | Minimum Duration | Default Duration | Default Maximum Amount |
-| :--- | :---            | :---     | :--- | :--- |
-| 0    | BTC             | 20 | 120 | 1 |
-| 2    | LTC             | 20 | 120 | 10 |
-| 5    | DASH            | 10 | 30 | 10 |
-| 60   | ETH             | 10 | 60 | 10 |
-| 144  | XRP             | 10 | 30 | 10 |
-| 145  | BCH             | 20 | 120 | 1 |
-| 148  | XLM             | 10 | 30 | 10 |
-| 194  | EOS             | 10 | 30 | 10 |
-| 195  | TRX             | 10 | 30 | 10 |
-| 236  | BSV             | 20 | 120 | 1 |
-| 354  | DOT             | 10 | 30 | 10 |
-| 461  | FIL             | 10 | 30 | 10 |
-| 714  | BNB             | 10 | 30 | 10 |
-| 1815 | ADA             | 10 | 30 | 10 |
-| 99999999997 | BSC      | 10 | 60 | 10 |
-| unlisted | - | 20 | 120 | 10000 |
+| ID   | Currency Symbol | Minimum Duration | Default Duration | Default Minimum / Maximum Amount | Confirm Blocks |
+| :--- | :---            | :---     | :--- | :--- | :--- |
+| 0    | BTC             | 20 | 120 | 0.00002 / 0.2 | 2 |
+| 2    | LTC             | 20 | 120 | 0.005 / 50 | 6 |
+| 3    | DOGE            | 20 | 120 | 0.005 / 50 | 15 |
+| 60   | ETH             | 10 | 60 | 0.0005 / 5 | 6 |
+| 145  | BCH             | 20 | 120 | 0.005 / 20 | 6 |
+| 148  | XLM             | 10 | 30 | 2 / 2000 | 1 |
+| 195  | TRX             | 10 | 30 | 10 / 10000 | 1 |
+| 714  | BNB             | 10 | 30 | 0.003 / 30 | 1 |
+| 966  | MATIC           | 10 | 60 | 0.005 / 50 | 50 |
+| 1815 | ADA             | 10 | 30 | 1 / 1000 | 30 |
+| 99999999997 | BSC      | 10 | 60 | 0.005 / 50 | 20 |
 
 > The `Maximum Amount` boundary can be adjusted in the web control panel.
 
@@ -166,6 +163,18 @@ An example of a successful response:
 }
 ```
 
+For BNB, XLM
+
+```json
+{
+  "access_token": "ybJWKM_CT1yXxzLO2z1Y5fg1EzHuMyRA14ubzR8i-RE",
+  "address": "0xed965D0A23eC4583f55Fb5d4109C0fE069B396fC",
+  "expired_time": 1615975467,
+  "order_id": "N520335069_1000023",
+  "memo": "63574"
+}
+```
+
 The response includes the following parameters:
 
 | Field | Type  | Description |
@@ -174,6 +183,7 @@ The response includes the following parameters:
 | address | string | The address to accept the payment |
 | expired_time | int64 | The due date of the payment order (unix time in UTC) |
 | order_id | string | The order ID of the payment order |
+| memo | string | The memo of the payment order, the payment transaction must specify an accurate memo to complete the order. |
 
 ##### Error Code
 
@@ -874,26 +884,7 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret
     <td>currency_bip44</td>
     <td>int64</td>
     <td>
-   	 	<table>
-   	 	  <thead><tr><td>ID</td><td>Currency Symbol</td><td>Decimals</td></tr></thead>
-   	 	  <tbody>
-		    <tr><td>0</td><td>BTC</td><td>8</td></tr>
-  		    <tr><td>2</td><td>LTC</td><td>8</td></tr>
-  		    <tr><td>5</td><td>DASH</td><td>8</td></tr>
-  		    <tr><td>60</td><td>ETH</td><td>18</td></tr>
-  		    <tr><td>144</td><td>XRP</td><td>6</td></tr>
-  		    <tr><td>145</td><td>BCH</td><td>8</td></tr>
-  		    <tr><td>148</td><td>XLM</td><td>7</td></tr>
-  		    <tr><td>194</td><td>EOS</td><td>4</td></tr>
-   		    <tr><td>195</td><td>TRX</td><td>6</td></tr>
-   		    <tr><td>236</td><td>BSV</td><td>8</td></tr>
-   		    <tr><td>354</td><td>DOT</td><td>10</td></tr>
-   		    <tr><td>461</td><td>FIL</td><td>18</td></tr>
-   		    <tr><td>714</td><td>BNB</td><td>8</td></tr>
-   		    <tr><td>1815</td><td>ADA</td><td>6</td></tr>
-   		    <tr><td>99999999997</td><td>BSC</td><td>18</td></tr>
-   	 	  </tbody>
-		</table>
+    	Refer to <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER#currency-definition" target="_top"> Currency Definition</a> table
     </td>
   </tr>
   <tr>
@@ -920,29 +911,3 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret
  
 ##### [Back to top](#table-of-contents)
 
-<a name="currency-definition"></a>
-### Currency Definition
-
-| ID   | Currency Symbol | Decimals |
-| :--- | :---            | :---     |
-| 0    | BTC             | 8 |
-| 2    | LTC             | 8 |
-| 5    | DASH            | 8 |
-| 60   | ETH             | 18 |
-| 144  | XRP             | 6 |
-| 145  | BCH             | 8 |
-| 148  | XLM             | 7 |
-| 194  | EOS             | 4 |
-| 195  | TRX             | 6 |
-| 236  | BSV             | 8 |
-| 354  | DOT             | 10 |
-| 461  | FIL             | 18 |
-| 714  | BNB             | 8 |
-| 1815 | ADA             | 6 |
-| 99999999997 | BSC      | 18 |
-  
-> Refer to [here](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for more detailed currency definitions
-> 
-> BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system
-
-##### [Back to top](#table-of-contents)

@@ -358,7 +358,7 @@ kbd {
 
 <ul>
 <li><a href="#callback-definition">Callback Definition</a></li>
-<li><a href="#currency-definition">Currency Definition</a></li>
+<li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER#currency-definition">Currency Definition</a></li>
 </ul></li>
 </ul>
 
@@ -555,6 +555,8 @@ kbd {
 
 <blockquote>
 <p>The <code>redirect_url</code> must be encoded. Please refer to the code snippet on the github project to know how to encode the URL. <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/MerchantController.go#L92">Go</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA/blob/master/src/main/java/com/cybavo/sofa/mock/MerchantController.java#L72">Java</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT/blob/master/routes/merchant.js#L45">Javascript</a>, <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP/blob/master/index.php#L370">PHP</a></p>
+
+<p>If using BNB or XLM payment order, the payment transaction must specify an accurate memo to complete the order.</p>
 </blockquote>
 
 <p><a name="doundary-definition"></a>
@@ -567,7 +569,8 @@ Boundary definition</p>
 <th style="text-align: left">Currency Symbol</th>
 <th style="text-align: left">Minimum Duration</th>
 <th style="text-align: left">Default Duration</th>
-<th style="text-align: left">Default Maximum Amount</th>
+<th style="text-align: left">Default Minimum / Maximum Amount</th>
+<th style="text-align: left">Confirm Blocks</th>
 </tr>
 </thead>
 
@@ -577,112 +580,88 @@ Boundary definition</p>
 <td style="text-align: left">BTC</td>
 <td style="text-align: left">20</td>
 <td style="text-align: left">120</td>
-<td style="text-align: left">1</td>
+<td style="text-align: left">0.00002 / 0.2</td>
+<td style="text-align: left">2</td>
 </tr>
 <tr>
 <td style="text-align: left">2</td>
 <td style="text-align: left">LTC</td>
 <td style="text-align: left">20</td>
 <td style="text-align: left">120</td>
-<td style="text-align: left">10</td>
+<td style="text-align: left">0.005 / 50</td>
+<td style="text-align: left">6</td>
 </tr>
 <tr>
-<td style="text-align: left">5</td>
-<td style="text-align: left">DASH</td>
-<td style="text-align: left">10</td>
-<td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
+<td style="text-align: left">3</td>
+<td style="text-align: left">DOGE</td>
+<td style="text-align: left">20</td>
+<td style="text-align: left">120</td>
+<td style="text-align: left">0.005 / 50</td>
+<td style="text-align: left">15</td>
 </tr>
 <tr>
 <td style="text-align: left">60</td>
 <td style="text-align: left">ETH</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">60</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">144</td>
-<td style="text-align: left">XRP</td>
-<td style="text-align: left">10</td>
-<td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
+<td style="text-align: left">0.0005 / 5</td>
+<td style="text-align: left">6</td>
 </tr>
 <tr>
 <td style="text-align: left">145</td>
 <td style="text-align: left">BCH</td>
 <td style="text-align: left">20</td>
 <td style="text-align: left">120</td>
-<td style="text-align: left">1</td>
+<td style="text-align: left">0.005 / 20</td>
+<td style="text-align: left">6</td>
 </tr>
 <tr>
 <td style="text-align: left">148</td>
 <td style="text-align: left">XLM</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">194</td>
-<td style="text-align: left">EOS</td>
-<td style="text-align: left">10</td>
-<td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
+<td style="text-align: left">2 / 2000</td>
+<td style="text-align: left">1</td>
 </tr>
 <tr>
 <td style="text-align: left">195</td>
 <td style="text-align: left">TRX</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">236</td>
-<td style="text-align: left">BSV</td>
-<td style="text-align: left">20</td>
-<td style="text-align: left">120</td>
+<td style="text-align: left">10 / 10000</td>
 <td style="text-align: left">1</td>
-</tr>
-<tr>
-<td style="text-align: left">354</td>
-<td style="text-align: left">DOT</td>
-<td style="text-align: left">10</td>
-<td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">461</td>
-<td style="text-align: left">FIL</td>
-<td style="text-align: left">10</td>
-<td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
 </tr>
 <tr>
 <td style="text-align: left">714</td>
 <td style="text-align: left">BNB</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">30</td>
+<td style="text-align: left">0.003 / 30</td>
+<td style="text-align: left">1</td>
+</tr>
+<tr>
+<td style="text-align: left">966</td>
+<td style="text-align: left">MATIC</td>
 <td style="text-align: left">10</td>
+<td style="text-align: left">60</td>
+<td style="text-align: left">0.005 / 50</td>
+<td style="text-align: left">50</td>
 </tr>
 <tr>
 <td style="text-align: left">1815</td>
 <td style="text-align: left">ADA</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">30</td>
-<td style="text-align: left">10</td>
+<td style="text-align: left">1 / 1000</td>
+<td style="text-align: left">30</td>
 </tr>
 <tr>
 <td style="text-align: left">99999999997</td>
 <td style="text-align: left">BSC</td>
 <td style="text-align: left">10</td>
 <td style="text-align: left">60</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">unlisted</td>
-<td style="text-align: left">-</td>
+<td style="text-align: left">0.005 / 50</td>
 <td style="text-align: left">20</td>
-<td style="text-align: left">120</td>
-<td style="text-align: left">10000</td>
 </tr>
 </tbody>
 </table>
@@ -700,6 +679,16 @@ Boundary definition</p>
   &quot;address&quot;: &quot;0xed965D0A23eC4583f55Fb5d4109C0fE069B396fC&quot;,
   &quot;expired_time&quot;: 1615975467,
   &quot;order_id&quot;: &quot;N520335069_1000022&quot;
+}</code></pre></div>
+
+<p>For BNB, XLM</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;access_token&quot;: &quot;ybJWKM_CT1yXxzLO2z1Y5fg1EzHuMyRA14ubzR8i-RE&quot;,
+  &quot;address&quot;: &quot;0xed965D0A23eC4583f55Fb5d4109C0fE069B396fC&quot;,
+  &quot;expired_time&quot;: 1615975467,
+  &quot;order_id&quot;: &quot;N520335069_1000023&quot;,
+  &quot;memo&quot;: &quot;63574&quot;
 }</code></pre></div>
 
 <p>The response includes the following parameters:</p>
@@ -733,6 +722,11 @@ Boundary definition</p>
 <td style="text-align: left">order_id</td>
 <td style="text-align: left">string</td>
 <td style="text-align: left">The order ID of the payment order</td>
+</tr>
+<tr>
+<td style="text-align: left">memo</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The memo of the payment order, the payment transaction must specify an accurate memo to complete the order.</td>
 </tr>
 </tbody>
 </table>
@@ -2190,26 +2184,7 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</co
     <td>currency_bip44</td>
     <td>int64</td>
     <td>
-        <table>
-          <thead><tr><td>ID</td><td>Currency Symbol</td><td>Decimals</td></tr></thead>
-          <tbody>
-            <tr><td>0</td><td>BTC</td><td>8</td></tr>
-            <tr><td>2</td><td>LTC</td><td>8</td></tr>
-            <tr><td>5</td><td>DASH</td><td>8</td></tr>
-            <tr><td>60</td><td>ETH</td><td>18</td></tr>
-            <tr><td>144</td><td>XRP</td><td>6</td></tr>
-            <tr><td>145</td><td>BCH</td><td>8</td></tr>
-            <tr><td>148</td><td>XLM</td><td>7</td></tr>
-            <tr><td>194</td><td>EOS</td><td>4</td></tr>
-            <tr><td>195</td><td>TRX</td><td>6</td></tr>
-            <tr><td>236</td><td>BSV</td><td>8</td></tr>
-            <tr><td>354</td><td>DOT</td><td>10</td></tr>
-            <tr><td>461</td><td>FIL</td><td>18</td></tr>
-            <tr><td>714</td><td>BNB</td><td>8</td></tr>
-            <tr><td>1815</td><td>ADA</td><td>6</td></tr>
-            <tr><td>99999999997</td><td>BSC</td><td>18</td></tr>
-          </tbody>
-        </table>
+        Refer to <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER#currency-definition" target="_top"> Currency Definition</a> table
     </td>
   </tr>
   <tr>
@@ -2262,106 +2237,6 @@ http://localhost:8889/v1/mock/merchant/{MERCHANT_ID}/apisecret/refreshsecret</co
 </table>
 
 <h5 id="toc_92"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="currency-definition"></a></p>
-
-<h3 id="toc_93">Currency Definition</h3>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">ID</th>
-<th style="text-align: left">Currency Symbol</th>
-<th style="text-align: left">Decimals</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">0</td>
-<td style="text-align: left">BTC</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">2</td>
-<td style="text-align: left">LTC</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">5</td>
-<td style="text-align: left">DASH</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">60</td>
-<td style="text-align: left">ETH</td>
-<td style="text-align: left">18</td>
-</tr>
-<tr>
-<td style="text-align: left">144</td>
-<td style="text-align: left">XRP</td>
-<td style="text-align: left">6</td>
-</tr>
-<tr>
-<td style="text-align: left">145</td>
-<td style="text-align: left">BCH</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">148</td>
-<td style="text-align: left">XLM</td>
-<td style="text-align: left">7</td>
-</tr>
-<tr>
-<td style="text-align: left">194</td>
-<td style="text-align: left">EOS</td>
-<td style="text-align: left">4</td>
-</tr>
-<tr>
-<td style="text-align: left">195</td>
-<td style="text-align: left">TRX</td>
-<td style="text-align: left">6</td>
-</tr>
-<tr>
-<td style="text-align: left">236</td>
-<td style="text-align: left">BSV</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">354</td>
-<td style="text-align: left">DOT</td>
-<td style="text-align: left">10</td>
-</tr>
-<tr>
-<td style="text-align: left">461</td>
-<td style="text-align: left">FIL</td>
-<td style="text-align: left">18</td>
-</tr>
-<tr>
-<td style="text-align: left">714</td>
-<td style="text-align: left">BNB</td>
-<td style="text-align: left">8</td>
-</tr>
-<tr>
-<td style="text-align: left">1815</td>
-<td style="text-align: left">ADA</td>
-<td style="text-align: left">6</td>
-</tr>
-<tr>
-<td style="text-align: left">99999999997</td>
-<td style="text-align: left">BSC</td>
-<td style="text-align: left">18</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>Refer to <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
-
-<p>BSC is a pseudo cryptocurrency definition in the CYBAVO SOFA system</p>
-</blockquote>
-
-<h5 id="toc_94"><a href="#table-of-contents">Back to top</a></h5>
 
 
 
