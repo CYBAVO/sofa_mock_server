@@ -2208,7 +2208,7 @@ Query the whitelist configuration of the withdrawal wallet.
 
 ##### Request
 
-**GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/config
+`VIEW` **GET** /v1/sofa/wallets/`WALLET_ID`/sender/whitelist/config
 
 > `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
@@ -2760,7 +2760,7 @@ Sign message, equivalent to `eth_sign`.
 
 ##### Request
 
-`VIEW` **POST** /v1/sofa/wallets/`WALLET_ID`/signmessage
+**POST** /v1/sofa/wallets/`WALLET_ID`/signmessage
 
 > `Withdrawal Wallet` `Deposit-withdrawal Wallet` `Delegated Wallet`
 
