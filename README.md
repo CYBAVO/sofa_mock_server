@@ -1363,7 +1363,7 @@ By default, the withdraw API will perform the address check to verify that the o
 
 The withdrawal API can also interact with the contracts (ERC/BEP 721/1155) deployed in the SOFA system.
 
-> **Alert** You can use the [query API](#query-latest-withdrawal-transaction-state) to confirm the current withdrawal status when uncertain (e.g. request timeout) to prevent fund loss due to repetitive transaction.
+> **⚠️ Alert:** Use the [query API](#query-latest-withdrawal-transaction-state) to confirm the current withdrawal status when uncertain (e.g. request timeout) to prevent fund loss due to repetitive transaction.
 
 ##### Request
 
