@@ -3235,6 +3235,10 @@ The label will be automatically synced to the child wallet.</p>
 
 <p>The withdrawal API can also interact with the contracts (ERC/BEP 721/1155) deployed in the SOFA system.</p>
 
+<blockquote>
+<p><strong>Alert</strong> You can use the <a href="#query-latest-withdrawal-transaction-state">query API</a> to confirm the current withdrawal status when uncertain (e.g. request timeout) to prevent fund loss due to repetitive transaction.</p>
+</blockquote>
+
 <h5 id="toc_125">Request</h5>
 
 <p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/sender/transactions</p>
