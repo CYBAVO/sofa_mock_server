@@ -4,6 +4,8 @@
 - [Get Started](#get-started)
 - [API Authentication](#api-authentication)
 - [Callback Integration](#callback-integration)
+- [Callback State Change](#callback-state-change)
+- [In-pool Transaction Callback](#in-pool-transaction-callback)
 - [Cryptocurrency Unit Conversion](#cryptocurrency-unit-conversion)
 - [API Response Validation](#api-response-validation)
 - REST API
@@ -59,6 +61,7 @@
 		- [List Wallets](#list-wallets)
 		- [Query Wallets Balance](#query-wallets-balance)
 		- [Query Currency Prices](#query-currency-prices)
+		- [Query Contract Token Meta](#query-contract-token-meta)
 - Testing
 	- [Mock Server](#mock-server)
 	- [cURL Testing Commands](#curl-testing-commands)
@@ -72,6 +75,7 @@
 	- [Memo Requirement](#memo-requirement)
 	- [Wallet Type Definition](#wallet-type-definition)
 	- [Delegated Wallet Supported Currency](#delegated-wallet-supported-currency)
+	- [EVM Compatible Currency](#evm-compatible-currency)
 
 <a name="get-started"></a>
 # Get Started
@@ -186,6 +190,45 @@ transaction in chain state(3) -> repeats state 3 until the confirmation count is
 
 > Refer to [Transaction State Definition](#transaction-state-definition) for all transaction states definition.
 
+<a name="in-pool-transaction-callback"></a>
+# In-pool Transaction Callback
+
+Currently, only BTC supports in-pool transaction callbacks. The callback type is **In-pool Transaction Callback**(127), which is a one-time callback.
+
+The following is an in-pool transaction callback example:
+
+```json
+{
+  "type": 127,
+  "serial": 0,
+  "order_id": "",
+  "currency": "BTC",
+  "txid": "675959d855da3a194d7f9d32b347ec2702d29677f23c563bc2c31aefaa274739",
+  "block_height": 0,
+  "tindex": 0,
+  "vout_index": 0,
+  "amount": "1000",
+  "fees": "",
+  "memo": "",
+  "broadcast_at": 0,
+  "chain_at": 0,
+  "from_address": "",
+  "to_address": "2Mw6znX6LgyFRhE9iM2d1TXBTP7MQiKD36y",
+  "wallet_id": 367628,
+  "state": 2,
+  "confirm_blocks": 0,
+  "processing_state": 0,
+  "addon": {
+    "fee_decimal": 8,
+    "token_id": ""
+  },
+  "decimal": 8,
+  "currency_bip44": 0,
+  "token_address": ""
+}
+```
+
+> The `processing_state` always be 0 (In fullnode mempool) and `state` always be 2 (TXID in pool).
 
 <a name="cryptocurrency-unit-conversion"></a>
 # Cryptocurrency Unit Conversion
@@ -4338,6 +4381,100 @@ The response includes the following parameters:
 | 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
 | 403 | 385   | API Secret not valid | - | Invalid API code permission |
 
+##### [Back to top](#table-of-contents)
+
+
+<a name="query-contract-token-meta"></a>
+### Query Contract Token Meta
+
+Used to query token meta information for a specific contract.
+
+##### Request
+
+`VIEW` **POST** /v1/sofa/currency/`CURRENCY`/contract/get-multiple-tokenuri
+
+> The API code must be a read-only API code. Use wallet ID 0 to register API code with the mock server.
+> 
+> All EVM compatible currencies are supported. Refer to [EVM Compatible Currency](#evm-compatible-currency).
+
+- [Sample curl command](#curl-query-contract-token-meta)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/currency/60/contract/get-multiple-tokenuri
+```
+
+###### Post body
+
+```json
+{
+  "requests": [
+    {
+      "token_address": "0x9fceceda8a781e493a0eba6a59c6e6c731fd5ee5",
+      "token_id": "1"
+    }
+  ]
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| requests | array | requried | Specify all inquiry contracts |
+| token_address | string | requried | Specify token contract address |
+| token_id | string | requried if token_adress is a ERC1155 contract | Specify token ID in an ERC1155 contract |
+
+##### Response Format
+
+An example of a successful response:
+	
+```json
+{
+  "responses": [
+    {
+      "error_message": null,
+      "token_address": "0x9fceceda8a781e493a0eba6a59c6e6c731fd5ee5",
+      "token_id": "1",
+      "uri_info": {
+        "description": "Elementos character",
+        "image": "https://gateway.pinata.cloud/ipfs/QmQRzm4tzvboKqseZFWV1MYjbwVQFeeQfyc4Vf9EqEnQHm",
+        "name": 1,
+        "token_uri": "https://gateway.pinata.cloud/ipfs/QmNW6R5J5vTxcRHpiMP4KNwRbtUyJExH6buXqhHLUwfHum"
+      }
+    }
+  ]
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| error_message | string | Description of any errors that occurred |
+| token_address | string | Inquiry token contract |
+| token_id | string | Inquiry token ID |
+| uri_info | struct | Meta information, please refer to [EIP-721](https://eips.ethereum.org/EIPS/eip-721#specification), [EIP-1155](https://eips.ethereum.org/EIPS/eip-1155#metadata). |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 965   | Not Supported | - | Not supported currency |
 
 ##### [Back to top](#table-of-contents)
 
@@ -4391,6 +4528,7 @@ http://localhost:8889/v1/mock/wallets/withdrawal/callback
 > Refer to [WithdrawalCallback()](https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L183) function in mock server OuterController.go
 
 ##### [Back to top](#table-of-contents)
+
 
 <a name="curl-testing-commands"></a>
 # cURL Testing Commands
@@ -4801,7 +4939,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"test_number":102999}' \
-http://localhost:8889/v1/mock/wallets/896541/notifications/inspect
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect
 ```
 - [API definition](#inspect-callback-endpoint)
 
@@ -4831,6 +4969,17 @@ curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances
 curl http://localhost:8889/v1/mock/currency/prices
 ```
 - [API definition](#query-currency-prices)
+
+
+<a name="curl-query-contract-token-meta"></a>
+### Query Contract Token Meta
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"requests":[{"token_address":"0x9fceceda8a781e493a0eba6a59c6e6c731fd5ee5","token_id":"1"}]}' \
+http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
+```
+- [API definition](#query-contract-token-meta)
+
 
 
 ##### [Back to top](#table-of-contents)
@@ -5162,6 +5311,7 @@ Deposit callback with blocklist_tags sample:
 | 2 | Withdraw Callback |
 | 3 | Collect Callback |
 | 4 | Airdrop Callback |
+| 127 | In-pool Transaction Callback |
 | -1 | All callbacks (for inquiry) |
 
 ##### [Back to top](#table-of-contents)
@@ -5282,6 +5432,31 @@ Deposit callback with blocklist_tags sample:
 
 <a name="delegated-wallet-supported-currency"></a>
 ### Delegated Wallet Supported Currency
+
+| ID   | Currency Symbol |
+| :--- | :---            |
+| 60   | ETH             |
+| 700  | XDAI            |
+| 966  | MATIC           |
+| 1001 | TT              |
+| 1023 | ONE             |
+| 52752 | CELO           |
+| 99999999986* | KUB     |
+| 99999999987* | KOVAN   |
+| 99999999988* | AVAX-C  |
+| 99999999989* | PALM    |
+| 99999999990* | FTM     |
+| 99999999991* | OKT     |
+| 99999999992* | OPTIMISM |
+| 99999999993* | ARBITRUM |
+| 99999999994* | HECO    |
+| 99999999997* | BSC     |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="evm-compatible-currency"></a>
+### EVM Compatible Currency
 
 | ID   | Currency Symbol |
 | :--- | :---            |

@@ -1037,3 +1037,22 @@ func (c *OuterController) GetDelegatedBalances() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Query Token Meta Info
+// @router /currency/:currency/contract/get-multiple-tokenuri [post]
+func (c *OuterController) GetContractTokenMeta() {
+	defer c.ServeJSON()
+
+	currency := c.Ctx.Input.Param(":currency")
+
+	resp, err := api.MakeRequest(0, "POST", fmt.Sprintf("/v1/sofa/currency/%s/contract/get-multiple-tokenuri", currency),
+		nil, c.Ctx.Input.RequestBody)
+	if err != nil {
+		logs.Error("GetContractTokenMeta failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}
