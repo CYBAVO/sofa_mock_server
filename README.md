@@ -2836,6 +2836,8 @@ The request includes the following parameters:
 | Field | Type  | Note | Description |
 | :---  | :---  | :--- | :---        |
 | message | string | required | Message to be signed |
+| is_hex | boolean | optional | Treat the message as a hexadecimal string that will be decoded before signing |
+| eip155 | boolean | optional | Sign the message in EIP-155 format |
 | wallet_address | string | required, for delegated wallet | Specify the delegated address for the request |
 | index | int64 | required, for delegated wallet | Specify the corresponding index of the `wallet_address` |
 
