@@ -380,6 +380,7 @@ kbd {
 <li><a href="#query-withdrawal-wallet-transaction-history">Query Withdrawal Wallet Transaction History</a></li>
 <li><a href="#sign-message">Sign Message</a></li>
 <li><a href="#call-contract-read-abi">Call Contract Read ABI</a></li>
+<li><a href="#arweave-sign-transaction">Arweave Sign Transaction</a></li>
 </ul></li>
 <li>Deposit / Withdraw Common API
 
@@ -4412,7 +4413,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <h3 id="toc_155">Query Withdrawal Transaction Event Logs</h3>
 
-<p>Query event logs of a withdrawal transaction by transaction hash.</p>
+<p>Query event logs of a withdrawal transaction by transaction hash. Only <a href="#evm-compatible-currency">EVM Compatible Currencies</a> are supported. </p>
 
 <h5 id="toc_156">Request</h5>
 
@@ -7296,37 +7297,41 @@ The label will be automatically synced to the child wallet.</p>
 
 <h5 id="toc_262"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_263">Deposit / Withdrawal Wallet Common API</h1>
+<p><a name="arweave-sign-transaction"></a></p>
 
-<p><a name="query-callback-history"></a></p>
+<h3 id="toc_263">Arweave Sign Transaction</h3>
 
-<h3 id="toc_264">Query Callback History</h3>
+<p>Sign Arweave transaction for uploading data. This API is dedicated to the Arweave withdrawal wallet.</p>
 
-<p>Used to query some kind of callbacks within a time interval.</p>
+<h5 id="toc_264">Request</h5>
 
-<h5 id="toc_265">Request</h5>
-
-<p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications?from_time=<code>from</code>&amp;to_time=<code>to</code>&amp;type=<code>type</code></p>
+<p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/signtransaction</p>
 
 <blockquote>
-<p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
+<p><code>Withdrawal Wallet</code></p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-callback-history">Sample curl command</a></li>
+<li><a href="#curl-arweave-sign-transaction">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_266">Request Format</h5>
+<h5 id="toc_265">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_267">API</h6>
+<h6 id="toc_266">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/677414/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/557432/signtransaction</code></pre></div>
+
+<h6 id="toc_267">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;ar_tx&quot;: &quot;{\&quot;format\&quot;:2,\&quot;id\&quot;:\&quot;\&quot;,\&quot;last_tx\&quot;:\&quot;4z4iqqw4j_bBC1jXvm-pbMDg5eSYOGPjRz2fB1nsai6cVtvTd7Ucn-_Qau_bZh\&quot;,\&quot;owner\&quot;:\&quot;KkTVKjrry_aieBmqNOuUGtJam-3yT6zMABY89pinlcY\&quot;,\&quot;tags\&quot;:[{\&quot;name\&quot;:\&quot;Q29udGVudC1UeXBl\&quot;,\&quot;value\&quot;:\&quot;aW1hZ2UvanBlZw\&quot;}],\&quot;target\&quot;:\&quot;\&quot;,\&quot;quantity\&quot;:\&quot;0\&quot;,\&quot;data\&quot;:\&quot;\&quot;,\&quot;data_size\&quot;:\&quot;23782\&quot;,\&quot;data_root\&quot;:\&quot;Ve1yivS-iMklYK6xyPT58IeZRu-TtnAYkW5Ih4pb-S4\&quot;,\&quot;reward\&quot;:\&quot;73874553\&quot;,\&quot;signature\&quot;:\&quot;\&quot;,\&quot;chunks\&quot;:\&quot;\&quot;}&quot;
+}</code></pre></div>
 
 <p>The request includes the following parameters:</p>
 
-<h6 id="toc_268">Query Parameters</h6>
+<h6 id="toc_268">Post body</h6>
 
 <table>
 <thead>
@@ -7340,22 +7345,10 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">from_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">optional, default <code>0</code></td>
-<td style="text-align: left">Start date (unix time in UTC)</td>
-</tr>
-<tr>
-<td style="text-align: left">to_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">optional, default <code>current time</code></td>
-<td style="text-align: left">End date (unix time in UTC)</td>
-</tr>
-<tr>
-<td style="text-align: left">type</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">optional, default <code>-1</code></td>
-<td style="text-align: left">Refer to <a href="#callback-type-definition">Callback Type</a></td>
+<td style="text-align: left">ar_tx</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">required</td>
+<td style="text-align: left">Transaction JSON string to be signed</td>
 </tr>
 </tbody>
 </table>
@@ -7365,32 +7358,9 @@ The label will be automatically synced to the child wallet.</p>
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;notifications&quot;: [
-    {
-      &quot;type&quot;: 2,
-      &quot;serial&quot;: 90000000003,
-      &quot;order_id&quot;: &quot;a206&quot;,
-      &quot;currency&quot;: &quot;BNB&quot;,
-      &quot;txid&quot;: &quot;76B8B2B1E25472FFE7B8FCE85742E0964FEDB1B679DE963FA19F430E8B287F93&quot;,
-      &quot;block_height&quot;: 25844472,
-      &quot;tindex&quot;: 2,
-      &quot;vout_index&quot;: 0,
-      &quot;amount&quot;: &quot;15000000&quot;,
-      &quot;fees&quot;: &quot;37500&quot;,
-      &quot;memo&quot;: &quot;CC&quot;,
-      &quot;broadcast_at&quot;: 0,
-      &quot;chain_at&quot;: 1562234190,
-      &quot;from_address&quot;: &quot;tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0&quot;,
-      &quot;to_address&quot;: &quot;tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk&quot;,
-      &quot;wallet_id&quot;: 677414,
-      &quot;state&quot;: 3,
-      &quot;confirm_blocks&quot;: 1,
-      &quot;processing_state&quot;: 1,
-      &quot;addon&quot;: {}
-    }
-  ]
-}
-</code></pre></div>
+  &quot;id&quot;: &quot;j06PW1hWTS2keWOl6X_oIKdUMV29MllMlO2rSRDhkzg&quot;,
+  &quot;signature&quot;: &quot;v56Dgg-V--ZQANyhyc00Pgd2nywB9NFv7YOgY4ngv7WlHCydDNzlKIvTGCrJvC0xmnuQv-O4XAHM4NbQCKEOfqU8kpwPvo59lQA1yCIjQeNw3rGvlg832MvyAR71FjME5KI84vz-IcDOGpqJs-GApjPpbTren5NKfkVMA9TAnTUhd3wQafQdTdbaGnBbccuHxEFBqR3xWkjt6r2dsmtUZkyVz41MAjMJyQ8u7_131AexJXNBX0U-wDXxJ6eu6kydMPrdsYqU6no8wEEl3XTdsOmJ5J1jy9uiCyN5Ri2II2VzTvKgP8xVOquAo2EZGQLHo2nJU4sVOXHA1ZJ9l0U2ny5ZMyqqh3tFqEsk5dDwBJumoCbMo0bFOKSXiG7iez8WEi57kdLy5PJBizW5jFYITm1fXnJ8ERyk8wTHu0f1_5FQLZtinl6sbwsb_xCyy2siPYc5CpwR5u6yR7hCbBxt9WJ3nDeMfKTRk2_vnEYagC_HzMk3aG1oqohaA8_J7t8UNli8idLS7LpxTWdZuU32rIU8mv9lVpEbxjGpRQFqvwS32AUxLM6llG5svswgb38_y7GEajWZkeAuZ4-dvK7r91evzkbrKbpI_mnOGnMgPopiyCl6wEOoiJYtfo5IbAXi5YJITZ7KbwtoWh-MzJFPE_9UnZ9eXY8GKJU-mZC23NA&quot;
+}</code></pre></div>
 
 <p>The response includes the following parameters:</p>
 
@@ -7405,9 +7375,14 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">notifications</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">Arrary of callbacks, refer to <a href="#callback-definition">Callback Definition</a></td>
+<td style="text-align: left">id</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">ID field of the signed transaction</td>
+</tr>
+<tr>
+<td style="text-align: left">signature</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Signature filed of the signed transaction</td>
 </tr>
 </tbody>
 </table>
@@ -7489,49 +7464,70 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code permission</td>
 </tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">112</td>
+<td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Malformatted post body</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">112</td>
+<td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">not allowed to sign asset transfer transaction</td>
+<td style="text-align: left">The <code>quantity</code> or <code>target</code> is not empty</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">112</td>
+<td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">invalid transaction format</td>
+<td style="text-align: left">The <code>data_size</code> is zero or <code>data_root</code> is empty</td>
+</tr>
+<tr>
+<td style="text-align: left">404</td>
+<td style="text-align: left">303</td>
+<td style="text-align: left">Invalid currency</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The wallet is not allowed to perform this request</td>
+</tr>
 </tbody>
 </table>
 
 <h5 id="toc_271"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-callback-detail"></a></p>
+<h1 id="toc_272">Deposit / Withdrawal Wallet Common API</h1>
 
-<h3 id="toc_272">Query Callback Detail</h3>
+<p><a name="query-callback-history"></a></p>
 
-<p>Query the detailed information of the callback by its serial ID. It can be used to reconfirm whether a deposit callback exists.</p>
+<h3 id="toc_273">Query Callback History</h3>
 
-<h5 id="toc_273">Request</h5>
+<p>Used to query some kind of callbacks within a time interval.</p>
 
-<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications/get_by_id</p>
+<h5 id="toc_274">Request</h5>
+
+<p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications?from_time=<code>from</code>&amp;to_time=<code>to</code>&amp;type=<code>type</code></p>
 
 <blockquote>
 <p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-callback-detail">Sample curl command</a></li>
+<li><a href="#curl-query-callback-history">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_274">Request Format</h5>
+<h5 id="toc_275">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_275">API</h6>
+<h6 id="toc_276">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/677414/notifications/get_by_id</code></pre></div>
-
-<h6 id="toc_276">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;ids&quot;: [
-    90000000140,
-    90000000139    
-  ]
-}</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/677414/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2</code></pre></div>
 
 <p>The request includes the following parameters:</p>
 
-<h6 id="toc_277">Post body</h6>
+<h6 id="toc_277">Query Parameters</h6>
 
 <table>
 <thead>
@@ -7545,10 +7541,22 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">ids</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">requried</td>
-<td style="text-align: left">Specify the IDs for query</td>
+<td style="text-align: left">from_time</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">optional, default <code>0</code></td>
+<td style="text-align: left">Start date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">to_time</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">optional, default <code>current time</code></td>
+<td style="text-align: left">End date (unix time in UTC)</td>
+</tr>
+<tr>
+<td style="text-align: left">type</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">optional, default <code>-1</code></td>
+<td style="text-align: left">Refer to <a href="#callback-type-definition">Callback Type</a></td>
 </tr>
 </tbody>
 </table>
@@ -7560,43 +7568,21 @@ The label will be automatically synced to the child wallet.</p>
 <div><pre><code class="language-javascript">{
   &quot;notifications&quot;: [
     {
-      &quot;type&quot;: 3,
-      &quot;serial&quot;: 90000000139,
-      &quot;order_id&quot;: &quot;&quot;,
-      &quot;currency&quot;: &quot;ADA&quot;,
-      &quot;txid&quot;: &quot;35c283a6f13f5886240fe2e815bc149154ec066cd2061202318dd4e4bf8af35e&quot;,
-      &quot;block_height&quot;: 1003304,
-      &quot;tindex&quot;: 0,
+      &quot;type&quot;: 2,
+      &quot;serial&quot;: 90000000003,
+      &quot;order_id&quot;: &quot;a206&quot;,
+      &quot;currency&quot;: &quot;BNB&quot;,
+      &quot;txid&quot;: &quot;76B8B2B1E25472FFE7B8FCE85742E0964FEDB1B679DE963FA19F430E8B287F93&quot;,
+      &quot;block_height&quot;: 25844472,
+      &quot;tindex&quot;: 2,
       &quot;vout_index&quot;: 0,
-      &quot;amount&quot;: &quot;24447&quot;,
-      &quot;fees&quot;: &quot;0&quot;,
-      &quot;memo&quot;: &quot;&quot;,
-      &quot;broadcast_at&quot;: 1584088556,
-      &quot;chain_at&quot;: 1584088556,
-      &quot;from_address&quot;: &quot;&quot;,
-      &quot;to_address&quot;: &quot;37btjrVyb4KG8gKeZjJguinwdsbcRV65ngHhBUaJWf36QxiakTV3UHiNUP9arReXMZQnpRBVVdkcBB4GyiWzPRSTmg41mTzMpxgfhtfRHtaBCKJNbX&quot;,
-      &quot;wallet_id&quot;: 677414,
-      &quot;state&quot;: 3,
-      &quot;confirm_blocks&quot;: 2,
-      &quot;processing_state&quot;: 1,
-      &quot;addon&quot;: {}
-    },
-    {
-      &quot;type&quot;: 3,
-      &quot;serial&quot;: 90000000140,
-      &quot;order_id&quot;: &quot;&quot;,
-      &quot;currency&quot;: &quot;ADA&quot;,
-      &quot;txid&quot;: &quot;fa120b6283509f0ab2b136a3ac8b613aa3ca2f36ce7c2744e122668d013cfdb5&quot;,
-      &quot;block_height&quot;: 1003305,
-      &quot;tindex&quot;: 0,
-      &quot;vout_index&quot;: 0,
-      &quot;amount&quot;: &quot;55497180&quot;,
-      &quot;fees&quot;: &quot;0&quot;,
-      &quot;memo&quot;: &quot;&quot;,
-      &quot;broadcast_at&quot;: 1584088576,
-      &quot;chain_at&quot;: 1584088576,
-      &quot;from_address&quot;: &quot;&quot;,
-      &quot;to_address&quot;: &quot;37btjrVyb4KDKCyAPRUPxpGiUPWunpBAkGRX8U3h7LYzS2UrHUnEQozcCyqR2GfBVnM3frTaUNEb8DoNGo9JakrskAtaWt6vED6R6ohkmaJ2qr4oCg&quot;,
+      &quot;amount&quot;: &quot;15000000&quot;,
+      &quot;fees&quot;: &quot;37500&quot;,
+      &quot;memo&quot;: &quot;CC&quot;,
+      &quot;broadcast_at&quot;: 0,
+      &quot;chain_at&quot;: 1562234190,
+      &quot;from_address&quot;: &quot;tbnb1f805kv6z8nq2whrcnkagjte3jjss2sxf2rfls0&quot;,
+      &quot;to_address&quot;: &quot;tbnb1655kasahedvaeudaeq6jggr7kal8qgwygu9xqk&quot;,
       &quot;wallet_id&quot;: 677414,
       &quot;state&quot;: 3,
       &quot;confirm_blocks&quot;: 1,
@@ -7709,22 +7695,22 @@ The label will be automatically synced to the child wallet.</p>
 
 <h5 id="toc_280"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-wallet-synchronization-info"></a></p>
+<p><a name="query-callback-detail"></a></p>
 
-<h3 id="toc_281">Query Wallet Synchronization Info</h3>
+<h3 id="toc_281">Query Callback Detail</h3>
 
-<p>Get the blockchain synchronization status of a wallet.</p>
+<p>Query the detailed information of the callback by its serial ID. It can be used to reconfirm whether a deposit callback exists.</p>
 
 <h5 id="toc_282">Request</h5>
 
-<p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/blocks</p>
+<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications/get_by_id</p>
 
 <blockquote>
 <p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-wallet-synchronization-info">Sample curl command</a></li>
+<li><a href="#curl-query-callback-detail">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_283">Request Format</h5>
@@ -7733,16 +7719,94 @@ The label will be automatically synced to the child wallet.</p>
 
 <h6 id="toc_284">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/677414/blocks</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/677414/notifications/get_by_id</code></pre></div>
 
-<h5 id="toc_285">Response Format</h5>
+<h6 id="toc_285">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;ids&quot;: [
+    90000000140,
+    90000000139    
+  ]
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_286">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Note</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">ids</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">requried</td>
+<td style="text-align: left">Specify the IDs for query</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_287">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;latest_block_height&quot;: 29317651,
-  &quot;synced_block_height&quot;: 28529203
-}</code></pre></div>
+  &quot;notifications&quot;: [
+    {
+      &quot;type&quot;: 3,
+      &quot;serial&quot;: 90000000139,
+      &quot;order_id&quot;: &quot;&quot;,
+      &quot;currency&quot;: &quot;ADA&quot;,
+      &quot;txid&quot;: &quot;35c283a6f13f5886240fe2e815bc149154ec066cd2061202318dd4e4bf8af35e&quot;,
+      &quot;block_height&quot;: 1003304,
+      &quot;tindex&quot;: 0,
+      &quot;vout_index&quot;: 0,
+      &quot;amount&quot;: &quot;24447&quot;,
+      &quot;fees&quot;: &quot;0&quot;,
+      &quot;memo&quot;: &quot;&quot;,
+      &quot;broadcast_at&quot;: 1584088556,
+      &quot;chain_at&quot;: 1584088556,
+      &quot;from_address&quot;: &quot;&quot;,
+      &quot;to_address&quot;: &quot;37btjrVyb4KG8gKeZjJguinwdsbcRV65ngHhBUaJWf36QxiakTV3UHiNUP9arReXMZQnpRBVVdkcBB4GyiWzPRSTmg41mTzMpxgfhtfRHtaBCKJNbX&quot;,
+      &quot;wallet_id&quot;: 677414,
+      &quot;state&quot;: 3,
+      &quot;confirm_blocks&quot;: 2,
+      &quot;processing_state&quot;: 1,
+      &quot;addon&quot;: {}
+    },
+    {
+      &quot;type&quot;: 3,
+      &quot;serial&quot;: 90000000140,
+      &quot;order_id&quot;: &quot;&quot;,
+      &quot;currency&quot;: &quot;ADA&quot;,
+      &quot;txid&quot;: &quot;fa120b6283509f0ab2b136a3ac8b613aa3ca2f36ce7c2744e122668d013cfdb5&quot;,
+      &quot;block_height&quot;: 1003305,
+      &quot;tindex&quot;: 0,
+      &quot;vout_index&quot;: 0,
+      &quot;amount&quot;: &quot;55497180&quot;,
+      &quot;fees&quot;: &quot;0&quot;,
+      &quot;memo&quot;: &quot;&quot;,
+      &quot;broadcast_at&quot;: 1584088576,
+      &quot;chain_at&quot;: 1584088576,
+      &quot;from_address&quot;: &quot;&quot;,
+      &quot;to_address&quot;: &quot;37btjrVyb4KDKCyAPRUPxpGiUPWunpBAkGRX8U3h7LYzS2UrHUnEQozcCyqR2GfBVnM3frTaUNEb8DoNGo9JakrskAtaWt6vED6R6ohkmaJ2qr4oCg&quot;,
+      &quot;wallet_id&quot;: 677414,
+      &quot;state&quot;: 3,
+      &quot;confirm_blocks&quot;: 1,
+      &quot;processing_state&quot;: 1,
+      &quot;addon&quot;: {}
+    }
+  ]
+}
+</code></pre></div>
 
 <p>The response includes the following parameters:</p>
 
@@ -7757,19 +7821,14 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">latest_block_height</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">The latest block height on blockchain</td>
-</tr>
-<tr>
-<td style="text-align: left">synced_block_height</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">The current synced block height</td>
+<td style="text-align: left">notifications</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Arrary of callbacks, refer to <a href="#callback-definition">Callback Definition</a></td>
 </tr>
 </tbody>
 </table>
 
-<h5 id="toc_286">Error Code</h5>
+<h5 id="toc_288">Error Code</h5>
 
 <table>
 <thead>
@@ -7849,70 +7908,41 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_287"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_289"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="query-transaction-average-fee"></a></p>
+<p><a name="query-wallet-synchronization-info"></a></p>
 
-<h3 id="toc_288">Query Transaction Average Fee</h3>
+<h3 id="toc_290">Query Wallet Synchronization Info</h3>
 
-<p>Query average blockchain fee within latest N blocks.</p>
+<p>Get the blockchain synchronization status of a wallet.</p>
 
-<h5 id="toc_289">Request</h5>
+<h5 id="toc_291">Request</h5>
 
-<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/autofee</p>
+<p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/blocks</p>
 
 <blockquote>
 <p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-query-transaction-average-fee">Sample curl command</a></li>
+<li><a href="#curl-query-wallet-synchronization-info">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_290">Request Format</h5>
+<h5 id="toc_292">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_291">API</h6>
+<h6 id="toc_293">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/635718/autofee</code></pre></div>
-
-<h6 id="toc_292">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;block_num&quot;: 1
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_293">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Note</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">block_num</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">optional, default <code>1</code>, range <code>1~100</code></td>
-<td style="text-align: left">Query the average blockchain fee in the last N blocks</td>
-</tr>
-</tbody>
-</table>
+<div><pre><code class="language-none">/v1/sofa/wallets/677414/blocks</code></pre></div>
 
 <h5 id="toc_294">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-    &quot;auto_fee&quot;: &quot;1&quot;
+  &quot;latest_block_height&quot;: 29317651,
+  &quot;synced_block_height&quot;: 28529203
 }</code></pre></div>
 
 <p>The response includes the following parameters:</p>
@@ -7928,9 +7958,14 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">auto_fee</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Mining fee denominated in the smallest cryptocurrency unit</td>
+<td style="text-align: left">latest_block_height</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">The latest block height on blockchain</td>
+</tr>
+<tr>
+<td style="text-align: left">synced_block_height</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">The current synced block height</td>
 </tr>
 </tbody>
 </table>
@@ -8012,34 +8047,27 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code permission</td>
 </tr>
-<tr>
-<td style="text-align: left">400</td>
-<td style="text-align: left">112</td>
-<td style="text-align: left">Invalid parameter</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">The <code>block_num</code> is out of range</td>
-</tr>
 </tbody>
 </table>
 
 <h5 id="toc_296"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="batch-query-transaction-average-fees"></a></p>
+<p><a name="query-transaction-average-fee"></a></p>
 
-<h3 id="toc_297">Batch Query Transaction Average Fees</h3>
+<h3 id="toc_297">Query Transaction Average Fee</h3>
 
-<p>Batch Query average blockchain fee within latest N blocks.</p>
+<p>Query average blockchain fee within latest N blocks.</p>
 
 <h5 id="toc_298">Request</h5>
 
-<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/autofees</p>
+<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/autofee</p>
 
 <blockquote>
 <p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-batch-query-transaction-average-fees">Sample curl command</a></li>
+<li><a href="#curl-query-transaction-average-fee">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_299">Request Format</h5>
@@ -8048,16 +8076,12 @@ The label will be automatically synced to the child wallet.</p>
 
 <h6 id="toc_300">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/854714/autofees</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/635718/autofee</code></pre></div>
 
 <h6 id="toc_301">Post body</h6>
 
 <div><pre><code class="language-javascript">{
-  &quot;block_nums&quot;: [
-    1,
-    5,
-    10
-  ]
+  &quot;block_num&quot;: 1
 }</code></pre></div>
 
 <p>The request includes the following parameters:</p>
@@ -8076,10 +8100,10 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">block_nums</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">required, max 5 entries, each entry is range <code>1~100</code></td>
-<td style="text-align: left">Batch query the average blockchain fee in the last N blocks</td>
+<td style="text-align: left">block_num</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">optional, default <code>1</code>, range <code>1~100</code></td>
+<td style="text-align: left">Query the average blockchain fee in the last N blocks</td>
 </tr>
 </tbody>
 </table>
@@ -8089,20 +8113,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;auto_fees&quot;: [
-    {
-      &quot;auto_fee&quot;: &quot;49000000000&quot;,
-      &quot;block_num&quot;: 1
-    },
-    {
-      &quot;auto_fee&quot;: &quot;49000000000&quot;,
-      &quot;block_num&quot;: 5
-    },
-    {
-      &quot;auto_fee&quot;: &quot;38000000000&quot;,
-      &quot;block_num&quot;: 10
-    }
-  ]
+    &quot;auto_fee&quot;: &quot;1&quot;
 }</code></pre></div>
 
 <p>The response includes the following parameters:</p>
@@ -8117,16 +8128,6 @@ The label will be automatically synced to the child wallet.</p>
 </thead>
 
 <tbody>
-<tr>
-<td style="text-align: left">auto_fees</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">Result of the inquiry</td>
-</tr>
-<tr>
-<td style="text-align: left">block_num</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">Inquiry block number</td>
-</tr>
 <tr>
 <td style="text-align: left">auto_fee</td>
 <td style="text-align: left">string</td>
@@ -8217,22 +8218,222 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">112</td>
 <td style="text-align: left">Invalid parameter</td>
 <td style="text-align: left">-</td>
-<td style="text-align: left">Exceeds 5 entries or each entry not in range</td>
+<td style="text-align: left">The <code>block_num</code> is out of range</td>
 </tr>
 </tbody>
 </table>
 
 <h5 id="toc_305"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_306">Vault Wallet API</h1>
+<p><a name="batch-query-transaction-average-fees"></a></p>
+
+<h3 id="toc_306">Batch Query Transaction Average Fees</h3>
+
+<p>Batch Query average blockchain fee within latest N blocks.</p>
+
+<h5 id="toc_307">Request</h5>
+
+<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/autofees</p>
+
+<blockquote>
+<p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-batch-query-transaction-average-fees">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_308">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_309">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/854714/autofees</code></pre></div>
+
+<h6 id="toc_310">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;block_nums&quot;: [
+    1,
+    5,
+    10
+  ]
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_311">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Note</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">block_nums</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">required, max 5 entries, each entry is range <code>1~100</code></td>
+<td style="text-align: left">Batch query the average blockchain fee in the last N blocks</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_312">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;auto_fees&quot;: [
+    {
+      &quot;auto_fee&quot;: &quot;49000000000&quot;,
+      &quot;block_num&quot;: 1
+    },
+    {
+      &quot;auto_fee&quot;: &quot;49000000000&quot;,
+      &quot;block_num&quot;: 5
+    },
+    {
+      &quot;auto_fee&quot;: &quot;38000000000&quot;,
+      &quot;block_num&quot;: 10
+    }
+  ]
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">auto_fees</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Result of the inquiry</td>
+</tr>
+<tr>
+<td style="text-align: left">block_num</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">Inquiry block number</td>
+</tr>
+<tr>
+<td style="text-align: left">auto_fee</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Mining fee denominated in the smallest cryptocurrency unit</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_313">Error Code</h5>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">HTTP Code</th>
+<th style="text-align: left">Error Code</th>
+<th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">No wallet ID found</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The request is considered a replay request</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The API code mismatched</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Send requests too frequently</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">385</td>
+<td style="text-align: left">API Secret not valid</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Invalid API code permission</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">112</td>
+<td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Exceeds 5 entries or each entry not in range</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_314"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_315">Vault Wallet API</h1>
 
 <p><a name="query-vault-wallet-transaction-history"></a></p>
 
-<h3 id="toc_307">Query Vault Wallet Transaction History</h3>
+<h3 id="toc_316">Query Vault Wallet Transaction History</h3>
 
 <p>Get transaction history of vault wallets.</p>
 
-<h5 id="toc_308">Request</h5>
+<h5 id="toc_317">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/transactions?from_time=<code>from</code>&amp;to_time=<code>to</code>&amp;start_index=<code>start</code>&amp;request_number=<code>count</code>&amp;state=<code>state</code></p>
 
@@ -8244,17 +8445,17 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-vault-wallet-transaction-history">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_309">Request Format</h5>
+<h5 id="toc_318">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_310">API with parameters</h6>
+<h6 id="toc_319">API with parameters</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/488471/transactions?from_time=1559664000&amp;to_time=1562255999&amp;start_index=0&amp;request_number=1</code></pre></div>
 
 <p>The request includes the following parameters:</p>
 
-<h6 id="toc_311">Query Parameters</h6>
+<h6 id="toc_320">Query Parameters</h6>
 
 <table>
 <thead>
@@ -8302,7 +8503,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <p><a name="transaction-state-filter"></a></p>
 
-<h6 id="toc_312">Transaction State Filter Definition</h6>
+<h6 id="toc_321">Transaction State Filter Definition</h6>
 
 <table>
 <thead>
@@ -8348,7 +8549,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_313">Response Format</h5>
+<h5 id="toc_322">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -8429,7 +8630,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>Refer to <a href="#currency-definition">Currency Definition</a> or <a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">here</a> for more detailed currency definitions</p>
 </blockquote>
 
-<h5 id="toc_314">Error Code</h5>
+<h5 id="toc_323">Error Code</h5>
 
 <table>
 <thead>
@@ -8509,15 +8710,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_315"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_324"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-vault-wallet-balance"></a></p>
 
-<h3 id="toc_316">Query Vault Wallet Balance</h3>
+<h3 id="toc_325">Query Vault Wallet Balance</h3>
 
 <p>Get the vault wallet balance. Facilitate to establish a real-time balance monitoring mechanism.</p>
 
-<h5 id="toc_317">Request</h5>
+<h5 id="toc_326">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/vault/balance</p>
 
@@ -8529,15 +8730,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-vault-wallet-balance">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_318">Request Format</h5>
+<h5 id="toc_327">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_319">API</h6>
+<h6 id="toc_328">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/488471/vault/balance</code></pre></div>
 
-<h5 id="toc_320">Response Format</h5>
+<h5 id="toc_329">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -8619,7 +8820,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>The currencies that support the unconfirmed balance are BTC, LTC, ETH, BCH, BSV, DASH</p>
 </blockquote>
 
-<h5 id="toc_321">Error Code</h5>
+<h5 id="toc_330">Error Code</h5>
 
 <table>
 <thead>
@@ -8706,17 +8907,17 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_322"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_331"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_323">Common API</h1>
+<h1 id="toc_332">Common API</h1>
 
 <p><a name="activate-api-code"></a></p>
 
-<h3 id="toc_324">Activate API Code</h3>
+<h3 id="toc_333">Activate API Code</h3>
 
 <p>Activate the API code of a certain wallet. Once activated, the currently activated API code will immediately become invalid.</p>
 
-<h5 id="toc_325">Request</h5>
+<h5 id="toc_334">Request</h5>
 
 <p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/apisecret/activate</p>
 
@@ -8728,15 +8929,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-activate-api-code">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_326">Request Format</h5>
+<h5 id="toc_335">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_327">API</h6>
+<h6 id="toc_336">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/488471/apisecret/activate</code></pre></div>
 
-<h5 id="toc_328">Response Format</h5>
+<h5 id="toc_337">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -8770,7 +8971,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_329">Error Code</h5>
+<h5 id="toc_338">Error Code</h5>
 
 <table>
 <thead>
@@ -8850,15 +9051,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_330"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_339"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-api-code-status"></a></p>
 
-<h3 id="toc_331">Query API Code Status</h3>
+<h3 id="toc_340">Query API Code Status</h3>
 
 <p>Query the API code info of a certain wallet. Use the <code>inactivated</code> API code in any request will activate it. Once activated, the currently activated API code will immediately become invalid.</p>
 
-<h5 id="toc_332">Request</h5>
+<h5 id="toc_341">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/apisecret</p>
 
@@ -8870,15 +9071,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-api-code-status">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_333">Request Format</h5>
+<h5 id="toc_342">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_334">API</h6>
+<h6 id="toc_343">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/488471/apisecret</code></pre></div>
 
-<h5 id="toc_335">Response Format</h5>
+<h5 id="toc_344">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -8931,7 +9132,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>Use an invalid API-CODE, the caller will get a 403 Forbidden error.</p>
 </blockquote>
 
-<h5 id="toc_336">Error Code</h5>
+<h5 id="toc_345">Error Code</h5>
 
 <table>
 <thead>
@@ -9011,15 +9212,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_337"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_346"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="refresh-api-code"></a></p>
 
-<h3 id="toc_338">Refresh API Code</h3>
+<h3 id="toc_347">Refresh API Code</h3>
 
 <p>Use paired refresh code to acquire the new inactive API code/secret of the wallet.</p>
 
-<h5 id="toc_339">Request</h5>
+<h5 id="toc_348">Request</h5>
 
 <p><strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/refreshsecret</p>
 
@@ -9031,15 +9232,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-refresh-api-code">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_340">Request Format</h5>
+<h5 id="toc_349">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_341">API</h6>
+<h6 id="toc_350">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/357818/refreshsecret</code></pre></div>
 
-<h6 id="toc_342">Post body</h6>
+<h6 id="toc_351">Post body</h6>
 
 <div><pre><code class="language-javascript">{
   &quot;refresh_code&quot;:&quot;3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra&quot;
@@ -9047,7 +9248,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <p>The request includes the following parameters:</p>
 
-<h6 id="toc_343">Post body</h6>
+<h6 id="toc_352">Post body</h6>
 
 <table>
 <thead>
@@ -9069,7 +9270,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_344">Response Format</h5>
+<h5 id="toc_353">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -9109,7 +9310,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_345">Error Code</h5>
+<h5 id="toc_354">Error Code</h5>
 
 <table>
 <thead>
@@ -9196,15 +9397,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_346"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_355"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-wallet-info"></a></p>
 
-<h3 id="toc_347">Query Wallet Info</h3>
+<h3 id="toc_356">Query Wallet Info</h3>
 
 <p>Get wallet basic information.</p>
 
-<h5 id="toc_348">Request</h5>
+<h5 id="toc_357">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/info</p>
 
@@ -9216,15 +9417,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-wallet-info">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_349">Request Format</h5>
+<h5 id="toc_358">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_350">API</h6>
+<h6 id="toc_359">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/488471/info</code></pre></div>
 
-<h5 id="toc_351">Response Format</h5>
+<h5 id="toc_360">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -9307,195 +9508,6 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_352">Error Code</h5>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">HTTP Code</th>
-<th style="text-align: left">Error Code</th>
-<th style="text-align: left">Error</th>
-<th style="text-align: left">Message</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid ID</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">No wallet ID found</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Header not found</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid timestamp</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid checksum</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">The request is considered a replay request</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Invalid API code</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">The API code mismatched</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Checksum unmatch</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Send requests too frequently</td>
-</tr>
-<tr>
-<td style="text-align: left">403</td>
-<td style="text-align: left">385</td>
-<td style="text-align: left">API Secret not valid</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Invalid API code permission</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_353"><a href="#table-of-contents">Back to top</a></h5>
-
-<p><a name="verify-addresses"></a></p>
-
-<h3 id="toc_354">Verify Addresses</h3>
-
-<p>Check if the address conforms to the wallet cryptocurrency address format (for example, ETH must have the prefix 0x, BTC should start with 1, 3 or bc1, etc).</p>
-
-<blockquote>
-<p>If the wallet&#39;s cryptocurrency is BNB or XRP, there will be a <code>must_need_memo</code> flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address.</p>
-</blockquote>
-
-<h5 id="toc_355">Request</h5>
-
-<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses/verify</p>
-
-<blockquote>
-<p>Wallet ID must be a deposit or withdraw wallet&#39;s ID</p>
-</blockquote>
-
-<ul>
-<li><a href="#curl-verify-addresses">Sample curl command</a></li>
-</ul>
-
-<h5 id="toc_356">Request Format</h5>
-
-<p>An example of the request:</p>
-
-<h6 id="toc_357">API</h6>
-
-<div><pre><code class="language-none">/v1/sofa/wallets/488471/addresses/verify</code></pre></div>
-
-<h6 id="toc_358">Post body</h6>
-
-<div><pre><code class="language-javascript">{
-  &quot;addresses&quot;: [
-    &quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,
-    &quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;
-  ]
-}</code></pre></div>
-
-<p>The request includes the following parameters:</p>
-
-<h6 id="toc_359">Post body</h6>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Note</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">addresses</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">requried</td>
-<td style="text-align: left">Specify the address for verification</td>
-</tr>
-</tbody>
-</table>
-
-<h5 id="toc_360">Response Format</h5>
-
-<p>An example of a successful response:</p>
-
-<div><pre><code class="language-javascript">{
-  &quot;result&quot;: [
-    {
-      &quot;address&quot;: &quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,
-      &quot;valid&quot;: true,
-      &quot;must_need_memo&quot;: false
-    },
-    {
-      &quot;address&quot;: &quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;,
-      &quot;valid&quot;: false,
-      &quot;must_need_memo&quot;: false
-    }
-  ]
-}</code></pre></div>
-
-<p>The response includes the following parameters:</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">Field</th>
-<th style="text-align: left">Type</th>
-<th style="text-align: left">Description</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">result</td>
-<td style="text-align: left">array</td>
-<td style="text-align: left">Array of addresses&#39; verification result</td>
-</tr>
-<tr>
-<td style="text-align: left">must_need_memo</td>
-<td style="text-align: left">boolean</td>
-<td style="text-align: left">Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address</td>
-</tr>
-</tbody>
-</table>
-
 <h5 id="toc_361">Error Code</h5>
 
 <table>
@@ -9573,34 +9585,31 @@ The label will be automatically synced to the child wallet.</p>
 <td style="text-align: left">-</td>
 <td style="text-align: left">Invalid API code permission</td>
 </tr>
-<tr>
-<td style="text-align: left">400</td>
-<td style="text-align: left">112</td>
-<td style="text-align: left">Invalid parameter</td>
-<td style="text-align: left">-</td>
-<td style="text-align: left">Malformatted post body</td>
-</tr>
 </tbody>
 </table>
 
 <h5 id="toc_362"><a href="#table-of-contents">Back to top</a></h5>
 
-<p><a name="inspect-callback-endpoint"></a></p>
+<p><a name="verify-addresses"></a></p>
 
-<h3 id="toc_363">Inspect Callback Endpoint</h3>
+<h3 id="toc_363">Verify Addresses</h3>
 
-<p>Use to inspect the notification and withdrawal authentication endpoint.</p>
+<p>Check if the address conforms to the wallet cryptocurrency address format (for example, ETH must have the prefix 0x, BTC should start with 1, 3 or bc1, etc).</p>
+
+<blockquote>
+<p>If the wallet&#39;s cryptocurrency is BNB or XRP, there will be a <code>must_need_memo</code> flag to indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address.</p>
+</blockquote>
 
 <h5 id="toc_364">Request</h5>
 
-<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications/inspect</p>
+<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/addresses/verify</p>
 
 <blockquote>
-<p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
+<p>Wallet ID must be a deposit or withdraw wallet&#39;s ID</p>
 </blockquote>
 
 <ul>
-<li><a href="#curl-inspect-callback-endpoint">Sample curl command</a></li>
+<li><a href="#curl-verify-addresses">Sample curl command</a></li>
 </ul>
 
 <h5 id="toc_365">Request Format</h5>
@@ -9609,12 +9618,15 @@ The label will be automatically synced to the child wallet.</p>
 
 <h6 id="toc_366">API</h6>
 
-<div><pre><code class="language-none">/v1/sofa/wallets/896541/notifications/inspect</code></pre></div>
+<div><pre><code class="language-none">/v1/sofa/wallets/488471/addresses/verify</code></pre></div>
 
 <h6 id="toc_367">Post body</h6>
 
 <div><pre><code class="language-javascript">{
-  &quot;test_number&quot;: 102999
+  &quot;addresses&quot;: [
+    &quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,
+    &quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;
+  ]
 }</code></pre></div>
 
 <p>The request includes the following parameters:</p>
@@ -9633,10 +9645,10 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">test_number</td>
-<td style="text-align: left">int64</td>
+<td style="text-align: left">addresses</td>
+<td style="text-align: left">array</td>
 <td style="text-align: left">requried</td>
-<td style="text-align: left">The test number will be sent to the notification endpoint in the format <code>{&quot;msg&quot;:&quot;CONNECTION TEST&quot;,&quot;server_time&quot;:1622195270,&quot;client_ip&quot;:&quot;xxx.xxx.xxx.xxx&quot;,&quot;test_number&quot;:102999}</code>.</td>
+<td style="text-align: left">Specify the address for verification</td>
 </tr>
 </tbody>
 </table>
@@ -9646,16 +9658,18 @@ The label will be automatically synced to the child wallet.</p>
 <p>An example of a successful response:</p>
 
 <div><pre><code class="language-javascript">{
-  &quot;server_time&quot;: 1622195253,
-  &quot;client_ip&quot;: &quot;::1&quot;,
-  &quot;notification_endpoint&quot;: {
-    &quot;url&quot;: &quot;http%3A%2F%2Flocalhost%3A8889%2Fv1%2Fmock%2Fwallets%2Fcallback&quot;,
-    &quot;status_code&quot;: 400,
-    &quot;response&quot;: &quot;NDAw&quot;
-  },
-  &quot;withdrawal_authentication_endpoint&quot;: {
-    &quot;error&quot;: &quot;no endpoint found&quot;
-  }
+  &quot;result&quot;: [
+    {
+      &quot;address&quot;: &quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,
+      &quot;valid&quot;: true,
+      &quot;must_need_memo&quot;: false
+    },
+    {
+      &quot;address&quot;: &quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;,
+      &quot;valid&quot;: false,
+      &quot;must_need_memo&quot;: false
+    }
+  ]
 }</code></pre></div>
 
 <p>The response includes the following parameters:</p>
@@ -9671,44 +9685,14 @@ The label will be automatically synced to the child wallet.</p>
 
 <tbody>
 <tr>
-<td style="text-align: left">server_time</td>
-<td style="text-align: left">int64</td>
-<td style="text-align: left">Current server unix time in UTC</td>
+<td style="text-align: left">result</td>
+<td style="text-align: left">array</td>
+<td style="text-align: left">Array of addresses&#39; verification result</td>
 </tr>
 <tr>
-<td style="text-align: left">client_ip</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">The request client IP</td>
-</tr>
-<tr>
-<td style="text-align: left">notification_endpoint</td>
-<td style="text-align: left">struct</td>
-<td style="text-align: left">Specify the test result of notification endpoint</td>
-</tr>
-<tr>
-<td style="text-align: left">withdrawal_authentication_endpoint</td>
-<td style="text-align: left">struct</td>
-<td style="text-align: left">Specify the test result of withdrawal authentication endpoint</td>
-</tr>
-<tr>
-<td style="text-align: left">url</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">The escaped endpoint URL</td>
-</tr>
-<tr>
-<td style="text-align: left">status_code</td>
-<td style="text-align: left">int</td>
-<td style="text-align: left">The HTTP response status code from endpoint</td>
-</tr>
-<tr>
-<td style="text-align: left">response</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">The base64 encoded response from endpoint</td>
-</tr>
-<tr>
-<td style="text-align: left">error</td>
-<td style="text-align: left">string</td>
-<td style="text-align: left">Specify the connection error if any</td>
+<td style="text-align: left">must_need_memo</td>
+<td style="text-align: left">boolean</td>
+<td style="text-align: left">Indicate whether the address needs a memo / destination tag when transferring cryptocurrency to that address</td>
 </tr>
 </tbody>
 </table>
@@ -9802,15 +9786,232 @@ The label will be automatically synced to the child wallet.</p>
 
 <h5 id="toc_371"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_372">Read-only API code API</h1>
+<p><a name="inspect-callback-endpoint"></a></p>
+
+<h3 id="toc_372">Inspect Callback Endpoint</h3>
+
+<p>Use to inspect the notification and withdrawal authentication endpoint.</p>
+
+<h5 id="toc_373">Request</h5>
+
+<p><code>VIEW</code> <strong>POST</strong> /v1/sofa/wallets/<code>WALLET_ID</code>/notifications/inspect</p>
+
+<blockquote>
+<p><code>Withdrawal Wallet</code> <code>Deposit Wallet</code> <code>Deposit-withdrawal Wallet</code> <code>Delegated Wallet</code></p>
+</blockquote>
+
+<ul>
+<li><a href="#curl-inspect-callback-endpoint">Sample curl command</a></li>
+</ul>
+
+<h5 id="toc_374">Request Format</h5>
+
+<p>An example of the request:</p>
+
+<h6 id="toc_375">API</h6>
+
+<div><pre><code class="language-none">/v1/sofa/wallets/896541/notifications/inspect</code></pre></div>
+
+<h6 id="toc_376">Post body</h6>
+
+<div><pre><code class="language-javascript">{
+  &quot;test_number&quot;: 102999
+}</code></pre></div>
+
+<p>The request includes the following parameters:</p>
+
+<h6 id="toc_377">Post body</h6>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Note</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">test_number</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">requried</td>
+<td style="text-align: left">The test number will be sent to the notification endpoint in the format <code>{&quot;msg&quot;:&quot;CONNECTION TEST&quot;,&quot;server_time&quot;:1622195270,&quot;client_ip&quot;:&quot;xxx.xxx.xxx.xxx&quot;,&quot;test_number&quot;:102999}</code>.</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_378">Response Format</h5>
+
+<p>An example of a successful response:</p>
+
+<div><pre><code class="language-javascript">{
+  &quot;server_time&quot;: 1622195253,
+  &quot;client_ip&quot;: &quot;::1&quot;,
+  &quot;notification_endpoint&quot;: {
+    &quot;url&quot;: &quot;http%3A%2F%2Flocalhost%3A8889%2Fv1%2Fmock%2Fwallets%2Fcallback&quot;,
+    &quot;status_code&quot;: 400,
+    &quot;response&quot;: &quot;NDAw&quot;
+  },
+  &quot;withdrawal_authentication_endpoint&quot;: {
+    &quot;error&quot;: &quot;no endpoint found&quot;
+  }
+}</code></pre></div>
+
+<p>The response includes the following parameters:</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Field</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">server_time</td>
+<td style="text-align: left">int64</td>
+<td style="text-align: left">Current server unix time in UTC</td>
+</tr>
+<tr>
+<td style="text-align: left">client_ip</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The request client IP</td>
+</tr>
+<tr>
+<td style="text-align: left">notification_endpoint</td>
+<td style="text-align: left">struct</td>
+<td style="text-align: left">Specify the test result of notification endpoint</td>
+</tr>
+<tr>
+<td style="text-align: left">withdrawal_authentication_endpoint</td>
+<td style="text-align: left">struct</td>
+<td style="text-align: left">Specify the test result of withdrawal authentication endpoint</td>
+</tr>
+<tr>
+<td style="text-align: left">url</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The escaped endpoint URL</td>
+</tr>
+<tr>
+<td style="text-align: left">status_code</td>
+<td style="text-align: left">int</td>
+<td style="text-align: left">The HTTP response status code from endpoint</td>
+</tr>
+<tr>
+<td style="text-align: left">response</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The base64 encoded response from endpoint</td>
+</tr>
+<tr>
+<td style="text-align: left">error</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Specify the connection error if any</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_379">Error Code</h5>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left">HTTP Code</th>
+<th style="text-align: left">Error Code</th>
+<th style="text-align: left">Error</th>
+<th style="text-align: left">Message</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid ID</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">No wallet ID found</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Header not found</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Missing <code>X-API-CODE</code>, <code>X-CHECKSUM</code> header or query param <code>t</code></td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid timestamp</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The timestamp <code>t</code> is not in the valid time range</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid checksum</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The request is considered a replay request</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Invalid API code</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left"><code>X-API-CODE</code> header contains invalid API code</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Invalid API code for wallet {WALLET_ID}</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">The API code mismatched</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Checksum unmatch</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left"><code>X-CHECKSUM</code> header contains wrong checksum</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute)</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Send requests too frequently</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">385</td>
+<td style="text-align: left">API Secret not valid</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Invalid API code permission</td>
+</tr>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">112</td>
+<td style="text-align: left">Invalid parameter</td>
+<td style="text-align: left">-</td>
+<td style="text-align: left">Malformatted post body</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="toc_380"><a href="#table-of-contents">Back to top</a></h5>
+
+<h1 id="toc_381">Read-only API code API</h1>
 
 <p><a name="list-wallets"></a></p>
 
-<h3 id="toc_373">List Wallets</h3>
+<h3 id="toc_382">List Wallets</h3>
 
 <p>List all wallets can be accessed by the inquiry read-only API code.</p>
 
-<h5 id="toc_374">Request</h5>
+<h5 id="toc_383">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/readonly/walletlist</p>
 
@@ -9822,15 +10023,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-list-wallets">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_375">Request Format</h5>
+<h5 id="toc_384">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_376">API</h6>
+<h6 id="toc_385">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/readonly/walletlist</code></pre></div>
 
-<h5 id="toc_377">Response Format</h5>
+<h5 id="toc_386">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -9925,7 +10126,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_378">Error Code</h5>
+<h5 id="toc_387">Error Code</h5>
 
 <table>
 <thead>
@@ -10005,15 +10206,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_379"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_388"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-wallets-balance"></a></p>
 
-<h3 id="toc_380">Query Wallets Balance</h3>
+<h3 id="toc_389">Query Wallets Balance</h3>
 
 <p>Query balance of all wallets can be accessed by the inquiry read-only API code.</p>
 
-<h5 id="toc_381">Request</h5>
+<h5 id="toc_390">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/wallets/readonly/walletlist/balances?type=<code>type</code>&amp;start_index=<code>start_index</code>&amp;request_number=<code>request_number</code></p>
 
@@ -10025,11 +10226,11 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-wallets-balance">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_382">Request Format</h5>
+<h5 id="toc_391">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_383">API</h6>
+<h6 id="toc_392">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/wallets/readonly/walletlist/balances</code></pre></div>
 
@@ -10067,7 +10268,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_384">Response Format</h5>
+<h5 id="toc_393">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -10235,7 +10436,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>For delegated ERC721 and ERC1155 token wallets, use the <a href="#query-delegated-address-balance">Query Delegated Address Balance</a> API to query detailed <code>token_id_balances</code> information.</p>
 </blockquote>
 
-<h5 id="toc_385">Error Code</h5>
+<h5 id="toc_394">Error Code</h5>
 
 <table>
 <thead>
@@ -10315,11 +10516,11 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_386"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_395"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-currency-prices"></a></p>
 
-<h3 id="toc_387">Query Currency Prices</h3>
+<h3 id="toc_396">Query Currency Prices</h3>
 
 <p>Query the prices of all currencies available in the SOFA system.</p>
 
@@ -10327,7 +10528,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>The prices provided by the API are averages for some exchanges and may not be real-time and accurate, so please be aware of the risk of possible price fluctuations when using the API.</p>
 </blockquote>
 
-<h5 id="toc_388">Request</h5>
+<h5 id="toc_397">Request</h5>
 
 <p><code>VIEW</code> <strong>GET</strong> /v1/sofa/currency/prices?convert=<code>currency</code></p>
 
@@ -10339,11 +10540,11 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-currency-prices">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_389">Request Format</h5>
+<h5 id="toc_398">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_390">API</h6>
+<h6 id="toc_399">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/currency/prices?convert=USD,GBP</code></pre></div>
 
@@ -10373,7 +10574,7 @@ The label will be automatically synced to the child wallet.</p>
 <p>All legal tender currencies supported are AUD, BRL, CAD, EUR, GBP, INR, JPY, KRW, NZD, PLN, RUB, SEK, SGD, THB, TWD, USD, ZAR.</p>
 </blockquote>
 
-<h5 id="toc_391">Response Format</h5>
+<h5 id="toc_400">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -10448,7 +10649,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_392">Error Code</h5>
+<h5 id="toc_401">Error Code</h5>
 
 <table>
 <thead>
@@ -10514,15 +10715,15 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_393"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_402"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="query-contract-token-meta"></a></p>
 
-<h3 id="toc_394">Query Contract Token Meta</h3>
+<h3 id="toc_403">Query Contract Token Meta</h3>
 
 <p>Used to query token meta information for a specific contract.</p>
 
-<h5 id="toc_395">Request</h5>
+<h5 id="toc_404">Request</h5>
 
 <p><code>VIEW</code> <strong>POST</strong> /v1/sofa/currency/<code>CURRENCY</code>/contract/get-multiple-tokenuri</p>
 
@@ -10536,15 +10737,15 @@ The label will be automatically synced to the child wallet.</p>
 <li><a href="#curl-query-contract-token-meta">Sample curl command</a></li>
 </ul>
 
-<h5 id="toc_396">Request Format</h5>
+<h5 id="toc_405">Request Format</h5>
 
 <p>An example of the request:</p>
 
-<h6 id="toc_397">API</h6>
+<h6 id="toc_406">API</h6>
 
 <div><pre><code class="language-none">/v1/sofa/currency/60/contract/get-multiple-tokenuri</code></pre></div>
 
-<h6 id="toc_398">Post body</h6>
+<h6 id="toc_407">Post body</h6>
 
 <div><pre><code class="language-javascript">{
   &quot;requests&quot;: [
@@ -10557,7 +10758,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <p>The request includes the following parameters:</p>
 
-<h6 id="toc_399">Post body</h6>
+<h6 id="toc_408">Post body</h6>
 
 <table>
 <thead>
@@ -10591,7 +10792,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_400">Response Format</h5>
+<h5 id="toc_409">Response Format</h5>
 
 <p>An example of a successful response:</p>
 
@@ -10646,7 +10847,7 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_401">Error Code</h5>
+<h5 id="toc_410">Error Code</h5>
 
 <table>
 <thead>
@@ -10719,13 +10920,13 @@ The label will be automatically synced to the child wallet.</p>
 </tbody>
 </table>
 
-<h5 id="toc_402"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_411"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="mock-server"></a></p>
 
-<h1 id="toc_403">Mock Server</h1>
+<h1 id="toc_412">Mock Server</h1>
 
-<h3 id="toc_404">How to compile</h3>
+<h3 id="toc_413">How to compile</h3>
 
 <ul>
 <li>Put sample code to {YOUR_GO_PATH}/github.com/cybavo/SOFA_MOCK_SERVER</li>
@@ -10738,7 +10939,7 @@ The label will be automatically synced to the child wallet.</p>
 </ul></li>
 </ul>
 
-<h3 id="toc_405">Setup configuration</h3>
+<h3 id="toc_414">Setup configuration</h3>
 
 <blockquote>
 <p>Configure CYBAVO API server URL in mockserver.app.conf</p>
@@ -10746,7 +10947,7 @@ The label will be automatically synced to the child wallet.</p>
 
 <div><pre><code class="language-none">api_server_url=&quot;BACKEND_SERVER_URL&quot;</code></pre></div>
 
-<h3 id="toc_406">Put wallet API code/secret into mock server</h3>
+<h3 id="toc_415">Put wallet API code/secret into mock server</h3>
 
 <ul>
 <li>  Get API code/secret on web control panel
@@ -10761,7 +10962,7 @@ The label will be automatically synced to the child wallet.</p>
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;api_code&quot;:&quot;API_CODE&quot;,&quot;api_secret&quot;:&quot;API_SECRET&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken</code></pre></div>
 
-<h3 id="toc_407">Register mock server callback URL</h3>
+<h3 id="toc_416">Register mock server callback URL</h3>
 
 <blockquote>
 <p>Operate on web control panel</p>
@@ -10781,15 +10982,15 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apitoken</code></pre></div>
 <p>Refer to <a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER/blob/master/controllers/OuterController.go#L183">WithdrawalCallback()</a> function in mock server OuterController.go</p>
 </blockquote>
 
-<h5 id="toc_408"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_417"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="curl-testing-commands"></a></p>
 
-<h1 id="toc_409">cURL Testing Commands</h1>
+<h1 id="toc_418">cURL Testing Commands</h1>
 
 <p><a name="curl-create-deposit-addresses"></a></p>
 
-<h3 id="toc_410">Create Deposit Addresses</h3>
+<h3 id="toc_419">Create Deposit Addresses</h3>
 
 <p>For BNB, XLM, XRP or EOS wallet:</p>
 
@@ -10807,7 +11008,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-deposit-addresses"></a></p>
 
-<h3 id="toc_411">Query Deposit Addresses</h3>
+<h3 id="toc_420">Query Deposit Addresses</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses?start_index=0&amp;request_number=1000</code></pre></div>
 
@@ -10817,7 +11018,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-deployed-contract-deposit-addresses"></a></p>
 
-<h3 id="toc_412">Query Deployed Contract Deposit Addresses</h3>
+<h3 id="toc_421">Query Deployed Contract Deposit Addresses</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/contract_txid?txids={TXID1},{TXID2}&#39;</code></pre></div>
 
@@ -10827,7 +11028,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-pool-address"></a></p>
 
-<h3 id="toc_413">Query Pool Address</h3>
+<h3 id="toc_422">Query Pool Address</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress</code></pre></div>
 
@@ -10837,7 +11038,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-pool-address-balance"></a></p>
 
-<h3 id="toc_414">Query Pool Address Balance</h3>
+<h3 id="toc_423">Query Pool Address Balance</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/pooladdress/balance</code></pre></div>
 
@@ -10847,7 +11048,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-invalid-deposit-addresses"></a></p>
 
-<h3 id="toc_415">Query Invalid Deposit Addresses</h3>
+<h3 id="toc_424">Query Invalid Deposit Addresses</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/invalid-deposit</code></pre></div>
 
@@ -10857,7 +11058,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-query-deposit-callback-detail"></a></p>
 
-<h3 id="toc_416">Query Deposit Callback Detail</h3>
+<h3 id="toc_425">Query Deposit Callback Detail</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/notifications/txid/{TX_ID}/{VOUT_INDEX}&#39;</code></pre></div>
 
@@ -10867,7 +11068,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses</code></pre></div>
 
 <p><a name="curl-resend-deposit-callbacks"></a></p>
 
-<h3 id="toc_417">Resend Deposit/Collection Callbacks</h3>
+<h3 id="toc_426">Resend Deposit/Collection Callbacks</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;notification_id&quot;:0}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/collection/notifications/manual</code></pre></div>
@@ -10878,7 +11079,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/collection/notifications/manua
 
 <p><a name="curl-query-deposit-wallet-balance"></a></p>
 
-<h3 id="toc_418">Query Deposit Wallet Balance</h3>
+<h3 id="toc_427">Query Deposit Wallet Balance</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/balance</code></pre></div>
 
@@ -10888,7 +11089,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/collection/notifications/manua
 
 <p><a name="curl-update-deposit-address-label"></a></p>
 
-<h3 id="toc_419">Update Deposit Address Label</h3>
+<h3 id="toc_428">Update Deposit Address Label</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;address&quot;:&quot;0x2B974a3e0b491bB26e0bF146E6cDaC36EFD574a&quot;,&quot;label&quot;:&quot;take-some-notes&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/label</code></pre></div>
@@ -10899,7 +11100,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/label</code></pre></
 
 <p><a name="curl-query-deposit-address-label"></a></p>
 
-<h3 id="toc_420">Query Deposit Address Label</h3>
+<h3 id="toc_429">Query Deposit Address Label</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;addresses&quot;:[&quot;0x2B974a3De0b491bB26e0bF146E6cDaC36EFD574a&quot;,&quot;0xF401AC94D9672e79c68e56A6f822b666E5A7d644&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/get_labels</code></pre></div>
@@ -10910,7 +11111,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/get_labels</code></p
 
 <p><a name="curl-query-delegated-address-balance"></a></p>
 
-<h3 id="toc_421">Query Delegated Address Balance</h3>
+<h3 id="toc_430">Query Delegated Address Balance</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;addresses&quot;:[&quot;0x6A2969E4496d5b27967a68b411D7e0218943c1B6&quot;,&quot;0x1EA22Ed0347E6C9f852cfcBEFE752A026450164b&quot;,&quot;0x2baB9B3af6041960322a248d5315850fc79a3881&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/get-balances</code></pre></div>
@@ -10921,7 +11122,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/get-balances</code></
 
 <p><a name="curl-verify-deposit-addresses"></a></p>
 
-<h3 id="toc_422">Verify Deposit Addresses</h3>
+<h3 id="toc_431">Verify Deposit Addresses</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;addresses&quot;:[&quot;0x46d4AD967F68253f61D45a044dC7dC7B13E5A4B3&quot;,&quot;0x107FF19Ea5fB7de78392e7AcC2A2C7eace891bDc&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/addresses/verify</code></pre></div>
@@ -10932,7 +11133,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/receiver/addresses/verify</cod
 
 <p><a name="curl-withdraw-assets"></a></p>
 
-<h3 id="toc_423">Withdraw Assets</h3>
+<h3 id="toc_432">Withdraw Assets</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;requests&quot;:[{&quot;order_id&quot;:&quot;888888_1&quot;,&quot;address&quot;:&quot;0x60589A749AAC632e9A830c8aBE042D1899d8Dd15&quot;,&quot;amount&quot;:&quot;0.0001&quot;,&quot;memo&quot;:&quot;memo-001&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-001&quot;},{&quot;order_id&quot;:&quot;888888_2&quot;,&quot;address&quot;:&quot;0xf16B7B8900F0d2f682e0FFe207a553F52B6C7015&quot;,&quot;amount&quot;:&quot;0.0002&quot;,&quot;memo&quot;:&quot;memo-002&quot;,&quot;user_id&quot;:&quot;USER01&quot;,&quot;message&quot;:&quot;message-002&quot;}]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pre></div>
@@ -10943,7 +11144,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-cancel-withdrawal-request"></a></p>
 
-<h3 id="toc_424">Cancel Withdrawal Request</h3>
+<h3 id="toc_433">Cancel Withdrawal Request</h3>
 
 <div><pre><code class="language-none">curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/cancel</code></pre></div>
 
@@ -10953,7 +11154,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-query-latest-withdrawal-transaction-state"></a></p>
 
-<h3 id="toc_425">Query Latest Withdrawal Transaction State</h3>
+<h3 id="toc_434">Query Latest Withdrawal Transaction State</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}</code></pre></div>
 
@@ -10963,7 +11164,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-query-all-withdrawal-transaction-states"></a></p>
 
-<h3 id="toc_426">Query All Withdrawal Transaction States</h3>
+<h3 id="toc_435">Query All Withdrawal Transaction States</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/{ORDER_ID}/all</code></pre></div>
 
@@ -10973,7 +11174,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-query-withdrawal-transaction-event-logs"></a></p>
 
-<h3 id="toc_427">Query Withdrawal Transaction Event Logs</h3>
+<h3 id="toc_436">Query Withdrawal Transaction Event Logs</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/eventlog?txid={TXID}</code></pre></div>
 
@@ -10983,7 +11184,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-query-withdrawal-wallet-balance"></a></p>
 
-<h3 id="toc_428">Query Withdrawal Wallet Balance</h3>
+<h3 id="toc_437">Query Withdrawal Wallet Balance</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/balance</code></pre></div>
 
@@ -10993,7 +11194,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-query-withdrawal-callback-detail"></a></p>
 
-<h3 id="toc_429">Query Withdrawal Callback Detail</h3>
+<h3 id="toc_438">Query Withdrawal Callback Detail</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/order_id/{ORDER_ID}&#39;</code></pre></div>
 
@@ -11003,7 +11204,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pr
 
 <p><a name="curl-set-withdrawal-request-acl"></a></p>
 
-<h3 id="toc_430">Set Withdrawal Request ACL</h3>
+<h3 id="toc_439">Set Withdrawal Request ACL</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;acl&quot;:&quot;192.168.101.55&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl</code></pre></div>
@@ -11014,7 +11215,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl</code>
 
 <p><a name="curl-query-withdrawal-whitelist-configuration"></a></p>
 
-<h3 id="toc_431">Query Withdrawal Whitelist Configuration</h3>
+<h3 id="toc_440">Query Withdrawal Whitelist Configuration</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/config</code></pre></div>
 
@@ -11024,7 +11225,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl</code>
 
 <p><a name="curl-query-withdrawal-wallet-transaction-history"></a></p>
 
-<h3 id="toc_432">Query Withdrawal Wallet Transaction History</h3>
+<h3 id="toc_441">Query Withdrawal Wallet Transaction History</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions</code></pre></div>
 
@@ -11034,7 +11235,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/transactions/acl</code>
 
 <p><a name="curl-sign-message"></a></p>
 
-<h3 id="toc_433">Sign Message</h3>
+<h3 id="toc_442">Sign Message</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;message&quot;:&quot;This is proof that I, user A, have access to this address.&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signmessage</code></pre></div>
@@ -11045,7 +11246,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signmessage</code></pre></div>
 
 <p><a name="curl-call-contract-read-abi"></a></p>
 
-<h3 id="toc_434">Call Contract Read ABI</h3>
+<h3 id="toc_443">Call Contract Read ABI</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/contract/read?contract=0xad6d458402f60fd3bd25163575031acdce07538d&amp;data=0xdd62ed3e000000000000000000000000d11bd6e308b8dc1c5243d54cf41a427ca0f46943000000000000000000000000e592427a0aece92de3edee1f18e0157c05861564</code></pre></div>
 
@@ -11053,9 +11254,20 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signmessage</code></pre></div>
 <li><a href="#call-contract-read-abi">API definition</a></li>
 </ul>
 
+<p><a name="curl-arweave-sign-transaction"></a></p>
+
+<h3 id="toc_444">Arweave Sign Transaction</h3>
+
+<div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;ar_tx&quot;:&quot;{\&quot;format\&quot;:2,\&quot;id\&quot;:\&quot;\&quot;,\&quot;last_tx\&quot;:\&quot;4z4iqqw4j_bBC1jXvm-pbMDg5eSYOGPjRz2fB1nsai6cVtvTd7Ucn-_Qau_bZh\&quot;,\&quot;owner\&quot;:\&quot;KkTVKjrry_aieBmqNOuUGtJam-3yT6zMABY89pinlcY\&quot;,\&quot;tags\&quot;:[{\&quot;name\&quot;:\&quot;Q29udGVudC1UeXBl\&quot;,\&quot;value\&quot;:\&quot;aW1hZ2UvanBlZw\&quot;}],\&quot;target\&quot;:\&quot;\&quot;,\&quot;quantity\&quot;:\&quot;0\&quot;,\&quot;data\&quot;:\&quot;\&quot;,\&quot;data_size\&quot;:\&quot;23782\&quot;,\&quot;data_root\&quot;:\&quot;Ve1yivS-iMklYK6xyPT58IeZRu-TtnAYkW5Ih4pb-S4\&quot;,\&quot;reward\&quot;:\&quot;73874553\&quot;,\&quot;signature\&quot;:\&quot;\&quot;,\&quot;chunks\&quot;:\&quot;\&quot;}&quot;}&#39; \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signtransaction</code></pre></div>
+
+<ul>
+<li><a href="#arweave-sign-transaction">API definition</a></li>
+</ul>
+
 <p><a name="curl-add-withdrawal-whitelist-entry"></a></p>
 
-<h3 id="toc_435">Add Withdrawal Whitelist Entry</h3>
+<h3 id="toc_445">Add Withdrawal Whitelist Entry</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;items&quot;:[{&quot;address&quot;:&quot;GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ&quot;,&quot;memo&quot;:&quot;85666&quot;,&quot;user_id&quot;:&quot;USER002&quot;}]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist</code></pre></div>
@@ -11066,7 +11278,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist</code></pre><
 
 <p><a name="curl-remove-withdrawal-whitelist-entry"></a></p>
 
-<h3 id="toc_436">Remove Withdrawal Whitelist Entry</h3>
+<h3 id="toc_446">Remove Withdrawal Whitelist Entry</h3>
 
 <div><pre><code class="language-none">curl -X DELETE -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;items&quot;:[{&quot;address&quot;:&quot;GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ&quot;,&quot;memo&quot;:&quot;85666&quot;,&quot;user_id&quot;:&quot;USER002&quot;}]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist</code></pre></div>
@@ -11077,7 +11289,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist</code></pre><
 
 <p><a name="curl-check-withdrawal-whitelist"></a></p>
 
-<h3 id="toc_437">Check Withdrawal Whitelist</h3>
+<h3 id="toc_447">Check Withdrawal Whitelist</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;address&quot;:&quot;GCIFMEYIEWSX3K6EOPMEJ3FHW5AAPD6NW76J7LPBRAKD4JZKTISKUPHJ&quot;,&quot;memo&quot;:&quot;85666&quot;,&quot;user_id&quot;:&quot;USER002&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/check</code></pre></div>
@@ -11088,7 +11300,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/check</code><
 
 <p><a name="curl-query-withdrawal-whitelist"></a></p>
 
-<h3 id="toc_438">Query Withdrawal Whitelist</h3>
+<h3 id="toc_448">Query Withdrawal Whitelist</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist</code></pre></div>
 
@@ -11098,7 +11310,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/whitelist/check</code><
 
 <p><a name="curl-resend-withdrawal-callbacks"></a></p>
 
-<h3 id="toc_439">Resend Withdrawal Callbacks</h3>
+<h3 id="toc_449">Resend Withdrawal Callbacks</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;notification_id&quot;:0}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/manual</code></pre></div>
@@ -11109,7 +11321,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/manual</c
 
 <p><a name="curl-query-callback-history"></a></p>
 
-<h3 id="toc_440">Query Callback History</h3>
+<h3 id="toc_450">Query Callback History</h3>
 
 <div><pre><code class="language-none">curl &#39;http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications?from_time=1561651200&amp;to_time=1562255999&amp;type=2&#39;</code></pre></div>
 
@@ -11119,7 +11331,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/sender/notifications/manual</c
 
 <p><a name="curl-query-callback-detail"></a></p>
 
-<h3 id="toc_441">Query Callback Detail</h3>
+<h3 id="toc_451">Query Callback Detail</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;ids&quot;:[90000000140,90000000139]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code></pre></div>
@@ -11130,7 +11342,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-wallet-synchronization-info"></a></p>
 
-<h3 id="toc_442">Query Wallet Synchronization Info</h3>
+<h3 id="toc_452">Query Wallet Synchronization Info</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/blocks</code></pre></div>
 
@@ -11140,7 +11352,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/get_by_id</code>
 
 <p><a name="curl-query-transaction-average-fee"></a></p>
 
-<h3 id="toc_443">Query Transaction Average Fee</h3>
+<h3 id="toc_453">Query Transaction Average Fee</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;block_num&quot;:1}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>
@@ -11151,7 +11363,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofee</code></pre></div>
 
 <p><a name="curl-batch-query-transaction-average-fees"></a></p>
 
-<h3 id="toc_444">Batch Query Transaction Average Fees</h3>
+<h3 id="toc_454">Batch Query Transaction Average Fees</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;block_nums&quot;:[1,5,10]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
@@ -11162,7 +11374,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
 
 <p><a name="curl-query-vault-wallet-transaction-history"></a></p>
 
-<h3 id="toc_445">Query Vault Wallet Transaction History</h3>
+<h3 id="toc_455">Query Vault Wallet Transaction History</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/transactions?start_index=0&amp;from_time=1559664000&amp;to_time=1562255999&amp;request_number=8</code></pre></div>
 
@@ -11172,7 +11384,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
 
 <p><a name="curl-query-vault-wallet-balance"></a></p>
 
-<h3 id="toc_446">Query Vault Wallet Balance</h3>
+<h3 id="toc_456">Query Vault Wallet Balance</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/vault/balance</code></pre></div>
 
@@ -11182,7 +11394,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
 
 <p><a name="curl-activate-api-code"></a></p>
 
-<h3 id="toc_447">Activate API Code</h3>
+<h3 id="toc_457">Activate API Code</h3>
 
 <div><pre><code class="language-none">curl -X POST http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret/activate</code></pre></div>
 
@@ -11192,7 +11404,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
 
 <p><a name="curl-query-api-code-status"></a></p>
 
-<h3 id="toc_448">Query API Code Status</h3>
+<h3 id="toc_458">Query API Code Status</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/apisecret</code></pre></div>
 
@@ -11202,7 +11414,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/autofees</code></pre></div>
 
 <p><a name="curl-refresh-api-code"></a></p>
 
-<h3 id="toc_449">Refresh API Code</h3>
+<h3 id="toc_459">Refresh API Code</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;refresh_code&quot;:&quot;3EbaSPUpKzHJ9wYgYZqy6W4g43NT365bm9vtTfYhMPra&quot;}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/refreshsecret</code></pre></div>
@@ -11213,7 +11425,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/refreshsecret</code></pre></di
 
 <p><a name="curl-query-wallet-info"></a></p>
 
-<h3 id="toc_450">Query Wallet Info</h3>
+<h3 id="toc_460">Query Wallet Info</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/info</code></pre></div>
 
@@ -11223,7 +11435,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/refreshsecret</code></pre></di
 
 <p><a name="curl-verify-addresses"></a></p>
 
-<h3 id="toc_451">Verify Addresses</h3>
+<h3 id="toc_461">Verify Addresses</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;addresses&quot;:[&quot;0x635B4764D1939DfAcD3a8014726159abC277BecC&quot;,&quot;1CK6KHY6MHgYvmRQ4PAafKYDrg1ejbH1cE&quot;]}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre></div>
@@ -11234,7 +11446,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/addresses/verify</code></pre><
 
 <p><a name="curl-inspect-callback-endpoint"></a></p>
 
-<h3 id="toc_452">Inspect Callback Endpoint</h3>
+<h3 id="toc_462">Inspect Callback Endpoint</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;test_number&quot;:102999}&#39; \
 http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect</code></pre></div>
@@ -11245,7 +11457,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect</code></
 
 <p><a name="curl-list-wallets"></a></p>
 
-<h3 id="toc_453">List Wallets</h3>
+<h3 id="toc_463">List Wallets</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/readonly/walletlist</code></pre></div>
 
@@ -11255,7 +11467,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect</code></
 
 <p><a name="curl-query-wallets-balance"></a></p>
 
-<h3 id="toc_454">Query Wallets Balance</h3>
+<h3 id="toc_464">Query Wallets Balance</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/wallets/readonly/walletlist/balances</code></pre></div>
 
@@ -11265,7 +11477,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect</code></
 
 <p><a name="curl-query-currency-prices"></a></p>
 
-<h3 id="toc_455">Query Currency Prices</h3>
+<h3 id="toc_465">Query Currency Prices</h3>
 
 <div><pre><code class="language-none">curl http://localhost:8889/v1/mock/currency/prices</code></pre></div>
 
@@ -11275,7 +11487,7 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/notifications/inspect</code></
 
 <p><a name="curl-query-contract-token-meta"></a></p>
 
-<h3 id="toc_456">Query Contract Token Meta</h3>
+<h3 id="toc_466">Query Contract Token Meta</h3>
 
 <div><pre><code class="language-none">curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;requests&quot;:[{&quot;token_address&quot;:&quot;0x9fceceda8a781e493a0eba6a59c6e6c731fd5ee5&quot;,&quot;token_id&quot;:&quot;1&quot;}]}&#39; \
 http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri</code></pre></div>
@@ -11284,11 +11496,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 <li><a href="#query-contract-token-meta">API definition</a></li>
 </ul>
 
-<h5 id="toc_457"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_467"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="other-language-versions"></a></p>
 
-<h1 id="toc_458">Other Language Versions</h1>
+<h1 id="toc_468">Other Language Versions</h1>
 
 <ul>
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA">Java</a></li>
@@ -11296,13 +11508,13 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 <li><a href="https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP">PHP</a></li>
 </ul>
 
-<h5 id="toc_459"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_469"><a href="#table-of-contents">Back to top</a></h5>
 
-<h1 id="toc_460">Appendix</h1>
+<h1 id="toc_470">Appendix</h1>
 
 <p><a name="callback-definition"></a></p>
 
-<h3 id="toc_461">Callback Definition</h3>
+<h3 id="toc_471">Callback Definition</h3>
 
 <table>
   <tr>
@@ -11480,7 +11692,7 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 
 <p><a name="transaction-state-definition"></a></p>
 
-<h3 id="toc_462">Transaction State Definition</h3>
+<h3 id="toc_472">Transaction State Definition</h3>
 
 <table>
 <thead>
@@ -11694,11 +11906,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
   &quot;token_address&quot;: &quot;&quot;
 }</code></pre></div>
 
-<h5 id="toc_463"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_473"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="callback-type-definition"></a></p>
 
-<h3 id="toc_464">Callback Type Definition</h3>
+<h3 id="toc_474">Callback Type Definition</h3>
 
 <table>
 <thead>
@@ -11736,11 +11948,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 </tbody>
 </table>
 
-<h5 id="toc_465"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_475"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="currency-definition"></a></p>
 
-<h3 id="toc_466">Currency Definition</h3>
+<h3 id="toc_476">Currency Definition</h3>
 
 <table>
 <thead>
@@ -11953,11 +12165,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 <p>KOVAN is PoA testnet for Ethereum.</p>
 </blockquote>
 
-<h5 id="toc_467"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_477"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="support-unconfirmed-balance-currency"></a></p>
 
-<h3 id="toc_468">Support Unconfirmed Balance Currency</h3>
+<h3 id="toc_478">Support Unconfirmed Balance Currency</h3>
 
 <table>
 <thead>
@@ -12063,11 +12275,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 <p>L-BTC only shows the unconfirmed incoming balance, no outgoing balance.</p>
 </blockquote>
 
-<h5 id="toc_469"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_479"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="memo-requirement"></a></p>
 
-<h3 id="toc_470">Memo Requirement</h3>
+<h3 id="toc_480">Memo Requirement</h3>
 
 <table>
 <thead>
@@ -12097,11 +12309,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 </tbody>
 </table>
 
-<h5 id="toc_471"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_481"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="wallet-type-definition"></a></p>
 
-<h3 id="toc_472">Wallet Type Definition</h3>
+<h3 id="toc_482">Wallet Type Definition</h3>
 
 <table>
 <thead>
@@ -12139,11 +12351,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 </tbody>
 </table>
 
-<h5 id="toc_473"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_483"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="delegated-wallet-supported-currency"></a></p>
 
-<h3 id="toc_474">Delegated Wallet Supported Currency</h3>
+<h3 id="toc_484">Delegated Wallet Supported Currency</h3>
 
 <table>
 <thead>
@@ -12221,11 +12433,11 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 </tbody>
 </table>
 
-<h5 id="toc_475"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_485"><a href="#table-of-contents">Back to top</a></h5>
 
 <p><a name="evm-compatible-currency"></a></p>
 
-<h3 id="toc_476">EVM Compatible Currency</h3>
+<h3 id="toc_486">EVM Compatible Currency</h3>
 
 <table>
 <thead>
@@ -12303,7 +12515,7 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 </tbody>
 </table>
 
-<h5 id="toc_477"><a href="#table-of-contents">Back to top</a></h5>
+<h5 id="toc_487"><a href="#table-of-contents">Back to top</a></h5>
 
 
 

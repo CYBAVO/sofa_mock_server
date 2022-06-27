@@ -41,6 +41,7 @@
 		- [Query Withdrawal Wallet Transaction History](#query-withdrawal-wallet-transaction-history)
 		- [Sign Message](#sign-message)
 		- [Call Contract Read ABI](#call-contract-read-abi)
+		- [Arweave Sign Transaction](#arweave-sign-transaction)
 	- Deposit / Withdraw Common API
 		- [Query Callback History](#query-callback-history)
 		- [Query Callback Detail](#query-callback-detail)
@@ -1842,7 +1843,7 @@ The response includes the following parameters:
 <a name="query-withdrawal-transaction-event-logs"></a>
 ### Query Withdrawal Transaction Event Logs
 
-Query event logs of a withdrawal transaction by transaction hash.
+Query event logs of a withdrawal transaction by transaction hash. Only [EVM Compatible Currencies](#evm-compatible-currency) are supported. 
 
 ##### Request
 
@@ -2952,6 +2953,85 @@ The response includes the following parameters:
 | 400 | 112 | Invalid parameter | no contract policy | There is no contract policy of the given wallet |
 | 400 | 112 | Invalid parameter | unsupported contract | There is no contract policy of the given contract address |
 | 400 | 303 | Invalid currency | - | Not supported cryptocurrency to call contract read ABI |
+
+##### [Back to top](#table-of-contents)
+
+
+<a name="arweave-sign-transaction"></a>
+### Arweave Sign Transaction
+
+Sign Arweave transaction for uploading data. This API is dedicated to the Arweave withdrawal wallet.
+
+##### Request
+
+**POST** /v1/sofa/wallets/`WALLET_ID`/signtransaction
+
+> `Withdrawal Wallet`
+
+- [Sample curl command](#curl-arweave-sign-transaction)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/wallets/557432/signtransaction
+```
+
+###### Post body
+
+```json
+{
+  "ar_tx": "{\"format\":2,\"id\":\"\",\"last_tx\":\"4z4iqqw4j_bBC1jXvm-pbMDg5eSYOGPjRz2fB1nsai6cVtvTd7Ucn-_Qau_bZh\",\"owner\":\"KkTVKjrry_aieBmqNOuUGtJam-3yT6zMABY89pinlcY\",\"tags\":[{\"name\":\"Q29udGVudC1UeXBl\",\"value\":\"aW1hZ2UvanBlZw\"}],\"target\":\"\",\"quantity\":\"0\",\"data\":\"\",\"data_size\":\"23782\",\"data_root\":\"Ve1yivS-iMklYK6xyPT58IeZRu-TtnAYkW5Ih4pb-S4\",\"reward\":\"73874553\",\"signature\":\"\",\"chunks\":\"\"}"
+}
+```
+
+The request includes the following parameters:
+
+###### Post body
+
+| Field | Type  | Note | Description |
+| :---  | :---  | :--- | :---        |
+| ar_tx | string | required | Transaction JSON string to be signed |
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "id": "j06PW1hWTS2keWOl6X_oIKdUMV29MllMlO2rSRDhkzg",
+  "signature": "v56Dgg-V--ZQANyhyc00Pgd2nywB9NFv7YOgY4ngv7WlHCydDNzlKIvTGCrJvC0xmnuQv-O4XAHM4NbQCKEOfqU8kpwPvo59lQA1yCIjQeNw3rGvlg832MvyAR71FjME5KI84vz-IcDOGpqJs-GApjPpbTren5NKfkVMA9TAnTUhd3wQafQdTdbaGnBbccuHxEFBqR3xWkjt6r2dsmtUZkyVz41MAjMJyQ8u7_131AexJXNBX0U-wDXxJ6eu6kydMPrdsYqU6no8wEEl3XTdsOmJ5J1jy9uiCyN5Ri2II2VzTvKgP8xVOquAo2EZGQLHo2nJU4sVOXHA1ZJ9l0U2ny5ZMyqqh3tFqEsk5dDwBJumoCbMo0bFOKSXiG7iez8WEi57kdLy5PJBizW5jFYITm1fXnJ8ERyk8wTHu0f1_5FQLZtinl6sbwsb_xCyy2siPYc5CpwR5u6yR7hCbBxt9WJ3nDeMfKTRk2_vnEYagC_HzMk3aG1oqohaA8_J7t8UNli8idLS7LpxTWdZuU32rIU8mv9lVpEbxjGpRQFqvwS32AUxLM6llG5svswgb38_y7GEajWZkeAuZ4-dvK7r91evzkbrKbpI_mnOGnMgPopiyCl6wEOoiJYtfo5IbAXi5YJITZ7KbwtoWh-MzJFPE_9UnZ9eXY8GKJU-mZC23NA"
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| id | string | ID field of the signed transaction |
+| signature | string | Signature filed of the signed transaction |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Invalid ID | - | No wallet ID found |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+| 400 | 112 | Invalid parameter | - | Malformatted post body |
+| 400 | 112 | Invalid parameter | not allowed to sign asset transfer transaction | The `quantity` or `target` is not empty |
+| 400 | 112 | Invalid parameter | invalid transaction format | The `data_size` is zero or `data_root` is empty |
+| 404 | 303 | Invalid currency | - | The wallet is not allowed to perform this request |
+
 
 ##### [Back to top](#table-of-contents)
 
@@ -4773,6 +4853,16 @@ http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signmessage
 curl http://localhost:8889/v1/mock/wallets/{WALLET_ID}/contract/read?contract=0xad6d458402f60fd3bd25163575031acdce07538d&data=0xdd62ed3e000000000000000000000000d11bd6e308b8dc1c5243d54cf41a427ca0f46943000000000000000000000000e592427a0aece92de3edee1f18e0157c05861564
 ```
 - [API definition](#call-contract-read-abi)
+
+
+<a name="curl-arweave-sign-transaction"></a>
+### Arweave Sign Transaction
+
+```
+curl -X POST -H "Content-Type: application/json" -d '{"ar_tx":"{\"format\":2,\"id\":\"\",\"last_tx\":\"4z4iqqw4j_bBC1jXvm-pbMDg5eSYOGPjRz2fB1nsai6cVtvTd7Ucn-_Qau_bZh\",\"owner\":\"KkTVKjrry_aieBmqNOuUGtJam-3yT6zMABY89pinlcY\",\"tags\":[{\"name\":\"Q29udGVudC1UeXBl\",\"value\":\"aW1hZ2UvanBlZw\"}],\"target\":\"\",\"quantity\":\"0\",\"data\":\"\",\"data_size\":\"23782\",\"data_root\":\"Ve1yivS-iMklYK6xyPT58IeZRu-TtnAYkW5Ih4pb-S4\",\"reward\":\"73874553\",\"signature\":\"\",\"chunks\":\"\"}"}' \
+http://localhost:8889/v1/mock/wallets/{WALLET_ID}/signtransaction
+```
+- [API definition](#arweave-sign-transaction)
 
 
 <a name="curl-add-withdrawal-whitelist-entry"></a>
