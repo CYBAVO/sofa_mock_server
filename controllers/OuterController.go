@@ -1074,3 +1074,19 @@ func (c *OuterController) SignTransaction() {
 	json.Unmarshal(resp, &m)
 	c.Data["json"] = m
 }
+
+// @Title Get Service Health Status
+// @router /healthcheck [get]
+func (c *OuterController) HealthCheck() {
+	defer c.ServeJSON()
+
+	resp, err := api.MakeRequest(0, "GET", "/v1/sofa/healthcheck", nil, nil)
+	if err != nil {
+		logs.Error("HealthCheck failed", err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	var m map[string]interface{}
+	json.Unmarshal(resp, &m)
+	c.Data["json"] = m
+}

@@ -63,6 +63,7 @@
 		- [Query Wallets Balance](#query-wallets-balance)
 		- [Query Currency Prices](#query-currency-prices)
 		- [Query Contract Token Meta](#query-contract-token-meta)
+		- [Query Service Health Status](#query-service-health-status)
 - Testing
 	- [Mock Server](#mock-server)
 	- [cURL Testing Commands](#curl-testing-commands)
@@ -4561,6 +4562,69 @@ The response includes the following parameters:
 ##### [Back to top](#table-of-contents)
 
 
+<a name="query-service-health-status"></a>
+### Query Service Health Status
+
+Used to query service health status.
+
+##### Request
+
+`VIEW` **GET** /v1/sofa/healthcheck
+
+> The API code must be a read-only API code. Use wallet ID 0 to register API code with the mock server.
+
+- [Sample curl command](#curl-query-service-health-status)
+
+##### Request Format
+
+An example of the request:
+
+###### API
+
+```
+/v1/sofa/healthcheck
+```
+
+##### Response Format
+
+An example of a successful response:
+
+```json
+{
+  "cc_state": 1,
+  "ww_state": 1,
+  "kms_state": 1,
+  "mpc_enabled": true,
+  "mpc_state": 1
+}
+```
+
+The response includes the following parameters:
+
+| Field | Type  | Description |
+| :---  | :---  | :---        |
+| cc_state | int | 1 means the service is live, 0 means the service is down |
+| ww_state | int | 1 means the service is live, 0 means the service is down |
+| kms_state | int | 1 means the service is live, 0 means the service is down |
+| mpc_enabled | boolean | true means MPC enabled, false means no MPC |
+| mpc_state | int | 1 means the service is live, 0 means the service is down |
+
+##### Error Code
+
+| HTTP Code | Error Code | Error | Message | Description |
+| :---      | :---       | :---  | :---    | :---        |
+| 403 | -   | Forbidden. Header not found | - | Missing `X-API-CODE`, `X-CHECKSUM` header or query param `t` |
+| 403 | -   | Forbidden. Invalid timestamp | - | The timestamp `t` is not in the valid time range |
+| 403 | -   | Forbidden. Invalid checksum | - | The request is considered a replay request |
+| 403 | -   | Forbidden. Invalid API code | - | `X-API-CODE` header contains invalid API code |
+| 403 | -   | Invalid API code for wallet {WALLET_ID} | - | The API code mismatched |
+| 403 | -   | Forbidden. Checksum unmatch | - | `X-CHECKSUM` header contains wrong checksum |
+| 403 | -   | Forbidden. Call too frequently ({THROTTLING_COUNT} calls/minute) | - | Send requests too frequently |
+| 403 | 385   | API Secret not valid | - | Invalid API code permission |
+
+##### [Back to top](#table-of-contents)
+
+
 <a name="mock-server"></a>
 # Mock Server
 
@@ -5073,6 +5137,14 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 - [API definition](#query-contract-token-meta)
 
 
+<a name="curl-query-service-health-status"></a>
+### Query Service Health Status
+
+```
+curl http://localhost:8889/v1/mock/healthcheck
+```
+- [API definition](#query-service-health-status)
+
 
 ##### [Back to top](#table-of-contents)
 
@@ -5418,6 +5490,7 @@ Deposit callback with blocklist_tags sample:
 | 3    | DOGE            | 8 |
 | 5    | DASH            | 8 |
 | 60   | ETH             | 18 |
+| 118  | ATOM            | 6 |
 | 144  | XRP             | 6 |
 | 145  | BCH (BCHN)      | 8 |
 | 148  | XLM             | 7 |
@@ -5440,6 +5513,10 @@ Deposit callback with blocklist_tags sample:
 | 1815 | ADA             | 6 |
 | 5353 | HNS             | 6 |
 | 52752 | CELO           | 18 |
+| 99999999982* | AXL     | 6 |
+| 99999999983* | BLD     | 6 |
+| 99999999984* | OSMO    | 6 |
+| 99999999986* | KUB     | 18 |
 | 99999999986* | KUB     | 18 |
 | 99999999987* | KOVAN   | 18 |
 | 99999999988* | AVAX-C  | 18 |
@@ -5503,6 +5580,7 @@ Deposit callback with blocklist_tags sample:
 | XLM | Up to 20 chars |
 | EOS | Up to 256 chars |
 | BNB | Up to 128 chars |
+| ATOM | Up to 180 chars |
 
 ##### [Back to top](#table-of-contents)
 
