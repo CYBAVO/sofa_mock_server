@@ -2997,6 +2997,8 @@ The request includes the following parameters:
 | :---  | :---  | :--- | :---        |
 | ar_tx | string | required | Transaction JSON string to be signed |
 
+> The owner field is the address of the withdrawal wallet. The owner field of the response is the public key of the wallet address.
+
 ##### Response Format
 
 An example of a successful response:
@@ -3004,7 +3006,8 @@ An example of a successful response:
 ```json
 {
   "id": "j06PW1hWTS2keWOl6X_oIKdUMV29MllMlO2rSRDhkzg",
-  "signature": "v56Dgg-V--ZQANyhyc00Pgd2nywB9NFv7YOgY4ngv7WlHCydDNzlKIvTGCrJvC0xmnuQv-O4XAHM4NbQCKEOfqU8kpwPvo59lQA1yCIjQeNw3rGvlg832MvyAR71FjME5KI84vz-IcDOGpqJs-GApjPpbTren5NKfkVMA9TAnTUhd3wQafQdTdbaGnBbccuHxEFBqR3xWkjt6r2dsmtUZkyVz41MAjMJyQ8u7_131AexJXNBX0U-wDXxJ6eu6kydMPrdsYqU6no8wEEl3XTdsOmJ5J1jy9uiCyN5Ri2II2VzTvKgP8xVOquAo2EZGQLHo2nJU4sVOXHA1ZJ9l0U2ny5ZMyqqh3tFqEsk5dDwBJumoCbMo0bFOKSXiG7iez8WEi57kdLy5PJBizW5jFYITm1fXnJ8ERyk8wTHu0f1_5FQLZtinl6sbwsb_xCyy2siPYc5CpwR5u6yR7hCbBxt9WJ3nDeMfKTRk2_vnEYagC_HzMk3aG1oqohaA8_J7t8UNli8idLS7LpxTWdZuU32rIU8mv9lVpEbxjGpRQFqvwS32AUxLM6llG5svswgb38_y7GEajWZkeAuZ4-dvK7r91evzkbrKbpI_mnOGnMgPopiyCl6wEOoiJYtfo5IbAXi5YJITZ7KbwtoWh-MzJFPE_9UnZ9eXY8GKJU-mZC23NA"
+  "signature": "v56Dgg-V--ZQANyhyc00Pgd2nywB9NFv7YOgY4ngv7WlHCydDNzlKIvTGCrJvC0xmnuQv-O4XAHM4NbQCKEOfqU8kpwPvo59lQA1yCIjQeNw3rGvlg832MvyAR71FjME5KI84vz-IcDOGpqJs-GApjPpbTren5NKfkVMA9TAnTUhd3wQafQdTdbaGnBbccuHxEFBqR3xWkjt6r2dsmtUZkyVz41MAjMJyQ8u7_131AexJXNBX0U-wDXxJ6eu6kydMPrdsYqU6no8wEEl3XTdsOmJ5J1jy9uiCyN5Ri2II2VzTvKgP8xVOquAo2EZGQLHo2nJU4sVOXHA1ZJ9l0U2ny5ZMyqqh3tFqEsk5dDwBJumoCbMo0bFOKSXiG7iez8WEi57kdLy5PJBizW5jFYITm1fXnJ8ERyk8wTHu0f1_5FQLZtinl6sbwsb_xCyy2siPYc5CpwR5u6yR7hCbBxt9WJ3nDeMfKTRk2_vnEYagC_HzMk3aG1oqohaA8_J7t8UNli8idLS7LpxTWdZuU32rIU8mv9lVpEbxjGpRQFqvwS32AUxLM6llG5svswgb38_y7GEajWZkeAuZ4-dvK7r91evzkbrKbpI_mnOGnMgPopiyCl6wEOoiJYtfo5IbAXi5YJITZ7KbwtoWh-MzJFPE_9UnZ9eXY8GKJU-mZC23NA",
+  "owner": "teNsEXXHfFdY2TM-ZGpNXzAoSqNND2cZ2TW-Xnc7-yl4SjFJmMpLiYhgeunSJGaVe08ZMDCHDnYykj91E5f1ZApL7y_W3WkCDEoWeRnm69M-SUPCw35oo1HF_hvwgfnX3H14zifIWHTKJq1vxSD7y2EGRVUBn5xZlWjoUJ5Gbbn2BRDQ_Fob7x_ckTbLvDBomdTFQeAntXH99OxE9pH88SI6OkmkYzZXjYmJYaGIP6q81y6CCxfmzWdLRGNXNYimacNuJAJxh4ZsWr-tRewVPPrj3f30Iybmb_VIlhuI9r6sA_rhwyigL1qTvuXZ6b47tpY7idnU8Ea0X3KIVNt-C2flWebczWBz1pcljBtHcxrGHhewOp2gO3_I3nsm5MRwtaR1512iewsEZQj7apJe5EY6kZIG_YBRbv8YRZEhvmkHcCO4lKuNqjw9lrbsFI-atZ61z_jVeWJrBB6Lwyp9v6VOs09lsHoBDjFR9eCOy1nfn6a26iKLMPj9X5xRukvicQ5ZWUU8zbtGDskyUtvhkH4uXGNjkjE7d-WaAR4cj7Ni6mrFA2iHcqIUODpu8DR-bZ5yxENQjjIgm6Rr--v-kRltu4iEADdQBfUzY1hYOo6GtgyYLUnHPFB7IDMULyolo_31yUIAblHbNOuBF9fRue-ODY_MZKvOS1Qq7GH0_sE"
 }
 ```
 
@@ -3014,6 +3017,7 @@ The response includes the following parameters:
 | :---  | :---  | :---        |
 | id | string | ID field of the signed transaction |
 | signature | string | Signature filed of the signed transaction |
+| owner | string | Public key of the wallet address |
 
 ##### Error Code
 
