@@ -5357,6 +5357,11 @@ curl http://localhost:8889/v1/mock/healthcheck
 | 10   | Dropped | A long-awaited withdrawal transaction that does not appear in the memory pool of the fullnode will be regarded as dropped  | O | Withdrawal(2) |
 | 11   | Transaction Failed | The withdrawal transaction is regarded as a failed transaction by the fullnode | O | Withdrawal(2) |
 | 12   | Paused | The withdrawal request has been paused | - | - |
+| 13   | Retrying | Automatic transaction retry in progress | - | - |
+| 14   | Query transaction status fail | Unable to query transaction status from fullnode  | - | - |
+| 15   | Init-Locked | Transaction is being processed in the KMS module | - | - |
+| 20   | Preparing transaction fee | Preparing transaction fee (delegated wallet only) | - | - |
+| 21   | Transaction fee is ready | Transaction fee is ready (delegated wallet only) | - | - |
 
 Callback sample:
 
