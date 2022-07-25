@@ -65,6 +65,7 @@ func init() {
 	beego.Router("/v1/mock/currency/prices", &controllers.OuterController{}, "GET:GetCurrencyPrices")
 	beego.Router("/v1/mock/wallets/:wallet_id/receiver/get-balances", &controllers.OuterController{}, "POST:GetDelegatedBalances")
 	beego.Router("/v1/mock/currency/:currency/contract/get-multiple-tokenuri", &controllers.OuterController{}, "POST:GetContractTokenMeta")
+	beego.Router("/v1/mock/healthcheck", &controllers.OuterController{}, "GET:HealthCheck")
 
 	beego.Router("/v1/mock/wallets/callback", &controllers.OuterController{}, "POST:Callback")
 	beego.Router("/v1/mock/wallets/withdrawal/callback", &controllers.OuterController{}, "POST:WithdrawalCallback")
