@@ -27,41 +27,6 @@
 	color: var(--vscode-editorError-foreground);
 }
 
-/* From extension ms-toolsai.jupyter */
-/* These classnames are inherited from bootstrap, but are present in most notebook renderers */
-
-.alert {
-    width: auto;
-    padding: 1em;
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-.alert > *:last-child {
-    margin-bottom: 0;
-}
-#preview > .alert:last-child {
-    /* Prevent this being set to zero by the default notebook stylesheet */
-    padding-bottom: 1em;
-}
-
-.alert-success {
-    /* Note there is no suitable color available, so we just copy "info" */
-    background-color: var(--theme-info-background);
-    color: var(--theme-info-foreground);
-}
-.alert-info {
-    background-color: var(--theme-info-background);
-    color: var(--theme-info-foreground);
-}
-.alert-warning {
-    background-color: var(--theme-warning-background);
-    color: var(--theme-warning-foreground);
-}
-.alert-danger {
-    background-color: var(--theme-error-background);
-    color: var(--theme-error-foreground);
-}
-
 </style>
         
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
@@ -8860,11 +8825,36 @@ The label will be automatically synced to the child wallet.</p>
 <pre><code><code><div>/v1/sofa/wallets/readonly/walletlist/balances
 </div></code></code></pre>
 <p>The request includes the following parameters:</p>
-<p>| Field          | Type | Note                              | Description                                                                                                                                           |
-| :------------- | :--- | :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| type           | int  | optional, default <code>-1</code>            | Specify the wallet type want to query. Supports Vault, Deposit and Withdrawal wallet type. Refer to <a href="#wallet-type-definition">Wallet Type Definition</a> |     |
-| start_index    | int  | optional, default <code>0</code>             | Specify start index                                                                                                                                   |
-| request_number | int  | optional, default <code>50</code>, max <code>100</code> | Request count                                                                                                                                         |</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Field</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Note</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">type</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">optional, default <code>-1</code></td>
+<td style="text-align:left">Specify the wallet type want to query. Supports Vault, Deposit and Withdrawal wallet type. Refer to <a href="#wallet-type-definition">Wallet Type Definition</a></td>
+</tr>
+<tr>
+<td style="text-align:left">start_index</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">optional, default <code>0</code></td>
+<td style="text-align:left">Specify start index</td>
+</tr>
+<tr>
+<td style="text-align:left">request_number</td>
+<td style="text-align:left">int</td>
+<td style="text-align:left">optional, default <code>50</code>, max <code>100</code></td>
+<td style="text-align:left">Request count</td>
+</tr>
+</tbody>
+</table>
 <h5 id="response-format-45">Response Format</h5>
 <p>An example of a successful response:</p>
 <pre><code class="language-json"><div>{

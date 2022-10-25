@@ -4254,11 +4254,11 @@ An example of the request:
 
 The request includes the following parameters:
 
-| Field          | Type | Note                              | Description                                                                                                                                           |
-| :------------- | :--- | :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
-| type           | int  | optional, default `-1`            | Specify the wallet type want to query. Supports Vault, Deposit and Withdrawal wallet type. Refer to [Wallet Type Definition](#wallet-type-definition) |     |
-| start_index    | int  | optional, default `0`             | Specify start index                                                                                                                                   |
-| request_number | int  | optional, default `50`, max `100` | Request count                                                                                                                                         |
+| Field | Type | Note | Description |
+| :--- | :--- | :--- | :--- |
+| type | int  | optional, default `-1` | Specify the wallet type want to query. Supports Vault, Deposit and Withdrawal wallet type. Refer to [Wallet Type Definition](#wallet-type-definition) |
+| start_index | int  | optional, default `0` | Specify start index |
+| request_number | int  | optional, default `50`, max `100` | Request count |
 
 ##### Response Format
 
