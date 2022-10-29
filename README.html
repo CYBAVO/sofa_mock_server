@@ -10120,7 +10120,8 @@ http://localhost:8889/v1/mock/currency/{CURRENCY}/contract/get-multiple-tokenuri
 		    <tr><td>1</td><td>Processing</td></tr>
 		    <tr><td>2</td><td>TXID in pool</td></tr>
 		    <tr><td>3</td><td>TXID in chain</td></tr>
-		    <tr><td>5</td><td>Failed (the err_reason of addon field will contain detailed error reason)</td></tr>
+		    <tr><td>5</td><td>Failed (the err_reason of addon field will contain detailed error reason).<br>
+        * If the callback state is 5 with err_reason <b>"nonce too low"</b> after accelerating a pending transaction. This means that the pending transaction is already on the chain and awaiting the confirmation of the pending transaction. Don't need to accelerate again.</td></tr>
 		    <tr><td>8</td><td>Cancelled</td></tr>
 		    <tr><td>10</td><td>Dropped</td></tr>
 		    <tr><td>11</td><td>Transaction Failed</td></tr>
