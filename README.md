@@ -69,6 +69,7 @@
   - [Mock Server](#mock-server)
   - [cURL Testing Commands](#curl-testing-commands)
   - [Other Language Versions](#other-language-versions)
+  - [Use Postman to evaluate](#use-postman-to-evaluate)
 - Appendix
   - [Callback Definition](#callback-definition)
   - [Transaction State Definition](#transaction-state-definition)
@@ -5198,6 +5199,10 @@ curl http://localhost:8889/v1/mock/healthcheck
 - [Java](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVA)
 - [Javascript](https://github.com/CYBAVO/SOFA_MOCK_SERVER_JAVASCRIPT)
 - [PHP](https://github.com/CYBAVO/SOFA_MOCK_SERVER_PHP)
+
+# Use Postman to evaluate
+
+- Import the API collection from [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/18263358-a93fcd9e-43c4-4b83-b00e-8b37c6bf9786?action=collection%2Ffork&collection-url=entityId%3D18263358-a93fcd9e-43c4-4b83-b00e-8b37c6bf9786%26entityType%3Dcollection%26workspaceId%3Dff5ca053-1f3f-41c3-88d4-4286a36e279e)
 
 ##### [Back to top](#table-of-contents)
 
