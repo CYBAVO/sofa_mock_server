@@ -744,7 +744,7 @@ Get the pool address of a deposit wallet. The pool address has different functio
 >
 > In EOS, XRP, XLM or BNB, the pool address is the user's deposit address. All user deposits will be distinguished by memo / tag field.
 >
-> LTC, DOGE, DASH, DOT(WND), FIL. SOL and ADA does not support pool address.
+> LTC, DOGE, DASH, DOT(WND), FIL and ADA does not support pool address.
 
 ##### Request
 
